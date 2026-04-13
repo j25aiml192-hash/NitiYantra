@@ -61,9 +61,9 @@ export default function LoginPage() {
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center shadow-sm p-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/nittisetulogo.svg" alt="NitiSetu" className="w-5 h-5" style={{ filter: "invert(1)" }} />
+            <img src="/nittisetulogo.svg" alt="NitiYantra" className="w-5 h-5" style={{ filter: "invert(1)" }} />
           </div>
-          <span className="text-xl font-semibold text-[var(--text)] tracking-tight">NitiSetu</span>
+          <span className="text-xl font-semibold text-[var(--text)] tracking-tight">NitiYantra</span>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer transition-colors">Sign up</span>
@@ -180,7 +180,7 @@ export default function LoginPage() {
           <div className="rounded-3xl p-8 sm:p-10 shadow-[0_8px_40px_rgba(0,0,0,0.08)]" style={{ backgroundColor: "var(--card)" }}>
 
             {/* Title */}
-            <h2 className="text-3xl font-bold text-[var(--text)] text-center mb-2">NitiSetu Login</h2>
+            <h2 className="text-3xl font-bold text-[var(--text)] text-center mb-2">NitiYantra Login</h2>
             <p className="text-sm text-[var(--text-muted)] text-center mb-8 leading-relaxed">
               Hey, Enter your credentials to sign in to<br />your governance dashboard
             </p>
@@ -328,7 +328,7 @@ export default function LoginPage() {
       {/* ─── Footer ─── */}
       <footer className="w-full text-center py-5 relative z-10">
         <p className="text-xs text-[var(--text-muted)]">
-          Copyright @NitiSetu 2026 &nbsp;|&nbsp; <span className="hover:text-gray-600 cursor-pointer transition-colors">Privacy Policy</span>
+          Copyright @NitiYantra 2026 &nbsp;|&nbsp; <span className="hover:text-gray-600 cursor-pointer transition-colors">Privacy Policy</span>
         </p>
       </footer>
     </div>
