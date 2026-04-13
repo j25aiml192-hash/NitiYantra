@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-const API = "https://nitisetu-backend.onrender.com";
+const API = "https://nityantra-backend.onrender.com";
 
 /* ── CountUp ── */
 function CountUp({ end, suffix = "" }: { end: number; suffix?: string }) {
@@ -196,9 +196,9 @@ export default function LandingPage() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.15)", padding: 5,
             }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/nittisetulogo.svg" alt="NitiSetu" style={{ width: 20, height: 20, filter: "invert(1)" }} />
+              <img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 20, height: 20, filter: "invert(1)" }} />
             </div>
-            <span style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", letterSpacing: -0.4 }}>NitiSetu</span>
+            <span style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", letterSpacing: -0.4 }}>NitiYantra</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
             {[
@@ -261,11 +261,11 @@ export default function LandingPage() {
             <div style={{
               position: "absolute", inset: 0,
               background: "linear-gradient(180deg, #1E1B4B 0%, #312E81 30%, #4F46E5 70%, #6366F1 100%)",
-              WebkitMaskImage: "url(/nitisetu-hero.png)",
+              WebkitMaskImage: "url(/NitiYantra-hero.png)",
               WebkitMaskSize: "contain",
               WebkitMaskRepeat: "no-repeat",
               WebkitMaskPosition: "center",
-              maskImage: "url(/nitisetu-hero.png)",
+              maskImage: "url(/NitiYantra-hero.png)",
               maskSize: "contain",
               maskRepeat: "no-repeat",
               maskPosition: "center",
@@ -282,7 +282,7 @@ export default function LandingPage() {
           fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.7,
           maxWidth: 520, margin: "0 auto 32px", position: "relative", zIndex: 1,
         }}>
-          NitiSetu consolidates citizen complaints across 5 districts, tracks every issue from
+          NitiYantra consolidates citizen complaints across 5 districts, tracks every issue from
           submission to resolution, and gives administrators AI-driven intelligence to govern proactively.
         </p>
 
@@ -516,7 +516,7 @@ export default function LandingPage() {
           <p style={{ fontSize: 12, fontWeight: 600, color: "var(--accent)", textTransform: "uppercase", letterSpacing: 1.5, margin: "0 0 13px" }}>Try it live</p>
           <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: -0.8, margin: "0 0 8px", color: "var(--text)" }}>See the AI classify a complaint</h2>
           <p style={{ fontSize: 16, color: "var(--text-secondary)", maxWidth: 460, margin: "0 auto" }}>
-            Type any civic complaint and watch NitiSetu instantly categorize, score, and route it.
+            Type any civic complaint and watch NitiYantra instantly categorize, score, and route it.
           </p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1.618fr 1fr", gap: 21, alignItems: "start" }}>
@@ -614,7 +614,7 @@ export default function LandingPage() {
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 13px", color: "var(--text)" }}>Platform Overview</h3>
               <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.8, margin: 0 }}>
-                NitiSetu is an AI-powered governance intelligence platform that consolidates citizen complaints across 5 districts and 5 departments. It transforms fragmented civic data into a unified command center, enabling administrators to track every issue from submission to resolution and improve service delivery.
+                NitiYantra is an AI-powered governance intelligence platform that consolidates citizen complaints across 5 districts and 5 departments. It transforms fragmented civic data into a unified command center, enabling administrators to track every issue from submission to resolution and improve service delivery.
               </p>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 21 }}>
@@ -713,7 +713,7 @@ export default function LandingPage() {
               Governance<br />intelligence,<br />live right now.
             </h2>
             <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "0 0 34px", maxWidth: 400 }}>
-              NitiSetu is deployed with real civic data — {totalComplaints} complaints across 5 departments.
+              NitiYantra is deployed with real civic data — {totalComplaints} complaints across 5 departments.
               No setup. No demo data. The real thing.
             </p>
             <div style={{ display: "flex", gap: 13, marginBottom: 34 }}>

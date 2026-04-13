@@ -187,7 +187,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 flexShrink: 0, padding: 5,
               }}
             >
-              <img src="/nittisetulogo.svg" alt="NitiYantra" style={{ width: 20, height: 20, filter: "invert(1)" }} />
+              <img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 20, height: 20, filter: "invert(1)" }} />
             </div>
             {!collapsed && (
               <div style={{ whiteSpace: "nowrap", opacity: 1, transition: "opacity 0.15s ease 0.1s" }}>

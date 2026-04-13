@@ -69,7 +69,7 @@ function RoutingTimeline({
       id: 2,
       icon: "⚡",
       title: "AI Analyzing...",
-      sub: "Running NitiSetu Keyword Engine v1",
+      sub: "Running NitiYantra Keyword Engine v1",
       hasProgress: true,
     },
     {

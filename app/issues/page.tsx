@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { updateIssueStatus } from "@/lib/api";
 import toast from "react-hot-toast";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "https://nitisetu-backend.onrender.com";
+const API = process.env.NEXT_PUBLIC_API_URL || "https://nityantra-backend.onrender.com";
 
 /* ── Department map ── */
 const DEPT: Record<number, { name: string; icon: string; color: string }> = {

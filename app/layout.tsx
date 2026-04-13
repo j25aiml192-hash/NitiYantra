@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   description:
     "NitiYantra is an AI-powered governance intelligence & election simulation superplatform.",
   icons: {
-    icon: "/nittisetulogo.svg",
-    apple: "/nittisetulogo.svg",
+    icon: "/nityantralogo.svg",
+    apple: "/nityantralogo.svg",
   },
 };
 
@@ -37,7 +37,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             try {
-              var s = JSON.parse(localStorage.getItem('nitisetu_settings') || '{}');
+              var s = JSON.parse(localStorage.getItem('NitiYantra_settings') || '{}');
               var t = s.theme || 'light';
               if (t === 'system') {
                 t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';

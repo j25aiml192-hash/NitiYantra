@@ -36,8 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("nitisetu_token");
-    const savedUser = localStorage.getItem("nitisetu_user");
+    const savedToken = localStorage.getItem("nityantra_token");
+    const savedUser = localStorage.getItem("nityantra_user");
 
     if (savedToken && savedUser) {
       setToken(savedToken);
@@ -60,8 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [pathname, router]);
 
   const logout = () => {
-    localStorage.removeItem("nitisetu_token");
-    localStorage.removeItem("nitisetu_user");
+    localStorage.removeItem("nityantra_token");
+    localStorage.removeItem("nityantra_user");
     setUser(null);
     setToken(null);
     router.replace("/login");

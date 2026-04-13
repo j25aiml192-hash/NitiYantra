@@ -27,9 +27,9 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const data = await loginUser(username, password);
-      localStorage.setItem("nitisetu_token", data.access_token);
+      localStorage.setItem("nityantra_token", data.access_token);
       if (data.user) {
-        localStorage.setItem("nitisetu_user", JSON.stringify(data.user));
+        localStorage.setItem("nityantra_user", JSON.stringify(data.user));
       }
       router.push("/dashboard");
     } catch (err: unknown) {
@@ -61,7 +61,7 @@ export default function LoginPage() {
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center shadow-sm p-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/nittisetulogo.svg" alt="NitiYantra" className="w-5 h-5" style={{ filter: "invert(1)" }} />
+            <img src="/nityantralogo.svg" alt="NitiYantra" className="w-5 h-5" style={{ filter: "invert(1)" }} />
           </div>
           <span className="text-xl font-semibold text-[var(--text)] tracking-tight">NitiYantra</span>
         </div>

@@ -12,7 +12,7 @@ export default function StickyNavbar() {
           </svg>
         </div>
         <span className="text-xl font-bold text-slate-900">
-          NitiSetu
+          NitiYantra
         </span>
       </div>
 

@@ -456,7 +456,7 @@ export default function DashboardPage() {
   const handleExport = () => {
     try {
       const lines: string[] = [];
-      lines.push("NitiSetu Governance Report");
+      lines.push("NitiYantra Governance Report");
       lines.push(`Generated: ${new Date().toLocaleString()}`);
       lines.push("");
       lines.push("=== Summary ===");
@@ -493,7 +493,7 @@ export default function DashboardPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `nitisetu_report_${new Date().toISOString().split("T")[0]}.csv`;
+      a.download = `NitiYantra_report_${new Date().toISOString().split("T")[0]}.csv`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success("Report exported successfully!");

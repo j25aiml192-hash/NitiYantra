@@ -19,14 +19,14 @@ interface PlatformData {
 }
 
 const API = process.env.NEXT_PUBLIC_API_URL ||
-            "https://nitisetu-backend.onrender.com"
+            "https://nityantra-backend.onrender.com"
 
 /* ─── Rule-based fallback engine ─── */
 function localResponse(input: string, data: PlatformData): string {
   const q = input.toLowerCase()
 
   if (q.match(/^(hi|hello|hey|namaste)/))
-    return `Namaste! I'm NitiSetu AI — your governance intelligence assistant. We're tracking ${data.totalComplaints} complaints across 5 districts. How can I help?`
+    return `Namaste! I'm NitiYantra AI — your governance intelligence assistant. We're tracking ${data.totalComplaints} complaints across 5 districts. How can I help?`
 
   if (q.includes("delay") || q.includes("sla") || q.includes("breach") || q.includes("overdue"))
     return `There are currently ${data.delayedIssues} issues that have breached SLA thresholds. Visit the SLA Breaches page for the full list. Critical issues (15+ days open) need immediate escalation.`
@@ -50,13 +50,13 @@ function localResponse(input: string, data: PlatformData): string {
     return `Delhi Police handles public safety — crime, traffic, harassment. ${data.byDepartment?.["Delhi Police"] || "Several"} complaint(s) active.`
 
   if (q.includes("department"))
-    return `NitiSetu monitors 5 departments:\n• PWD — Roads & Infrastructure\n• Jal Board — Water Supply\n• DESU — Electricity\n• MCD — Sanitation\n• Delhi Police — Public Safety\n\nVisit Performance Metrics for comparison.`
+    return `NitiYantra monitors 5 departments:\n• PWD — Roads & Infrastructure\n• Jal Board — Water Supply\n• DESU — Electricity\n• MCD — Sanitation\n• Delhi Police — Public Safety\n\nVisit Performance Metrics for comparison.`
 
   if (q.includes("category") || q.includes("type"))
     return `Complaints are AI-classified into: Roads, Water Supply, Electricity, Sanitation, and Public Safety. Our keyword engine classifies with 85-91% confidence.`
 
   if (q.includes("ai") || q.includes("classify") || q.includes("how does") || q.includes("how do you") || q.includes("work"))
-    return `NitiSetu uses a 3-stage AI pipeline:\n1. Text Classification — categorizes complaints into 5 departments\n2. Pattern Analysis — groups similar complaints to detect trends\n3. SLA Detection — flags issues open beyond 7-day threshold\n\nTry it on the AI Classifier page!`
+    return `NitiYantra uses a 3-stage AI pipeline:\n1. Text Classification — categorizes complaints into 5 departments\n2. Pattern Analysis — groups similar complaints to detect trends\n3. SLA Detection — flags issues open beyond 7-day threshold\n\nTry it on the AI Classifier page!`
 
   if (q.includes("map") || q.includes("heatmap") || q.includes("geographic"))
     return `The Geographic Monitor shows an interactive India map with district drill-down. Districts are color-coded: 🔴 Critical, 🟡 Warning, 🟢 Normal. Click any state to see district boundaries.`
@@ -182,7 +182,7 @@ export default function ChatBot() {
   }
 
   const chips = [
-    "How does NitiSetu's AI work?",
+    "How does NitiYantra's AI work?",
     "How many issues are delayed?",
     "Give me a platform summary",
     "Which departments are tracked?"
@@ -197,13 +197,13 @@ export default function ChatBot() {
           onClick={() => { setOpen(!open); setUnread(false) }}
           className="relative w-12 h-12 rounded-full bg-indigo-500 text-white border-none shadow-[0_10px_25px_rgba(79,125,243,0.3)] cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-[0_12px_30px_rgba(79,125,243,0.45)]"
         >
-          <img src="/nittisetulogo.svg" alt="NitiSetu" style={{ width: 22, height: 22, filter: "invert(1)" }} />
+          <img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 22, height: 22, filter: "invert(1)" }} />
           {unread && (
             <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 border-2" style={{ borderColor: "var(--card)" }} />
           )}
         </button>
         <span className="absolute right-14 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-medium bg-gray-900 text-white rounded-lg opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-in-out whitespace-nowrap shadow-md pointer-events-none">
-          NitiSetu AI
+          NitiYantra AI
         </span>
       </div>
 
@@ -276,10 +276,10 @@ export default function ChatBot() {
                 background: "linear-gradient(135deg, #6366f1, #4f46e5)",
                 display: "flex", alignItems: "center",
                 justifyContent: "center", padding: 4,
-              }}><img src="/nittisetulogo.svg" alt="NitiSetu" style={{ width: 18, height: 18, filter: "invert(1)" }} /></div>
+              }}><img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 18, height: 18, filter: "invert(1)" }} /></div>
               <div>
                 <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 600 }}>
-                  NitiSetu AI
+                  NitiYantra AI
                 </div>
                 <div style={{ color: "#22c55e", fontSize: 10, display: "flex", alignItems: "center", gap: 4, opacity: 0.85 }}>
                   <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
@@ -338,10 +338,10 @@ export default function ChatBot() {
                   margin: "0 auto 10px",
                   display: "flex", alignItems: "center",
                   justifyContent: "center", padding: 6,
-                }}><img src="/nittisetulogo.svg" alt="NitiSetu" style={{ width: 24, height: 24, filter: "invert(1)" }} /></div>
+                }}><img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 24, height: 24, filter: "invert(1)" }} /></div>
                 <p style={{ color: "var(--text)", fontSize: 13,
                             fontWeight: 600, marginBottom: 6 }}>
-                  NitiSetu AI
+                  NitiYantra AI
                 </p>
                 <p style={{ color: "var(--text-muted)", fontSize: 11,
                             maxWidth: 240, margin: "0 auto 16px",
@@ -447,7 +447,7 @@ export default function ChatBot() {
               onKeyDown={e => {
                 if (e.key === "Enter" && !loading) sendMessage(input)
               }}
-              placeholder="Ask NitiSetu AI..."
+              placeholder="Ask NitiYantra AI..."
               style={{
                 flex: 1,
                 background: "var(--bg)",

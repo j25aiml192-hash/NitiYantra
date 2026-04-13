@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useSidebar } from "@/lib/SidebarContext";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "https://nitisetu-backend.onrender.com";
+const API = process.env.NEXT_PUBLIC_API_URL || "https://nityantra-backend.onrender.com";
 
 /* ── Types ── */
 interface Decision {

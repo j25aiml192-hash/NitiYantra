@@ -29,7 +29,7 @@ export function generateGovernanceReport(data: ReportData) {
   // Header
   doc.setFontSize(22);
   doc.setTextColor(40, 40, 40);
-  doc.text("NitiSetu", 14, 22);
+  doc.text("NitiYantra", 14, 22);
   doc.setFontSize(10);
   doc.setTextColor(120, 120, 120);
   doc.text("Governance Intelligence Report", 14, 28);
@@ -134,12 +134,12 @@ export function generateGovernanceReport(data: ReportData) {
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
     doc.text(
-      `NitiSetu — Bridging Policy to People | Page ${i} of ${pageCount}`,
+      `NitiYantra — Bridging Policy to People | Page ${i} of ${pageCount}`,
       14,
       287
     );
     doc.text("India Innovates 2026 | Team Bugged Bhature", 140, 287);
   }
 
-  doc.save(`NitiSetu_Governance_Report_${dateStr.replace(/ /g, "_")}.pdf`);
+  doc.save(`NitiYantra_Governance_Report_${dateStr.replace(/ /g, "_")}.pdf`);
 }

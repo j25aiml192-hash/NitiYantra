@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="public/nittisetulogo.svg" alt="NitiSetu" width="80" />
+  <img src="public/nityantralogo.svg" alt="NitiYantra" width="80" />
 </p>
 
-<h1 align="center">NitiSetu</h1>
+<h1 align="center">NitiYantra</h1>
 <p align="center"><strong>AI-Powered Governance Intelligence Platform</strong></p>
 <p align="center"><em>Bridging policy to people.</em></p>
 
 <p align="center">
-  <a href="https://nitisetu-orcin.vercel.app">🌐 Live Demo</a> · 
-  <a href="https://nitisetu-backend.onrender.com/docs">📡 API Docs</a> · 
+  <a href="https://NitiYantra-orcin.vercel.app">🌐 Live Demo</a> · 
+  <a href="https://nityantra-backend.onrender.com/docs">📡 API Docs</a> · 
   <a href="#demo-credentials">🔑 Login</a>
 </p>
 
@@ -22,9 +22,9 @@
 
 ---
 
-## 🧠 What is NitiSetu?
+## 🧠 What is NitiYantra?
 
-NitiSetu is a **full-stack governance intelligence platform** that consolidates citizen complaints across Indian districts, classifies them using AI, detects SLA violations, and provides real-time analytics to administrators and politicians. It transforms fragmented civic data into a unified command center for proactive governance.
+NitiYantra is a **full-stack governance intelligence platform** that consolidates citizen complaints across Indian districts, classifies them using AI, detects SLA violations, and provides real-time analytics to administrators and politicians. It transforms fragmented civic data into a unified command center for proactive governance.
 
 > **India Innovates 2026** — Built by **Bugged Bhature**, JSS University, Noida.
 
@@ -100,7 +100,7 @@ NitiSetu is a **full-stack governance intelligence platform** that consolidates 
 ### Frontend
 
 ```bash
-cd nitisetu-frontend
+cd nityantra-frontend
 npm install
 npm run dev
 # → http://localhost:3000
@@ -109,11 +109,11 @@ npm run dev
 ### Backend
 
 ```bash
-cd nitisetu-backend
+cd nityantra-backend
 pip install -r requirements.txt
 
 # Set environment variables
-export DATABASE_URL="postgresql://user:pass@localhost/nitisetu"
+export DATABASE_URL="postgresql://user:pass@localhost/NitiYantra"
 export GEMINI_API_KEY="your-gemini-key"
 export JWT_SECRET="your-secret"
 
@@ -145,7 +145,7 @@ python seed.py
 ## 📁 Project Structure
 
 ```
-nitisetu-frontend/
+nityantra-frontend/
 ├── app/
 │   ├── page.tsx              # Landing page (hero + AI demo)
 │   ├── login/page.tsx        # Session-based auth gate
@@ -170,10 +170,10 @@ nitisetu-frontend/
 │   ├── AuthContext.tsx        # JWT session management
 │   └── SidebarContext.tsx     # Sidebar collapse state
 └── public/
-    ├── nittisetulogo.svg      # Brand logo
-    └── nitisetu-hero.png      # Hero image
+    ├── nityantralogo.svg      # Brand logo
+    └── NitiYantra-hero.png      # Hero image
 
-nitisetu-backend/
+nityantra-backend/
 ├── main.py                   # FastAPI app (all routes)
 ├── database.py               # SQLAlchemy models + connection
 ├── seed.py                   # Database seeder (100+ users, 150+ complaints)
@@ -187,9 +187,9 @@ nitisetu-backend/
 
 | Service | URL |
 |---------|-----|
-| **Frontend** | [nitisetu-orcin.vercel.app](https://nitisetu-orcin.vercel.app) |
-| **Backend API** | [nitisetu-backend.onrender.com](https://nitisetu-backend.onrender.com) |
-| **API Docs** | [nitisetu-backend.onrender.com/docs](https://nitisetu-backend.onrender.com/docs) |
+| **Frontend** | [NitiYantra-orcin.vercel.app](https://NitiYantra-orcin.vercel.app) |
+| **Backend API** | [nityantra-backend.onrender.com](https://nityantra-backend.onrender.com) |
+| **API Docs** | [nityantra-backend.onrender.com/docs](https://nityantra-backend.onrender.com/docs) |
 
 ---
 

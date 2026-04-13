@@ -616,7 +616,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
 
   const steps = [
     { id: 1, icon: "✅", title: "Complaint Received", sub: "Your complaint has been logged in the system" },
-    { id: 2, icon: "⚡", title: "AI Analyzing...", sub: "Running NitiSetu Keyword Engine v1", hasProgress: true },
+    { id: 2, icon: "⚡", title: "AI Analyzing...", sub: "Running NitiYantra Keyword Engine v1", hasProgress: true },
     { id: 3, icon: "🏷", title: `Classified: ${result.category}`, sub: `Confidence: ${result.confidence}%`, hasConfidence: true },
     { id: 4, icon: "🔀", title: `Routing to ${result.department}`, sub: "Assigning to responsible department", hasDept: true },
     { id: 5, icon: "✅", title: "Successfully Assigned", sub: result.complaintId ? `Complaint #${result.complaintId} is now being tracked` : "Your complaint is now being tracked", hasActions: true },

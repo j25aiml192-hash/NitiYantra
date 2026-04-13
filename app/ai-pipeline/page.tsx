@@ -65,7 +65,7 @@ export default function AIPipelinePage() {
   const [init, setInit] = useState(true);
 
   useEffect(() => {
-    const c = sessionStorage.getItem("nitisetu_pipeline_result");
+    const c = sessionStorage.getItem("NitiYantra_pipeline_result");
     if (c) { try { setResult(JSON.parse(c)); setDone(true); } catch { /* */ } }
     setInit(false);
   }, []);
@@ -76,7 +76,7 @@ export default function AIPipelinePage() {
     try {
       const data = await runFullPipeline();
       clearInterval(iv); setStage(3); setResult(data); setDone(true);
-      sessionStorage.setItem("nitisetu_pipeline_result", JSON.stringify(data));
+      sessionStorage.setItem("NitiYantra_pipeline_result", JSON.stringify(data));
       toast.success("Pipeline complete");
     } catch { clearInterval(iv); toast.error("Pipeline failed"); }
     finally { setLoading(false); }

@@ -83,7 +83,7 @@ export interface LoginResponse {
 /* ─── Auth helpers ─── */
 export function getAuthHeaders(): Record<string, string> {
   if (typeof window === "undefined") return {};
-  const token = localStorage.getItem("nitisetu_token");
+  const token = localStorage.getItem("nityantra_token");
   if (!token) return {};
   return { Authorization: `Bearer ${token}` };
 }
@@ -91,7 +91,7 @@ export function getAuthHeaders(): Record<string, string> {
 export function getCurrentUser(): LoginUser | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = localStorage.getItem("nitisetu_user");
+    const raw = localStorage.getItem("nityantra_user");
     return raw ? JSON.parse(raw) : null;
   } catch { return null; }
 }

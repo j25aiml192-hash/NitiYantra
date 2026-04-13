@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-const STORAGE_KEY = "nitisetu_settings";
+const STORAGE_KEY = "NitiYantra_settings";
 
 interface Settings {
   /* Profile */
@@ -24,7 +24,7 @@ interface Settings {
 
 const DEFAULTS: Settings = {
   name: "Admin User",
-  email: "admin@nitisetu.gov.in",
+  email: "admin@NitiYantra.gov.in",
   role: "administrator",
   emailNotif: true,
   pushNotif: true,
@@ -372,7 +372,7 @@ export default function SettingsPage() {
       {/* ── SIGN OUT ── */}
       <div className="mt-6">
         <GroupedCard>
-          <Row isLast onClick={() => toast.success("Sign out functionality coming soon")} destructive ariaLabel="Sign out of NitiSetu">
+          <Row isLast onClick={() => toast.success("Sign out functionality coming soon")} destructive ariaLabel="Sign out of NitiYantra">
             <span className="text-[15px] font-medium text-center" style={{ color: "#FF3B30" }}>Sign Out</span>
           </Row>
         </GroupedCard>
@@ -382,7 +382,7 @@ export default function SettingsPage() {
 
       {/* ── Footer ── */}
       <p className="text-center text-xs mt-6 pb-4" style={{ color: "#6B7280" }}>
-        NitiSetu v1.0.0 • AI Governance Intelligence
+        NitiYantra v1.0.0 • AI Governance Intelligence
       </p>
     </div>
   );

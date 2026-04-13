@@ -7,13 +7,13 @@ const DEMO_USERS = [
   {
     username: "admin",
     role: "Admin",
-    email: "admin@nitisetu.gov",
+    email: "admin@NitiYantra.gov",
     status: "Active",
   },
   {
     username: "viewer",
     role: "Viewer",
-    email: "viewer@nitisetu.gov",
+    email: "viewer@NitiYantra.gov",
     status: "Active",
   },
 ];
