@@ -121,10 +121,10 @@ export default function MyWorkPage() {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-50 to-slate-400 bg-clip-text text-transparent">
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
                     Welcome back, {displayName}
                   </h1>
-                  <p className="text-sm text-slate-300">
+                  <p className="text-sm text-slate-600">
                     {department} • {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                 </div>

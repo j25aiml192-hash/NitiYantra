@@ -198,8 +198,8 @@ export default function ComplaintsPage() {
         {/* ── Page Title ── */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-slate-50">Grievance Registry</h1>
-            <p className="text-sm text-slate-300">Manage and track all registered complaints</p>
+            <h1 className="text-2xl font-semibold text-slate-900">Grievance Registry</h1>
+            <p className="text-sm text-slate-600">Manage and track all registered complaints</p>
           </div>
           <div className="flex items-center gap-3">
             <button
