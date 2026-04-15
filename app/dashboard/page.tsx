@@ -529,17 +529,80 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg)]">
-      <main className="p-6 space-y-6">
+    <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden">
+      {/* ─── Fibonacci Grid Background ─── */}
+      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px)", backgroundSize: "55px 55px" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.055) 1px, transparent 1px)", backgroundSize: "89px 89px" }} />
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(223,223,228,0.75) 0%, transparent 100%)" }} />
+      </div>
+
+      {/* ─── Dashboard Animations ─── */}
+      <style>{`
+        @keyframes dashSlideUp {
+          from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
+          to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        @keyframes shimmerLine {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(300%); }
+        }
+        @keyframes glowOrb {
+          0%, 100% { opacity: 0.08; transform: scale(1); }
+          50% { opacity: 0.14; transform: scale(1.05); }
+        }
+        @keyframes pulseRing {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(29,78,216,0.15); }
+          50% { box-shadow: 0 0 24px 4px rgba(29,78,216,0.08); }
+        }
+        .dash-in { animation: dashSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .dash-d1 { animation-delay: 0.05s; }
+        .dash-d2 { animation-delay: 0.12s; }
+        .dash-d3 { animation-delay: 0.2s; }
+        .dash-d4 { animation-delay: 0.28s; }
+        .dash-d5 { animation-delay: 0.36s; }
+        .dash-d6 { animation-delay: 0.44s; }
+        .dash-d7 { animation-delay: 0.52s; }
+        .dash-d8 { animation-delay: 0.6s; }
+        .dash-card {
+          position: relative;
+          overflow: hidden;
+          transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease;
+        }
+        .dash-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .dash-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(29,78,216,0.25), rgba(139,92,246,0.2), transparent);
+          animation: shimmerLine 4s ease-in-out infinite;
+        }
+        .glow-orb {
+          animation: glowOrb 4s ease-in-out infinite;
+        }
+      `}</style>
+
+      <main className="relative z-10 p-6 space-y-6 max-w-[1400px] mx-auto">
 
         {/* ═══ HEADER ═══ */}
-        <div className="flex items-center justify-between">
+        <div className="dash-in dash-d1 flex items-center justify-between">
           <div>
-            <h1 className="text-[22px] font-bold text-[var(--text)] tracking-tight">Command Center</h1>
-            <p className="text-[13px] text-[var(--text-muted)] mt-0.5">Real-time governance intelligence overview</p>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1D4ED8] to-[#7C3AED] flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+              </div>
+              <div>
+                <h1 className="text-[22px] font-bold text-[var(--text)] tracking-tight">Command Center</h1>
+                <p className="text-[13px] text-[var(--text-muted)]">Real-time governance intelligence overview</p>
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--text)] text-[var(--card)] text-sm font-medium hover:opacity-90 transition-all shadow-sm">
+            <button onClick={handleExport} className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--text)] text-[var(--card)] text-sm font-medium hover:opacity-90 transition-all shadow-md hover:shadow-lg">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
@@ -554,7 +617,7 @@ export default function DashboardPage() {
                     loadData();
                   } catch { toast.error("Failed to auto-escalate"); }
                 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-rose-200 hover:border-rose-400 text-rose-600 text-sm font-medium transition-all cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--card)] border border-rose-200 hover:border-rose-400 text-rose-600 text-sm font-medium transition-all cursor-pointer hover:shadow-md"
               >
                 ⚡ Auto-Escalate
               </button>
@@ -564,11 +627,13 @@ export default function DashboardPage() {
 
         {/* ═══ GOVERNANCE HEALTH SCORE ═══ */}
         {govHealth && (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-            <div className="flex items-start gap-6">
+          <div className="dash-in dash-d2 dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)" }}>
+            {/* Decorative glow orb */}
+            <div className="absolute -left-8 -top-8 w-40 h-40 rounded-full glow-orb" style={{ background: "radial-gradient(circle, rgba(29,78,216,0.12), transparent 70%)" }} />
+            <div className="relative flex items-start gap-6">
               {/* Score Circle */}
               <div className="flex flex-col items-center shrink-0">
-                <div className="relative w-24 h-24">
+                <div className="relative w-24 h-24" style={{ animation: "pulseRing 3s ease-in-out infinite" }}>
                   <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
                     <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" strokeWidth="8" />
                     <circle
@@ -585,7 +650,7 @@ export default function DashboardPage() {
                     <span className="text-[10px] text-[var(--text-muted)]">/ 100</span>
                   </div>
                 </div>
-                <span className="mt-2 px-3 py-1 rounded-lg text-xs font-bold" style={{
+                <span className="mt-2 px-3 py-1 rounded-full text-xs font-bold" style={{
                   background: govHealth.overall_score >= 80 ? "rgba(5,150,105,0.1)" : govHealth.overall_score >= 60 ? "rgba(217,119,6,0.1)" : "rgba(225,29,72,0.1)",
                   color: govHealth.overall_score >= 80 ? "#059669" : govHealth.overall_score >= 60 ? "#d97706" : "#e11d48",
                 }}>
@@ -598,12 +663,12 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between mb-2">
                   <div>
                     <h3 className="text-[15px] font-semibold text-[var(--text)] flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs">🏛</span>
+                      <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs shadow-md shadow-indigo-500/20">🏛</span>
                       Governance Health Score
                     </h3>
-                    <p className="text-[11px] text-[var(--text-muted)] mt-0.5">AI-powered department performance analysis</p>
+                    <p className="text-[11px] text-[var(--text-muted)] mt-0.5 ml-9">AI-powered department performance analysis</p>
                   </div>
-                  <span className="text-[10px] px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-600 font-semibold">
+                  <span className="text-[10px] px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold border border-emerald-500/15">
                     {govHealth.ai_provider || "AI"}
                   </span>
                 </div>
@@ -615,14 +680,15 @@ export default function DashboardPage() {
                   </p>
                 )}
 
-                {/* Department Cards — horizontal scroll */}
+                {/* Department Cards */}
                 <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "thin" }}>
                   {govHealth.departments?.map((dept: { name: string; score: number; grade: string; trend: string; bottleneck: string }) => (
-                    <div key={dept.name} className="shrink-0 w-40 p-3 rounded-xl bg-[var(--bg)] border border-[var(--border)] hover:-translate-y-0.5 transition-all">
+                    <div key={dept.name} className="shrink-0 w-40 p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-default">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[11px] font-semibold text-[var(--text)]">{dept.name}</span>
-                        <span className="text-[10px] font-bold" style={{
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md" style={{
                           color: dept.score >= 80 ? "#059669" : dept.score >= 60 ? "#d97706" : "#e11d48",
+                          background: dept.score >= 80 ? "rgba(5,150,105,0.08)" : dept.score >= 60 ? "rgba(217,119,6,0.08)" : "rgba(225,29,72,0.08)",
                         }}>
                           {dept.grade}
                         </span>
@@ -638,7 +704,7 @@ export default function DashboardPage() {
                       <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden mb-2">
                         <div className="h-full rounded-full transition-all duration-700" style={{
                           width: `${dept.score}%`,
-                          background: dept.score >= 80 ? "#059669" : dept.score >= 60 ? "#d97706" : "#e11d48",
+                          background: dept.score >= 80 ? "linear-gradient(90deg, #059669, #34d399)" : dept.score >= 60 ? "linear-gradient(90deg, #d97706, #fbbf24)" : "linear-gradient(90deg, #e11d48, #fb7185)",
                         }} />
                       </div>
                       <p className="text-[9px] text-[var(--text-muted)] leading-tight line-clamp-2">{dept.bottleneck}</p>
@@ -650,8 +716,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* ═══ STAT CARDS (4 cols) ═══ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* ═══ STAT CARDS — Golden Ratio 4-col ═══ */}
+        <div className="dash-in dash-d3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <StatCard
             title="Total Complaints"
             value={stats?.total_complaints ?? 0}
@@ -682,17 +748,22 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* ═══ ROW 2: Bar Chart + Category Donut ═══ */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-          {/* Department Bar Chart (3/5 width) */}
-          <div className="lg:col-span-3 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+        {/* ═══ ROW 2: Bar Chart + Category Donut — Golden Ratio 1.618:1 ═══ */}
+        <div className="dash-in dash-d4" style={{ display: "grid", gridTemplateColumns: "1.618fr 1fr", gap: 21 }}>
+          {/* Department Bar Chart */}
+          <div className="dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "var(--shadow-card)" }}>
             <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="text-[15px] font-semibold text-[var(--text)]">Complaints by Department</h3>
-                <p className="text-[12px] text-[var(--text-muted)] mt-0.5">Volume distribution across departments</p>
+              <div className="flex items-center gap-2.5">
+                <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#1D4ED8] to-[#3B82F6] flex items-center justify-center shadow-md shadow-indigo-500/15">
+                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                </span>
+                <div>
+                  <h3 className="text-[15px] font-semibold text-[var(--text)]">Complaints by Department</h3>
+                  <p className="text-[11px] text-[var(--text-muted)]">Volume distribution across departments</p>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] bg-[var(--bg)] px-2.5 py-1 rounded-lg">
-                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: PALETTE.indigo }} />
+              <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] bg-[var(--bg)] px-2.5 py-1 rounded-full border border-[var(--border)]">
+                <span className="w-2 h-2 rounded-full" style={{ background: PALETTE.indigo }} />
                 Complaints
               </div>
             </div>
@@ -715,10 +786,17 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Category Donut (2/5 width) */}
-          <div className="lg:col-span-2 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-            <h3 className="text-[15px] font-semibold text-[var(--text)]">Category Breakdown</h3>
-            <p className="text-[12px] text-[var(--text-muted)] mt-0.5">Complaints by category type</p>
+          {/* Category Donut */}
+          <div className="dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center gap-2.5 mb-1">
+              <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md shadow-violet-500/15">
+                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+              </span>
+              <div>
+                <h3 className="text-[15px] font-semibold text-[var(--text)]">Category Breakdown</h3>
+                <p className="text-[11px] text-[var(--text-muted)]">Complaints by category type</p>
+              </div>
+            </div>
             <div className="h-56 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -739,28 +817,32 @@ export default function DashboardPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            {/* Mini legend below */}
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-2">
               {categoryData.slice(0, 6).map((c) => (
                 <div key={c.name} className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full" style={{ background: c.fill }} />
-                  <span className="text-[10px] text-[var(--text-muted)]">{c.name}</span>
+                  <span className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ background: c.fill }} />
+                  <span className="text-[10px] text-[var(--text-muted)] font-medium">{c.name}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* ═══ ROW 3: Trend + Resolution Gauge ═══ */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-          {/* Area Trend Chart (3/5) */}
-          <div className="lg:col-span-3 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+        {/* ═══ ROW 3: Trend + Resolution Gauge — Golden Ratio ═══ */}
+        <div className="dash-in dash-d5" style={{ display: "grid", gridTemplateColumns: "1.618fr 1fr", gap: 21 }}>
+          {/* Area Trend Chart */}
+          <div className="dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "var(--shadow-card)" }}>
             <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="text-[15px] font-semibold text-[var(--text)]">Complaint Trend</h3>
-                <p className="text-[12px] text-[var(--text-muted)] mt-0.5">14-day submission volume</p>
+              <div className="flex items-center gap-2.5">
+                <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-md shadow-teal-500/15">
+                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
+                </span>
+                <div>
+                  <h3 className="text-[15px] font-semibold text-[var(--text)]">Complaint Trend</h3>
+                  <p className="text-[11px] text-[var(--text-muted)]">14-day submission volume</p>
+                </div>
               </div>
-              <span className="text-[11px] text-[var(--text-muted)] bg-[var(--bg)] px-2.5 py-1 rounded-lg">Last 14 days</span>
+              <span className="text-[10px] text-[var(--text-muted)] bg-[var(--bg)] px-3 py-1 rounded-full border border-[var(--border)] font-medium">Last 14 days</span>
             </div>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -792,10 +874,17 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Resolution Radial Gauge (2/5) */}
-          <div className="lg:col-span-2 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-            <h3 className="text-[15px] font-semibold text-[var(--text)]">Department Efficiency</h3>
-            <p className="text-[12px] text-[var(--text-muted)] mt-0.5">Resolution rate by department</p>
+          {/* Resolution Radial Gauge */}
+          <div className="dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center gap-2.5 mb-1">
+              <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shadow-amber-500/15">
+                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              </span>
+              <div>
+                <h3 className="text-[15px] font-semibold text-[var(--text)]">Department Efficiency</h3>
+                <p className="text-[11px] text-[var(--text-muted)]">Resolution rate by department</p>
+              </div>
+            </div>
             <div className="h-64 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <RadialBarChart
@@ -820,7 +909,6 @@ export default function DashboardPage() {
                 </RadialBarChart>
               </ResponsiveContainer>
             </div>
-            {/* Overall Score */}
             <div className="flex items-center justify-center gap-3 mt-1 pt-3 border-t border-[var(--border)]">
               <span className="text-[11px] text-[var(--text-muted)]">Overall Resolution Rate</span>
               <span className="text-lg font-bold" style={{ color: totalResolved >= 50 ? PALETTE.teal : PALETTE.rose }}>{totalResolved}%</span>
@@ -837,19 +925,19 @@ export default function DashboardPage() {
           const maxCount = Math.max(...Object.values(districtCounts), 1);
 
           return (
-            <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+            <div className="dash-in dash-d6 dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "var(--shadow-card)" }}>
               <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-[15px] font-semibold text-[var(--text)] flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center">
-                      <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </span>
-                    District Urgency Map
-                  </h3>
-                  <p className="text-[12px] text-[var(--text-muted)] mt-0.5 ml-8">Complaint intensity across NCR districts</p>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center shadow-md shadow-rose-500/15">
+                    <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3 className="text-[15px] font-semibold text-[var(--text)]">District Urgency Map</h3>
+                    <p className="text-[11px] text-[var(--text-muted)]">Complaint intensity across NCR districts</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)]">
                   <span className="font-medium">Low</span>
@@ -875,7 +963,6 @@ export default function DashboardPage() {
                         background: `linear-gradient(145deg, var(--card), hsla(${hue}, 50%, 96%, 0.9))`,
                       }}
                     >
-                      {/* Decorative glow */}
                       <div
                         className="absolute -right-3 -top-3 w-16 h-16 rounded-full opacity-[0.1] group-hover:opacity-[0.18] transition-opacity"
                         style={{ background: `hsl(${hue}, 60%, 50%)` }}
@@ -904,10 +991,15 @@ export default function DashboardPage() {
 
         {/* ═══ DEPARTMENT PERFORMANCE TABLE ═══ */}
         {performance.length > 0 && (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-            <div className="p-6 pb-0">
-              <h3 className="text-[15px] font-semibold text-[var(--text)]">Department Performance</h3>
-              <p className="text-[12px] text-[var(--text-muted)] mt-0.5">Resolution metrics and efficiency scores</p>
+          <div className="dash-in dash-d7 dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="p-6 pb-0 flex items-center gap-2.5">
+              <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-600 flex items-center justify-center shadow-md shadow-sky-500/15">
+                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+              </span>
+              <div>
+                <h3 className="text-[15px] font-semibold text-[var(--text)]">Department Performance</h3>
+                <p className="text-[11px] text-[var(--text-muted)]">Resolution metrics and efficiency scores</p>
+              </div>
             </div>
             <div className="overflow-x-auto mt-4">
               <table className="w-full">
@@ -951,7 +1043,7 @@ export default function DashboardPage() {
                             <div className="flex-1 h-2 bg-[var(--border)] rounded-full overflow-hidden min-w-[80px]">
                               <div
                                 className="h-full rounded-full transition-all duration-700 ease-out"
-                                style={{ width: `${score}%`, background: barColor }}
+                                style={{ width: `${score}%`, background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)` }}
                               />
                             </div>
                             <span className="text-[12px] font-semibold tabular-nums w-10 text-right" style={{ color: barColor }}>
@@ -969,13 +1061,18 @@ export default function DashboardPage() {
         )}
 
         {/* ═══ RECENT COMPLAINTS TABLE ═══ */}
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+        <div className="dash-in dash-d8 dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "var(--shadow-card)" }}>
           <div className="flex items-center justify-between mb-5">
-            <div>
-              <h3 className="text-[15px] font-semibold text-[var(--text)]">Recent Complaints</h3>
-              <p className="text-[12px] text-[var(--text-muted)] mt-0.5">Latest citizen complaints across all districts</p>
+            <div className="flex items-center gap-2.5">
+              <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-md shadow-indigo-500/15">
+                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              </span>
+              <div>
+                <h3 className="text-[15px] font-semibold text-[var(--text)]">Recent Complaints</h3>
+                <p className="text-[11px] text-[var(--text-muted)]">Latest citizen complaints across all districts</p>
+              </div>
             </div>
-            <span className="text-[11px] text-[var(--text-muted)] bg-[var(--bg)] px-3 py-1.5 rounded-lg border border-[var(--border)]">
+            <span className="text-[10px] text-[var(--text-muted)] bg-[var(--bg)] px-3 py-1.5 rounded-full border border-[var(--border)] font-medium">
               Showing {complaints.length} of {stats?.total_complaints ?? 0}
             </span>
           </div>
