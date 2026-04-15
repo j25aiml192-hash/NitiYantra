@@ -228,7 +228,7 @@ export default function SocialPage() {
               <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[var(--bg)]" style={{ animation: "crPulse 2s ease-in-out infinite" }} />
             </div>
             <div>
-              <h1 className="text-[24px] font-bold text-[var(--text)] tracking-tight">Civic Radar</h1>
+              <h1 className="text-[24px] font-bold text-[var(--text)] tracking-tight">Crowd Monitor</h1>
               <p className="text-[13px] text-[var(--text-muted)] mt-0.5">Scan social media & news for civic complaints in real time</p>
             </div>
           </div>
@@ -237,13 +237,13 @@ export default function SocialPage() {
         {/* ═══ SOURCE STATS RIBBON ═══ */}
         <div className="cr-in cr-d2 flex items-center gap-4 flex-wrap">
           {[
-            { icon: "🔴", label: "Reddit", desc: "Subreddit scanning", color: "#FF4500" },
-            { icon: "🐦", label: "Twitter / X", desc: "Tweet analysis", color: "#1DA1F2" },
-            { icon: "📰", label: "News", desc: "Article extraction", color: "#059669" },
-            { icon: "💬", label: "Forums", desc: "Community posts", color: "#7C3AED" },
+            { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#FF4500]" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 13.38c.15.36.23.75.23 1.15 0 2.34-2.73 4.24-6.1 4.24s-6.1-1.9-6.1-4.24c0-.4.08-.79.23-1.15a1.55 1.55 0 0 1-.63-1.25c0-.86.7-1.56 1.56-1.56.42 0 .8.16 1.08.44 1.07-.74 2.5-1.2 4.06-1.26l.82-3.88a.31.31 0 0 1 .37-.24l2.73.57a1.1 1.1 0 0 1 2.1.35c0 .6-.49 1.1-1.1 1.1-.59 0-1.07-.47-1.1-1.05l-2.43-.51-.73 3.47c1.52.07 2.9.53 3.95 1.25.27-.27.65-.44 1.08-.44.86 0 1.56.7 1.56 1.56 0 .5-.24.95-.63 1.25zM8.62 12.53c-.6 0-1.09.49-1.09 1.09 0 .6.49 1.09 1.09 1.09.6 0 1.09-.49 1.09-1.09 0-.6-.49-1.09-1.09-1.09zm6.76 0c-.6 0-1.09.49-1.09 1.09 0 .6.49 1.09 1.09 1.09.6 0 1.09-.49 1.09-1.09 0-.6-.49-1.09-1.09-1.09zm-5.97 3.99a.32.32 0 0 1 .45 0c.63.63 1.54.93 2.64.93h.06c1.1 0 2.01-.3 2.64-.93a.32.32 0 0 1 .45.45c-.75.75-1.82 1.12-3.09 1.12h-.06c-1.27 0-2.34-.37-3.09-1.12a.32.32 0 0 1 0-.45z"/></svg>, label: "Reddit", desc: "Subreddit scanning", color: "#FF4500" },
+            { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#1DA1F2]" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>, label: "Twitter / X", desc: "Tweet analysis", color: "#1DA1F2" },
+            { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#059669]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h15ZM2 14h15Z"/><path d="M6 7h6"/><path d="M6 10h6"/><path d="M16 7h.01"/><path d="M16 10h.01"/></svg>, label: "News", desc: "Article extraction", color: "#059669" },
+            { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#7C3AED]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>, label: "Forums", desc: "Community posts", color: "#7C3AED" },
           ].map((s) => (
             <div key={s.label} className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 cursor-default">
-              <span className="text-sm">{s.icon}</span>
+              <span className="flex items-center justify-center">{s.icon}</span>
               <div>
                 <p className="text-[12px] font-semibold text-[var(--text)]">{s.label}</p>
                 <p className="text-[9px] text-[var(--text-muted)]">{s.desc}</p>
@@ -490,13 +490,13 @@ export default function SocialPage() {
               </div>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
-                  { icon: "🐦", label: "Twitter / X", color: "#1DA1F2" },
-                  { icon: "📰", label: "News Articles", color: "#059669" },
-                  { icon: "💬", label: "Forum Posts", color: "#7C3AED" },
-                  { icon: "📝", label: "Blog Posts", color: "#D97706" },
+                  { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#1DA1F2]" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>, label: "Twitter / X", color: "#1DA1F2" },
+                  { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#059669]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h15ZM2 14h15Z"/><path d="M6 7h6"/><path d="M6 10h6"/><path d="M16 7h.01"/><path d="M16 10h.01"/></svg>, label: "News Articles", color: "#059669" },
+                  { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#7C3AED]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>, label: "Forum Posts", color: "#7C3AED" },
+                  { icon: <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#D97706]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>, label: "Blog Posts", color: "#D97706" },
                 ].map((s) => (
                   <div key={s.label} className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl bg-[var(--bg)] border border-[var(--border)] hover:border-indigo-200 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-                    <span className="text-sm">{s.icon}</span>
+                    <span className="flex items-center justify-center">{s.icon}</span>
                     <span className="text-[12px] font-medium text-[var(--text-secondary)]">{s.label}</span>
                   </div>
                 ))}
@@ -507,7 +507,7 @@ export default function SocialPage() {
             <div className="cr-in cr-d4 bg-gradient-to-br from-indigo-50 to-violet-50 rounded-2xl border border-indigo-100 p-6">
               <h4 className="text-[13px] font-bold text-indigo-900 mb-3 flex items-center gap-2">
                 <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                How Civic Radar Works
+                How Crowd Monitor Works
               </h4>
               <div className="space-y-2.5">
                 {[
