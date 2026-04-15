@@ -489,9 +489,9 @@ export default function SimulatorPage() {
                   ]}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                     <XAxis dataKey="cycle" tick={{ fontSize: 11, fill: "var(--text-muted)" }} />
-                    <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}K Cr`} />
+                    <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} tickFormatter={(v) => `₹${(Number(v) / 1000).toFixed(0)}K Cr`} />
                     <Tooltip
-                      formatter={(value: number) => [`₹${value.toLocaleString()} Cr`, ""]}
+                      formatter={(value) => [`₹${Number(value).toLocaleString()} Cr`, ""]}
                       contentStyle={{
                         background: "var(--card)", border: "1px solid var(--border)",
                         borderRadius: 10, fontSize: 12,
