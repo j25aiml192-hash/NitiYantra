@@ -259,7 +259,6 @@ function RoutingTimeline({
 /* ── Main page ── */
 export default function SubmitComplaintPage() {
   const router = useRouter();
-  void router;
   const [text, setText] = useState("");
   const [district, setDistrict] = useState(DISTRICTS[0]);
   const [source, setSource] = useState(SOURCES[0]);
@@ -298,12 +297,16 @@ export default function SubmitComplaintPage() {
 
       setResult({ category, confidence, department, complaintId: complaintRes?.id ?? null });
       toast.success("Complaint submitted and classified!");
+      // Auto-redirect to complaints list after timeline animation finishes
+      setTimeout(() => {
+        router.push("/complaints");
+      }, 5000);
     } catch {
       toast.error("Failed to submit complaint");
     } finally {
       setLoading(false);
     }
-  }, [text, district, source]);
+  }, [text, district, source, router]);
 
   const handleReset = () => {
     setText("");
