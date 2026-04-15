@@ -51,7 +51,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* Global Pastel Background + Grid */}
-        <div style={{ position: "fixed", inset: 0, zIndex: -1, backgroundColor: "#F5EBED" }}>
+        <div style={{ position: "fixed", inset: 0, zIndex: -1, backgroundColor: "#fff" }}>
+          <div style={{ position: "absolute", inset: 0, backgroundColor: "hsla(225,100%,15%, 0.22)" }} />
           <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px)", backgroundSize: "55px 55px" }} />
           <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)", backgroundSize: "89px 89px" }} />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 20%, rgba(255,255,255,0.7) 0%, transparent 100%)" }} />
