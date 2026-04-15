@@ -114,14 +114,28 @@ export default function LandingPage() {
 
   return (
     <div style={{ background: "var(--bg)", minHeight: "100vh", fontFamily: f, position: "relative" }}>
-      {/* Grid background pattern */}
+      {/* Golden Ratio Grid — Major lines (89px) + Minor lines (55px) */}
       <div style={{
         position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-        backgroundImage: "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)",
-        backgroundSize: "48px 48px",
-        maskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%)",
-      }} />
+      }}>
+        {/* Minor grid — 55px Fibonacci spacing */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px)",
+          backgroundSize: "55px 55px",
+        }} />
+        {/* Major grid — 89px Fibonacci spacing */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.055) 1px, transparent 1px)",
+          backgroundSize: "89px 89px",
+        }} />
+        {/* Soft center vignette to keep content readable */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "radial-gradient(ellipse 50% 40% at 50% 50%, rgba(223,223,228,0.7) 0%, transparent 100%)",
+        }} />
+      </div>
       <style>{`
         @keyframes gradientShift {
           0%, 100% { background-position: 0% 50%; }

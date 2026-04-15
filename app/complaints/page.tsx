@@ -184,7 +184,7 @@ export default function ComplaintsPage() {
             </button>
             <button
               onClick={() => setShowGrievanceModal(true)}
-              className="px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-2"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
               New Complaint
@@ -203,12 +203,12 @@ export default function ComplaintsPage() {
               onClick={() => setStatusFilter(s)}
               className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 border ${
                 statusFilter === s
-                  ? "bg-indigo-500/10 text-indigo-500 border-indigo-500/20 shadow-sm"
+                  ? "bg-blue-600/10 text-blue-600 border-blue-600/20 shadow-sm"
                   : "bg-[var(--card)] text-[var(--text-muted)] border-[var(--border)] hover:text-[var(--text)] hover:bg-[var(--bg)]"
               }`}
             >
               {s === "all" ? "All" : s.replace("_", " ")}
-              <span className={`px-1.5 py-0.5 rounded text-[10px] ${statusFilter === s ? "bg-indigo-500/15 text-indigo-500" : "bg-[var(--border)] text-[var(--text-muted)]"}`}>
+              <span className={`px-1.5 py-0.5 rounded text-[10px] ${statusFilter === s ? "bg-blue-600/15 text-blue-600" : "bg-[var(--border)] text-[var(--text-muted)]"}`}>
                 {statusCounts[s as keyof typeof statusCounts] ?? 0}
               </span>
             </button>
@@ -227,7 +227,7 @@ export default function ComplaintsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search complaints or ID..."
-              className="w-full pl-10 pr-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600 transition-all"
             />
           </div>
 
@@ -235,7 +235,7 @@ export default function ComplaintsPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-indigo-500/30 appearance-none cursor-pointer min-w-[140px]"
+            className="px-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer min-w-[140px]"
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>{c === "all" ? "All Categories" : c}</option>
@@ -246,7 +246,7 @@ export default function ComplaintsPage() {
           <select
             value={districtFilter}
             onChange={(e) => setDistrictFilter(e.target.value)}
-            className="px-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-indigo-500/30 appearance-none cursor-pointer min-w-[140px]"
+            className="px-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer min-w-[140px]"
           >
             {DISTRICTS.map((d) => (
               <option key={d} value={d}>{d === "all" ? "All Districts" : d}</option>
@@ -364,7 +364,7 @@ export default function ComplaintsPage() {
                           onClick={() => setCurrentPage(p)}
                           className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
                             p === safePage
-                              ? "bg-indigo-500/10 text-indigo-500 border border-indigo-500/20"
+                              ? "bg-blue-600/10 text-blue-600 border border-blue-600/20"
                               : "text-[var(--text-muted)] hover:bg-[var(--bg)]"
                           }`}
                         >
@@ -397,7 +397,7 @@ export default function ComplaintsPage() {
             {/* Header */}
             <div className="sticky top-0 bg-[var(--card)] backdrop-blur-xl border-b border-[var(--border)] px-6 py-4 flex items-center justify-between z-10">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-indigo-500/20">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-blue-600/20">
                   #{selected.id}
                 </div>
                 <div>
@@ -439,7 +439,7 @@ export default function ComplaintsPage() {
                 <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-4">
                   <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1">District</p>
                   <p className="text-sm font-medium text-[var(--text)] flex items-center gap-2">
-                    <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -512,7 +512,7 @@ export default function ComplaintsPage() {
                         <select
                           value={assignDeptId || ""}
                           onChange={(e) => handleDeptChange(Number(e.target.value))}
-                          className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-indigo-500/30 appearance-none cursor-pointer"
+                          className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer"
                         >
                           <option value="">Select department...</option>
                           {Object.entries(DEPT_NAMES).map(([id, name]) => (
@@ -526,7 +526,7 @@ export default function ComplaintsPage() {
                           value={assignStaffId || ""}
                           onChange={(e) => setAssignStaffId(Number(e.target.value) || null)}
                           disabled={!assignDeptId || loadingStaff}
-                          className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-indigo-500/30 appearance-none cursor-pointer disabled:opacity-50"
+                          className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer disabled:opacity-50"
                         >
                           <option value="">{loadingStaff ? "Loading..." : staffList.length ? "Select staff..." : "No staff"}</option>
                           {staffList.map((s) => (
@@ -540,12 +540,12 @@ export default function ComplaintsPage() {
                       onChange={(e) => setAssignNotes(e.target.value)}
                       placeholder="Optional notes..."
                       rows={2}
-                      className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all resize-none mb-3"
+                      className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 transition-all resize-none mb-3"
                     />
                     <button
                       onClick={handleAssign}
                       disabled={!assignDeptId || assigning}
-                      className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {assigning ? (
                         <><svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" /></svg>Assigning...</>
@@ -621,7 +621,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
     return () => { clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [result.confidence]);
 
-  const confColor = result.confidence >= 85 ? "bg-emerald-500" : result.confidence >= 70 ? "bg-amber-500" : "bg-red-500";
+  const confColor = result.confidence >= 85 ? "bg-blue-500" : result.confidence >= 70 ? "bg-blue-400" : "bg-blue-300";
 
   const steps = [
     { id: 1, icon: "✅", title: "Complaint Received", sub: "Your complaint has been logged in the system" },
@@ -632,12 +632,12 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
   ];
 
   return (
-    <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-8 shadow-xl">
+    <div className="bg-[var(--card)] rounded-2xl border border-blue-500/20 p-8 shadow-xl" style={{ boxShadow: '0 0 0 1px rgba(37,99,235,0.08), 0 8px 40px rgba(37,99,235,0.08)' }}>
       <style>{`
         @keyframes slideIn { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
         @keyframes popIn { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
         @keyframes bounce-check { 0% { transform:scale(0.5); } 60% { transform:scale(1.15); } 100% { transform:scale(1); } }
-        @keyframes glow-pulse { 0%,100% { box-shadow:0 0 8px rgba(99,102,241,0.3); } 50% { box-shadow:0 0 20px rgba(99,102,241,0.6); } }
+        @keyframes glow-pulse { 0%,100% { box-shadow:0 0 8px rgba(37,99,235,0.3); } 50% { box-shadow:0 0 24px rgba(37,99,235,0.5); } }
         @keyframes dash-flow { to { stroke-dashoffset: 0; } }
         .step-slide { animation: slideIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards; }
         .step-pop { animation: popIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards; }
@@ -645,7 +645,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
         .glow { animation: glow-pulse 1.5s ease-in-out infinite; }
       `}</style>
       <div className="relative">
-        <div className="absolute left-[15px] top-4 bottom-4 w-[2px]" style={{ background: step >= 5 ? "linear-gradient(to bottom, #2563EB, #22c55e)" : "linear-gradient(to bottom, #2563EB, #1e2130)" }} />
+        <div className="absolute left-[15px] top-4 bottom-4 w-[2px]" style={{ background: step >= 5 ? "linear-gradient(to bottom, #2563EB, #3B82F6)" : "linear-gradient(to bottom, #2563EB, var(--border))" }} />
         <div className="space-y-0">
           {steps.map((s) => {
             const isActive = step === s.id;
@@ -658,33 +658,33 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
             );
             return (
               <div key={s.id} className={`flex items-start gap-4 py-4 ${s.id === 3 ? "step-pop" : "step-slide"}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 z-10 transition-all ${isCompleted ? "bg-indigo-600 text-white" : isActive && s.id === 5 ? "bg-emerald-500 text-white step-bounce" : isActive ? "bg-indigo-600 text-white glow" : "border-2 border-[var(--border)] text-[var(--text-secondary)]"}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 z-10 transition-all ${isCompleted ? "bg-blue-600 text-white" : isActive && s.id === 5 ? "bg-blue-600 text-white step-bounce" : isActive ? "bg-blue-600 text-white glow" : "border-2 border-[var(--border)] text-[var(--text-secondary)]"}`}>
                   {isCompleted ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg> : <span className="text-xs">{s.icon}</span>}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-semibold ${isActive || isCompleted ? "text-white" : "text-[var(--text-muted)]"}`}>{s.title}</p>
-                  <p className={`text-xs mt-0.5 ${isCompleted ? "text-[var(--text-muted)]" : "text-[var(--text-muted)]"}`}>{s.sub}</p>
+                  <p className={`text-sm font-semibold ${isActive || isCompleted ? "text-blue-600" : "text-[var(--text-muted)]"}`}>{s.title}</p>
+                  <p className={`text-xs mt-0.5 text-[var(--text-muted)]`}>{s.sub}</p>
                   {s.hasProgress && isActive && (
                     <div className="mt-3 h-1.5 bg-[var(--border)] rounded-full overflow-hidden w-48">
-                      <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${progressWidth}%`, transition: "width 0.8s cubic-bezier(0.22,1,0.36,1)" }} />
+                      <div className="h-full rounded-full" style={{ width: `${progressWidth}%`, transition: "width 0.8s cubic-bezier(0.22,1,0.36,1)", background: "linear-gradient(90deg, #2563EB, #3B82F6)" }} />
                     </div>
                   )}
                   {s.hasConfidence && (isActive || isCompleted) && (
                     <div className="mt-3 space-y-2">
-                      <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold text-white ${FORM_CATEGORY_COLORS[result.category] || "bg-slate-500"}`}>{result.category}</span>
+                      <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold text-white bg-blue-600">{result.category}</span>
                       <div className="w-48"><div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden"><div className={`h-full rounded-full ${confColor}`} style={{ width: `${confidenceWidth}%`, transition: "width 0.8s cubic-bezier(0.22,1,0.36,1)" }} /></div></div>
                     </div>
                   )}
                   {s.hasDept && (isActive || isCompleted) && (
                     <div className="mt-3 flex items-center gap-3">
                       <svg width="48" height="2" className="overflow-visible"><line x1="0" y1="1" x2="48" y2="1" stroke="#2563EB" strokeWidth="2" strokeDasharray="4 3" strokeDashoffset="48" style={{ animation: "dash-flow 0.6s ease forwards" }} /></svg>
-                      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">{result.department}</span>
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600/15 border border-blue-500/30 text-blue-600 text-xs font-bold uppercase tracking-wider">{result.department}</span>
                     </div>
                   )}
                   {s.hasActions && isActive && (
                     <div className="mt-5 flex flex-wrap gap-3">
-                      <button onClick={onReset} className="px-4 py-2.5 rounded-xl bg-[var(--card)] text-[var(--text)] text-xs font-semibold hover:bg-[var(--border)] transition-all">Submit Another</button>
-                      <button onClick={onViewAll} className="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-500 transition-all">View All Complaints →</button>
+                      <button onClick={onReset} className="px-5 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] text-xs font-semibold hover:bg-[var(--border)] transition-all">Submit Another</button>
+                      <button onClick={onViewAll} className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all">View All Complaints →</button>
                     </div>
                   )}
                 </div>
@@ -763,7 +763,7 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         {/* Glass card */}
         <div className="bg-[var(--card)] backdrop-blur-xl border border-[var(--border)] rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
           <div className="mb-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 text-xs font-medium mb-4">New Grievance</div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 border border-blue-600/20 text-blue-600 text-xs font-medium mb-4">New Grievance</div>
             <h2 className="text-2xl font-bold text-[var(--text)] mb-1">File Grievance</h2>
             <p className="text-sm text-[var(--text-muted)]">Describe the issue clearly. Our AI will automatically classify it and route it to the correct department.</p>
           </div>
@@ -776,7 +776,7 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
                   rows={4}
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all resize-none"
+                  className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all resize-none"
                   placeholder="Describe the issue in detail..."
                   required
                 />
@@ -784,13 +784,13 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">District</label>
-                  <select value={district} onChange={(e) => setDistrict(e.target.value)} className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all appearance-none cursor-pointer">
+                  <select value={district} onChange={(e) => setDistrict(e.target.value)} className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-all appearance-none cursor-pointer">
                     {GRIEVANCE_DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Source</label>
-                  <select value={source} onChange={(e) => setSource(e.target.value)} className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all appearance-none cursor-pointer">
+                  <select value={source} onChange={(e) => setSource(e.target.value)} className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-all appearance-none cursor-pointer">
                     {GRIEVANCE_SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
@@ -798,7 +798,7 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <><svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" /></svg>Processing via AI...</>
