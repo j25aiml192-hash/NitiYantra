@@ -621,12 +621,12 @@ export default function DashboardPage() {
 
         {/* ═══ GOVERNANCE HEALTH SCORE ═══ */}
         {govHealth && (
-          <div className="dash-in dash-d2 grid grid-cols-1 lg:grid-cols-[200px_1fr] xl:grid-cols-[240px_1fr] gap-6 mt-6 relative z-10">
+          <div className="dash-in dash-d2 grid grid-cols-1 lg:grid-cols-[180px_1fr] xl:grid-cols-[220px_1fr] gap-5 mt-6 relative z-10">
             {/* LEFT BOX: Score Circle */}
-            <div className="bg-slate-50/80 backdrop-blur-xl border border-slate-200 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm relative overflow-hidden transition-all hover:shadow-md h-full">
+            <div className="bg-slate-50/80 backdrop-blur-xl border border-slate-200 rounded-3xl p-5 flex flex-col items-center justify-center shadow-sm relative overflow-hidden transition-all hover:shadow-md h-full">
               {/* Decorative shimmer */}
               <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-indigo-400 to-transparent opacity-50" />
-              <div className="relative w-32 h-32 flex items-center justify-center mb-6">
+              <div className="relative w-28 h-28 flex items-center justify-center mb-5">
                 <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
                   <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" strokeWidth="8" />
                   <circle
@@ -640,11 +640,11 @@ export default function DashboardPage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-4xl font-extrabold text-slate-800 tracking-tighter">{govHealth.overall_score}</span>
-                  <span className="text-xs font-semibold text-slate-400">/ 100</span>
+                  <span className="text-3xl font-extrabold text-slate-800 tracking-tighter">{govHealth.overall_score}</span>
+                  <span className="text-[10px] font-semibold text-slate-400">/ 100</span>
                 </div>
               </div>
-              <span className="px-5 py-2 rounded-xl text-sm font-bold shadow-sm" style={{
+              <span className="px-4 py-1.5 rounded-xl text-xs font-bold shadow-sm" style={{
                 background: govHealth.overall_score >= 80 ? "#ecfdf5" : govHealth.overall_score >= 60 ? "#fffbeb" : "#fff1f2",
                 color: govHealth.overall_score >= 80 ? "#059669" : govHealth.overall_score >= 60 ? "#d97706" : "#e11d48",
                 border: `1px solid ${govHealth.overall_score >= 80 ? "#34d399" : govHealth.overall_score >= 60 ? "#fcd34d" : "#fda4af"}`
@@ -662,8 +662,8 @@ export default function DashboardPage() {
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                   </div>
                   <div>
-                    <h3 className="text-[17px] font-bold text-slate-900 tracking-tight">Governance Health Score</h3>
-                    <p className="text-[12px] text-slate-500 font-medium tracking-wide">AI-powered department performance analysis</p>
+                    <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">Governance Health Score</h3>
+                    <p className="text-[11px] text-slate-500 font-medium tracking-wide">AI-powered department performance analysis</p>
                   </div>
                 </div>
                 <span className="text-xs px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-600 font-bold tracking-widest uppercase border border-emerald-200 shadow-sm">
@@ -673,23 +673,23 @@ export default function DashboardPage() {
 
               {/* AI Insight */}
               {govHealth.ai_insight && (
-                <div className="text-[13px] text-slate-600 font-medium leading-relaxed mb-6 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm relative pr-6">
-                  <span className="absolute top-4 left-4 text-amber-500 text-lg leading-none">💡</span>
+                <div className="text-[12px] text-slate-600 font-medium leading-relaxed mb-4 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm relative pr-6">
+                  <span className="absolute top-3.5 left-4 text-amber-500 text-lg leading-none">💡</span>
                   <p className="pl-8">{govHealth.ai_insight}</p>
                 </div>
               )}
 
               {/* Department Cards */}
-              <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar flex-1 items-end">
+              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3 flex-1 items-end">
                 {govHealth.departments?.map((dept: { name: string; score: number; grade: string; trend: string; bottleneck: string }) => {
                   const isRed = dept.score < 60;
                   const isAmber = dept.score >= 60 && dept.score < 80;
                   const bdColor = isRed ? "border-rose-200" : isAmber ? "border-amber-200" : "border-emerald-200";
                   const bgColor = "bg-white";
                   return (
-                    <div key={dept.name} className={`shrink-0 w-[200px] p-4 rounded-2xl ${bgColor} border ${bdColor} shadow-sm group hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative overflow-hidden`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[13px] font-bold text-slate-800">{dept.name}</span>
+                    <div key={dept.name} className={`w-full p-3 rounded-2xl ${bgColor} border ${bdColor} shadow-sm group hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative overflow-hidden`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[11px] font-bold text-slate-800">{dept.name}</span>
                         <span className="text-[11px] font-bold w-6 h-6 flex items-center justify-center rounded-full" style={{
                           color: isRed ? "#e11d48" : isAmber ? "#d97706" : "#059669",
                           background: isRed ? "#ffe4e6" : isAmber ? "#fef3c7" : "#d1fae5"
@@ -697,21 +697,21 @@ export default function DashboardPage() {
                           {dept.grade}
                         </span>
                       </div>
-                      <div className="flex items-baseline gap-2 mb-3">
-                        <span className="text-2xl font-black tracking-tighter" style={{
+                      <div className="flex items-baseline gap-2 mb-2">
+                        <span className="text-xl font-black tracking-tighter" style={{
                           color: isRed ? "#f43f5e" : isAmber ? "#f59e0b" : "#10b981",
                         }}>{dept.score}</span>
                         <span className="text-xs">
                           {dept.trend === "improving" ? "📈" : dept.trend === "declining" ? "📉" : "➡️"}
                         </span>
                       </div>
-                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden mb-3">
+                      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden mb-2">
                         <div className="h-full rounded-full transition-all duration-700" style={{
                           width: `${dept.score}%`,
                           background: isRed ? "linear-gradient(90deg, #f43f5e, #fb7185)" : isAmber ? "linear-gradient(90deg, #f59e0b, #fbbf24)" : "linear-gradient(90deg, #10b981, #34d399)",
                         }} />
                       </div>
-                      <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 truncate">{dept.bottleneck || "Monitoring"}</p>
+                      <p className="text-[9px] uppercase font-bold tracking-widest text-slate-400 truncate">{dept.bottleneck || "Monitoring"}</p>
                     </div>
                   );
                 })}
