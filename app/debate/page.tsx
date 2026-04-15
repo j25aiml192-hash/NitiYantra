@@ -431,7 +431,7 @@ export default function DebatePage() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] animate-pulse" />
         <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `radial-gradient(#ffffff 0.5px, transparent 0.5px)`, backgroundSize: '40px 40px' }} />
+        <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `radial-gradient(#ffffff 0.8px, transparent 0.8px)`, backgroundSize: '32px 32px' }} />
       </div>
 
       <style>{`
