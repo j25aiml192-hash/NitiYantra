@@ -130,6 +130,8 @@ export default function DebatePage() {
   const [ttsSection, setTtsSection] = useState<TTSSection>(null);
   const [ttsPaused, setTtsPaused] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentSpeaker, setCurrentSpeaker] = useState("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ttsActiveRef = useRef(false);
 
@@ -177,6 +179,8 @@ export default function DebatePage() {
     if (!text) { onDone(); return; }
 
     setTtsSection(section);
+    setIsPlaying(true);
+    setCurrentSpeaker(SECTION_LABELS[section] || "Speaking...");
     if (section === "lokniti" || section === "lokmitra") setIsSpeaking(section);
 
     const speaker = SARVAM_SPEAKERS[section] || "arvind";
@@ -219,6 +223,7 @@ export default function DebatePage() {
   const startAutoTTS = useCallback((debateData: DebateResult) => {
     ttsActiveRef.current = true;
     setTtsPaused(false);
+    setIsPlaying(true);
 
     const language = "en";
 
@@ -232,6 +237,8 @@ export default function DebatePage() {
           setTtsSection(null);
           setIsSpeaking(null);
           ttsActiveRef.current = false;
+          setIsPlaying(false);
+          setCurrentSpeaker("");
         });
       });
     });
@@ -258,7 +265,7 @@ export default function DebatePage() {
     }
   };
 
-  const stopTTS = () => {
+  const stopTTS = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
@@ -271,7 +278,28 @@ export default function DebatePage() {
     setTtsSection(null);
     setIsSpeaking(null);
     setTtsPaused(false);
-  };
+    setIsPlaying(false);
+    setCurrentSpeaker("");
+  }, []);
+
+  // ── Keyboard shortcuts: Space = pause/resume, Escape = stop ──
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!isPlaying) return;
+      // Don't capture when typing in input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.code === "Space") {
+        e.preventDefault();
+        pauseResumeTTS();
+      } else if (e.code === "Escape") {
+        e.preventDefault();
+        stopTTS();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, ttsPaused]);
 
   // ── Speech Recognition ──
   const startListening = () => {
@@ -724,14 +752,14 @@ export default function DebatePage() {
       )}
 
       {/* ── Floating TTS Control Bar ── */}
-      {ttsSection && (
+      {isPlaying && (
         <div style={{
-          position: "fixed", bottom: 0, left: 0, right: 0,
-          background: "var(--card)", borderTop: "1px solid var(--border)",
-          padding: "10px 24px", zIndex: 200,
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 16,
+          position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+          background: "var(--card)", border: "1px solid var(--border)",
+          padding: "12px 24px", zIndex: 9999, borderRadius: 16,
+          display: "flex", alignItems: "center", gap: 16,
           backdropFilter: "blur(12px)",
-          boxShadow: "0 -4px 20px rgba(0,0,0,0.1)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
         }}>
           {/* Progress dots */}
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
@@ -746,18 +774,20 @@ export default function DebatePage() {
             ))}
           </div>
 
-          {/* Now speaking label — contextual */}
+          {/* Speaker label */}
           <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", minWidth: 200, textAlign: "center" }}>
-            🔊 <span style={{
+            {ttsSection === "verdict" ? "⚖️" : "🎙"}{" "}
+            <span style={{
               color: ttsSection === "lokniti" ? "#ef4444" : ttsSection === "lokmitra" ? "#2563EB" : "#8b5cf6",
             }}>
-              {SECTION_LABELS[ttsSection] || "Speaking..."}
+              {currentSpeaker || "Speaking..."}
             </span>
           </div>
 
           {/* Pause/Resume */}
           <button
             onClick={pauseResumeTTS}
+            title="Space to toggle"
             style={{
               padding: "6px 16px", borderRadius: 8, border: "1px solid var(--border)",
               background: "var(--bg)", color: "var(--text)", fontSize: 12,
@@ -770,6 +800,7 @@ export default function DebatePage() {
           {/* Stop */}
           <button
             onClick={stopTTS}
+            title="Esc to stop"
             style={{
               padding: "6px 16px", borderRadius: 8, border: "1px solid #ef444440",
               background: "rgba(239,68,68,0.08)", color: "#ef4444", fontSize: 12,
@@ -778,6 +809,11 @@ export default function DebatePage() {
           >
             ⏹️ Stop
           </button>
+
+          {/* Keyboard hint */}
+          <div style={{ fontSize: 9, color: "var(--text-muted)", whiteSpace: "nowrap" }}>
+            Space: pause · Esc: stop
+          </div>
         </div>
       )}
     </div>
