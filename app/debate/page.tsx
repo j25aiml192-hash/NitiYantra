@@ -139,7 +139,8 @@ export default function DebatePage() {
     }
   }, [ttsSection, result, manualTopic, speakSection]);
 
-  const startAutoTTS = useCallback((debateData: DebateResult) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const startAutoTTS = useCallback((_debateData: DebateResult) => {
     if (typeof window === "undefined") return;
     window.speechSynthesis.cancel();
 
