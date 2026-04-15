@@ -11,18 +11,18 @@ const CATEGORIES = ["all", "Roads", "Water Supply", "Electricity", "Sanitation",
 const DISTRICTS = ["all", "Noida", "Ghaziabad", "Delhi", "Gurugram", "Faridabad"] as const;
 
 const STATUS_STYLES: Record<string, string> = {
-  pending: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-  in_progress: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  resolved: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-  escalated: "bg-red-500/10 text-red-500 border-red-500/20",
+  pending: "bg-gradient-to-r from-amber-50 to-orange-50 text-amber-600 border-amber-200 shadow-sm",
+  in_progress: "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-600 border-blue-200 shadow-sm",
+  resolved: "bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-600 border-emerald-200 shadow-sm",
+  escalated: "bg-gradient-to-r from-rose-50 to-red-50 text-rose-600 border-rose-200 shadow-sm",
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Roads: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-  "Water Supply": "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  Electricity: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
-  Sanitation: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-  "Public Safety": "bg-red-500/10 text-red-500 border-red-500/20",
+  Roads: "bg-amber-100 text-amber-700 border-amber-200",
+  "Water Supply": "bg-blue-100 text-blue-700 border-blue-200",
+  Electricity: "bg-yellow-100 text-yellow-700 border-yellow-200",
+  Sanitation: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  "Public Safety": "bg-rose-100 text-rose-700 border-rose-200",
 };
 
 const DEPT_NAMES: Record<number, string> = {
@@ -192,8 +192,8 @@ export default function ComplaintsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent relative overflow-hidden">
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-6">
+    <div className="min-h-screen bg-transparent relative overflow-hidden flex flex-col">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 w-full flex-1 flex flex-col">
 
         {/* ── Page Title ── */}
         <div className="flex items-center justify-between mb-6">
@@ -220,23 +220,31 @@ export default function ComplaintsPage() {
           </div>
         </div>
 
-        {/* Complaint count */}
-        <p className="text-xs text-[var(--text-muted)] mb-4">{filtered.length} of {complaints.length} complaints shown</p>
+        {/* GOLDEN RATIO WRAPPER */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 flex-1 items-start">
+          
+          {/* ══ LEFT PANE: LIST ══ */}
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden flex flex-col h-full min-h-[600px]">
+            <div className="shimmerLine" />
+            
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">{filtered.length} of {complaints.length} Records</p>
+            </div>
 
-        {/* Status tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
+            {/* Status tabs */}
+            <div className="flex flex-wrap gap-2 mb-6">
           {STATUSES.map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 border ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border ${
                 statusFilter === s
-                  ? "bg-blue-600/10 text-blue-600 border-blue-600/20 shadow-sm"
-                  : "bg-[var(--card)] text-[var(--text-muted)] border-[var(--border)] hover:text-[var(--text)] hover:bg-[var(--bg)]"
+                  ? "bg-gradient-to-r from-blue-700 to-indigo-600 text-white shadow-md shadow-blue-600/20 border-transparent translate-y-[-1px]"
+                  : "bg-transparent text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-800 shadow-sm"
               }`}
             >
               {s === "all" ? "All" : s.replace("_", " ")}
-              <span className={`px-1.5 py-0.5 rounded text-[10px] ${statusFilter === s ? "bg-blue-600/15 text-blue-600" : "bg-[var(--border)] text-[var(--text-muted)]"}`}>
+              <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${statusFilter === s ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`}>
                 {statusCounts[s as keyof typeof statusCounts] ?? 0}
               </span>
             </button>
@@ -255,7 +263,7 @@ export default function ComplaintsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search complaints or ID..."
-              className="w-full pl-10 pr-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white transition-all shadow-sm font-medium"
             />
           </div>
 
@@ -263,7 +271,7 @@ export default function ComplaintsPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer min-w-[140px]"
+            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white appearance-none cursor-pointer min-w-[140px] shadow-sm font-medium transition-all"
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>{c === "all" ? "All Categories" : c}</option>
@@ -274,7 +282,7 @@ export default function ComplaintsPage() {
           <select
             value={districtFilter}
             onChange={(e) => setDistrictFilter(e.target.value)}
-            className="px-4 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer min-w-[140px]"
+            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white appearance-none cursor-pointer min-w-[140px] shadow-sm font-medium transition-all"
           >
             {DISTRICTS.map((d) => (
               <option key={d} value={d}>{d === "all" ? "All Districts" : d}</option>
@@ -301,30 +309,30 @@ export default function ComplaintsPage() {
 
         {/* Table */}
         {!loading && (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden" style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)" }}>
-            <div className="overflow-x-auto">
+          <div className="border border-[var(--border)] rounded-2xl overflow-hidden shadow-sm flex-1 mb-2 flex flex-col bg-white/40">
+            <div className="overflow-x-auto flex-1 custom-scrollbar">
               <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--bg)]">
-                    <th className="text-left text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider py-3.5 px-5">ID</th>
-                    <th className="text-left text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider py-3.5 px-5">Complaint</th>
-                    <th className="text-left text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider py-3.5 px-5">Category</th>
-                    <th className="text-left text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider py-3.5 px-5">District</th>
-                    <th className="text-left text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider py-3.5 px-5">Source</th>
-                    <th className="text-left text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider py-3.5 px-5">Date</th>
-                    <th className="text-left text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider py-3.5 px-5">Status</th>
+                <thead className="sticky top-0 z-10 backdrop-blur-md bg-white/80 border-b border-slate-200 shadow-sm">
+                  <tr>
+                    <th className="text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 px-5">ID</th>
+                    <th className="text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 px-5">Complaint</th>
+                    <th className="text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 px-5">Category</th>
+                    <th className="text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 px-5">District</th>
+                    <th className="text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 px-5">Source</th>
+                    <th className="text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 px-5">Date</th>
+                    <th className="text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 px-5">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-slate-100">
                   {paginated.map((c) => (
                     <tr
                       key={c.id}
                       onClick={() => setSelected(c)}
-                      className="hover:bg-[var(--bg)] cursor-pointer transition-colors group"
+                      className={`cursor-pointer transition-all duration-300 group ${selected?.id === c.id ? "bg-indigo-50/50" : "hover:bg-slate-50 hover:shadow-sm"}`}
                     >
-                      <td className="py-3.5 px-5 text-sm text-[var(--text-muted)] font-mono">#{c.id}</td>
-                      <td className="py-3.5 px-5 text-sm text-[var(--text-secondary)] max-w-[280px]">
-                        <p className="truncate group-hover:text-[var(--text)] transition-colors">{c.text}</p>
+                      <td className="py-4 px-5 text-sm font-bold text-indigo-500 font-mono">#{c.id}</td>
+                      <td className="py-4 px-5 text-sm font-semibold text-slate-800 max-w-[280px]">
+                        <p className="truncate group-hover:text-indigo-600 transition-colors">{c.text}</p>
                       </td>
                       <td className="py-3.5 px-5">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium border ${CATEGORY_COLORS[c.category] || "bg-[var(--border)] text-[var(--text-secondary)] border-[var(--border)]"}`}>
@@ -369,8 +377,8 @@ export default function ComplaintsPage() {
 
             {/* Pagination controls */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border)]">
-                <p className="text-xs text-[var(--text-muted)]">
+              <div className="flex items-center justify-between px-5 py-4 border-t border-[var(--border)] mt-auto bg-white/50">
+                <p className="text-xs font-medium text-[var(--text-muted)]">
                   Showing {(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filtered.length)} of {filtered.length}
                 </p>
                 <div className="flex items-center gap-1">
@@ -410,21 +418,30 @@ export default function ComplaintsPage() {
                 </div>
               </div>
             )}
+            )}
           </div>
         )}
-      </div>
+          </div> {/* End Left Pane */}
 
-      {/* ═══ Slide-in Detail Panel ═══ */}
-      {selected && (
-        <>
-          {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" onClick={() => setSelected(null)} />
-
-          {/* Panel */}
-          <div className="fixed top-0 right-0 h-full w-full max-w-lg bg-[var(--card)] border-l border-[var(--border)] z-50 overflow-y-auto shadow-2xl animate-slide-in">
-            {/* Header */}
-            <div className="sticky top-0 bg-[var(--card)] backdrop-blur-xl border-b border-[var(--border)] px-6 py-4 flex items-center justify-between z-10">
-              <div className="flex items-center gap-3">
+          {/* ══ RIGHT PANE: INTELLIGENCE ══ */}
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative flex flex-col h-full min-h-[600px] overflow-hidden">
+            <div className="shimmerLine" />
+            
+            {!selected ? (
+              <div className="flex-1 flex flex-col items-center justify-center p-8 text-center animate-fade-in">
+                <div className="w-16 h-16 rounded-3xl bg-[var(--bg)] flex items-center justify-center mb-4 border border-[var(--border)] shadow-sm">
+                  <svg className="w-8 h-8 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-[var(--text)] mb-1">No Complaint Selected</h3>
+                <p className="text-xs text-[var(--text-muted)] max-w-[200px]">Select a grievance from the registry to view its intelligence report, timeline, and assignment routing.</p>
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar animate-slide-in">
+                {/* Header */}
+                <div className="sticky top-0 bg-[var(--card)] backdrop-blur-xl border-b border-[var(--border)] px-6 py-4 flex items-center justify-between z-10">
+                  <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-blue-600/20">
                   #{selected.id}
                 </div>
@@ -449,10 +466,10 @@ export default function ComplaintsPage() {
                 <button
                   key={tab}
                   onClick={() => setDetailTab(tab)}
-                  className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition-all capitalize ${
+                  className={`px-4 py-2.5 text-xs font-bold rounded-t-lg transition-all capitalize ${
                     detailTab === tab
-                      ? "bg-[var(--bg)] text-[var(--text)] border border-[var(--border)] border-b-transparent -mb-px"
-                      : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+                      ? "bg-slate-50 text-indigo-700 border border-slate-200 border-b-slate-50 -mb-px relative z-10"
+                      : "text-slate-500 hover:text-slate-800"
                   }`}
                 >
                   {tab === "timeline" ? "⏱ Journey" : "📋 Details"}
@@ -462,7 +479,7 @@ export default function ComplaintsPage() {
 
             {/* ── Details Tab ── */}
             {detailTab === "details" && (
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 bg-slate-50 flex-1">
               {/* Status + Category badges */}
               <div className="flex flex-wrap gap-2">
                 <span className={`inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold border capitalize ${STATUS_STYLES[selected.status] || "bg-[var(--border)] text-[var(--text-secondary)] border-[var(--border)]"}`}>
@@ -475,54 +492,54 @@ export default function ComplaintsPage() {
 
               {/* Full complaint text */}
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-2">Complaint Text</p>
-                <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-4">
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap">{selected.text}</p>
+                <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-2 ml-1">Complaint Text</p>
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                  <p className="text-sm font-medium text-slate-800 leading-relaxed whitespace-pre-wrap">{selected.text}</p>
                 </div>
               </div>
 
               {/* Details grid */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-4">
-                  <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1">District</p>
-                  <p className="text-sm font-medium text-[var(--text)] flex items-center gap-2">
-                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">District</p>
+                  <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     {selected.district}
                   </p>
                 </div>
-                <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-4">
-                  <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1">Source</p>
-                  <p className="text-sm font-medium text-[var(--text)] flex items-center gap-2">
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Source</p>
+                  <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <span>{SOURCE_ICONS[selected.source] || "📝"}</span>
                     <span className="capitalize">{selected.source.replace("_", " ")}</span>
                   </p>
                 </div>
-                <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-4">
-                  <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1">Department</p>
-                  <p className="text-sm font-medium text-[var(--text)]">
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Department</p>
+                  <p className="text-sm font-bold text-slate-800">
                     {selected.department_id ? DEPT_NAMES[selected.department_id] || `Dept #${selected.department_id}` : "Unassigned"}
                   </p>
                 </div>
-                <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-4">
-                  <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1">Date</p>
-                  <p className="text-sm font-medium text-[var(--text)]">{formatDate(selected.date_submitted)}</p>
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Date</p>
+                  <p className="text-sm font-bold text-slate-800">{formatDate(selected.date_submitted)}</p>
                 </div>
               </div>
 
               {/* Complaint ID metadata */}
-              <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-4 flex items-center justify-between">
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-center justify-between mt-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[var(--border)] border border-[var(--border)] flex items-center justify-center">
-                    <svg className="w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shadow-inner">
+                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-[var(--text-muted)]">Complaint ID</p>
-                    <p className="text-sm font-mono font-bold text-[var(--text)]">COMP-{String(selected.id).padStart(4, "0")}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Complaint ID</p>
+                    <p className="text-base font-mono font-black text-indigo-700 tracking-tight">COMP-{String(selected.id).padStart(4, "0")}</p>
                   </div>
                 </div>
                 <span className="text-[10px] text-[var(--text-muted)] bg-[var(--border)] px-2 py-1 rounded-md border border-[var(--border)]">
@@ -535,7 +552,7 @@ export default function ComplaintsPage() {
             {/* ── Timeline Tab ── */}
             {detailTab === "timeline" && (
               <div className="p-6">
-                <h3 className="text-sm font-bold text-[var(--text)] mb-4 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
                   <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-[10px]">⏱</span>
                   Complaint Journey
                 </h3>
@@ -544,11 +561,11 @@ export default function ComplaintsPage() {
                     <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
                   </div>
                 ) : timeline.length === 0 ? (
-                  <p className="text-sm text-[var(--text-muted)] text-center py-8">No timeline events found</p>
+                  <p className="text-sm text-slate-500 font-medium text-center py-8">No timeline events found</p>
                 ) : (
                   <div className="relative">
                     {/* Vertical line */}
-                    <div className="absolute left-[11px] top-2 bottom-2 w-[2px] bg-[var(--border)]" />
+                    <div className="absolute left-[11px] top-2 bottom-2 w-[2px] bg-slate-200" />
                     <div className="space-y-0">
                       {timeline.map((evt, idx) => {
                         const isUpcoming = evt.status === "upcoming";
@@ -557,7 +574,7 @@ export default function ComplaintsPage() {
                           warning: "bg-amber-500", breach: "bg-red-500", escalate: "bg-red-600",
                           resolved: "bg-emerald-500",
                         };
-                        const dotColor = isUpcoming ? "bg-[var(--border)] border-2 border-dashed border-[var(--text-muted)]" : (dotColorMap[evt.icon] || "bg-slate-500");
+                        const dotColor = isUpcoming ? "bg-slate-100 border-2 border-dashed border-slate-300" : (dotColorMap[evt.icon] || "bg-slate-500");
                         const iconMap: Record<string, string> = {
                           file: "📄", ai: "⚡", assign: "🔀", warning: "⚠️", breach: "🔴", escalate: "🚨", resolved: "✅",
                         };
@@ -565,19 +582,19 @@ export default function ComplaintsPage() {
                         return (
                           <div key={idx} className={`flex items-start gap-4 py-3 ${isUpcoming ? "opacity-50" : ""}`}>
                             {/* Dot */}
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] shrink-0 z-10 ${dotColor} ${!isUpcoming ? "shadow-md" : ""}`}>
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] shrink-0 z-10 ${dotColor} ${!isUpcoming ? "shadow-md shadow-slate-200" : ""}`}>
                               {isUpcoming ? "" : <span>{iconMap[evt.icon] || "●"}</span>}
                             </div>
                             {/* Content */}
-                            <div className="flex-1 min-w-0">
-                              <p className={`text-sm font-semibold ${isUpcoming ? "text-[var(--text-muted)] italic" : "text-[var(--text)]"}`}>
+                            <div className="flex-1 min-w-0 bg-white border border-slate-100 rounded-xl p-3 shadow-sm ml-1 transform transition-all hover:-translate-y-0.5 hover:shadow-md">
+                              <p className={`text-sm font-bold ${isUpcoming ? "text-slate-400 italic" : "text-slate-700"}`}>
                                 {evt.description}
                               </p>
-                              <div className="flex items-center gap-3 mt-0.5">
-                                <span className="text-[10px] text-[var(--text-muted)]">
+                              <div className="flex items-center gap-3 mt-1">
+                                <span className="text-[10px] font-medium text-slate-500">
                                   {evt.timestamp ? new Date(evt.timestamp).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"}
                                 </span>
-                                <span className="text-[10px] text-[var(--text-muted)]">
+                                <span className="text-[10px] font-medium text-slate-500">
                                   by {evt.actor}
                                 </span>
                               </div>
@@ -610,16 +627,16 @@ export default function ComplaintsPage() {
               {currentUser?.role === "office_staff" && selected.status === "pending" && !selected.assigned_to && (
                 <div className="px-6 pb-6">
                   <div className="border-t border-[var(--border)] pt-5">
-                    <h4 className="text-sm font-semibold text-[var(--text)] flex items-center gap-2 mb-4">
+                    <h4 className="text-sm font-semibold text-slate-800 flex items-center gap-2 mb-4">
                       🔀 Assign & Route
                     </h4>
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1.5">Department</label>
+                        <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1.5 ml-1">Department</label>
                         <select
                           value={assignDeptId || ""}
                           onChange={(e) => handleDeptChange(Number(e.target.value))}
-                          className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer"
+                          className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 appearance-none cursor-pointer shadow-sm hover:border-slate-300 transition-all"
                         >
                           <option value="">Select department...</option>
                           {Object.entries(DEPT_NAMES).map(([id, name]) => (
@@ -628,12 +645,12 @@ export default function ComplaintsPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1.5">Assign To</label>
+                        <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1.5 ml-1">Assign To</label>
                         <select
                           value={assignStaffId || ""}
                           onChange={(e) => setAssignStaffId(Number(e.target.value) || null)}
                           disabled={!assignDeptId || loadingStaff}
-                          className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 appearance-none cursor-pointer disabled:opacity-50"
+                          className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 appearance-none cursor-pointer disabled:opacity-50 shadow-sm hover:border-slate-300 transition-all"
                         >
                           <option value="">{loadingStaff ? "Loading..." : staffList.length ? "Select staff..." : "No staff"}</option>
                           {staffList.map((s) => (
@@ -647,7 +664,7 @@ export default function ComplaintsPage() {
                       onChange={(e) => setAssignNotes(e.target.value)}
                       placeholder="Optional notes..."
                       rows={2}
-                      className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-blue-600/30 transition-all resize-none mb-3"
+                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all resize-none mb-4 shadow-sm"
                     />
                     <button
                       onClick={handleAssign}
@@ -670,18 +687,18 @@ export default function ComplaintsPage() {
                   {!showReassign ? (
                     <button
                       onClick={() => setShowReassign(true)}
-                      className="w-full py-2.5 bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)] text-xs font-semibold rounded-xl hover:bg-[var(--border)] transition-all"
+                      className="w-full py-2.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-white hover:text-slate-800 transition-all shadow-sm"
                     >
                       🔄 Reassign Complaint
                     </button>
                   ) : (
-                    <div className="border-t border-[var(--border)] pt-5">
-                      <h4 className="text-sm font-semibold text-[var(--text)] flex items-center gap-2 mb-4">
+                    <div className="border-t border-slate-200 pt-5">
+                      <h4 className="text-sm font-semibold text-slate-800 flex items-center gap-2 mb-4">
                         🔄 Reassign Complaint
                       </h4>
                       <div className="grid grid-cols-2 gap-3 mb-3">
                         <div>
-                          <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1.5">New Department</label>
+                          <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1.5 ml-1">New Department</label>
                           <select
                             value={reassignDeptId || ""}
                             onChange={async (e) => {
@@ -697,7 +714,7 @@ export default function ComplaintsPage() {
                                 setLoadingReassignStaff(false);
                               }
                             }}
-                            className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-amber-500/30 appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 appearance-none cursor-pointer shadow-sm transition-all"
                           >
                             <option value="">Select dept…</option>
                             {Object.entries(DEPT_NAMES).map(([id, name]) => (
@@ -706,12 +723,12 @@ export default function ComplaintsPage() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1.5">Assign To</label>
+                          <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1.5 ml-1">Assign To</label>
                           <select
                             value={reassignStaffId || ""}
                             onChange={(e) => setReassignStaffId(Number(e.target.value) || null)}
                             disabled={!reassignDeptId || loadingReassignStaff}
-                            className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-amber-500/30 appearance-none cursor-pointer disabled:opacity-50"
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 appearance-none cursor-pointer disabled:opacity-50 shadow-sm transition-all"
                           >
                             <option value="">{loadingReassignStaff ? "Loading…" : "Select staff…"}</option>
                             {reassignStaffList.map((s) => (
@@ -727,7 +744,7 @@ export default function ComplaintsPage() {
                         onChange={(e) => setReassignReason(e.target.value)}
                         placeholder="Reason for reassignment…"
                         rows={2}
-                        className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all resize-none mb-3"
+                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 transition-all resize-none mb-4 shadow-sm"
                       />
                       <div className="flex gap-2">
                         <button
@@ -752,7 +769,7 @@ export default function ComplaintsPage() {
                         </button>
                         <button
                           onClick={() => { setShowReassign(false); setReassignDeptId(null); setReassignStaffId(null); setReassignReason(""); }}
-                          className="px-4 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)] text-sm rounded-xl hover:bg-[var(--border)] transition-all"
+                          className="px-5 py-2.5 bg-slate-50 border border-slate-200 text-slate-600 font-bold text-sm rounded-xl hover:bg-white transition-all shadow-sm"
                         >
                           Cancel
                         </button>
@@ -761,10 +778,11 @@ export default function ComplaintsPage() {
                   )}
                 </div>
               )}
+              </div>
+            )}
           </div>
-        </>
-      )}
-
+        </div>
+      </div>
       {/* CSS */}
       <style jsx>{`
         @keyframes slide-in {
