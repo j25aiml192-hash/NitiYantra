@@ -113,164 +113,162 @@ export default function AIPipelinePage() {
   const steps = ["Classify", "Cluster", "Detect"];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="relative min-h-[90vh] bg-transparent font-sans overflow-hidden">
       <style>{`
         @keyframes enter { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes spin { to { transform:rotate(360deg) } }
-        @keyframes shimmer { from { background-position:-200% 0 } to { background-position:200% 0 } }
         @keyframes flowBar { 0% { background-position:0% 50% } 100% { background-position:200% 50% } }
-        @keyframes borderGlow { 0%,100% { opacity:0.5 } 50% { opacity:1 } }
+        .chart-3d { filter: drop-shadow(0 12px 12px rgba(0,0,0,0.15)) drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
+        .bar-3d { filter: drop-shadow(0 6px 8px rgba(0,0,0,0.1)); }
       `}</style>
+      
+      {/* 3D background elements */}
+      <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-indigo-400/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-teal-400/5 rounded-full blur-[100px] pointer-events-none" />
 
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "28px 24px 64px" }}>
-
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-12">
         {/* ═══ Header ═══ */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, animation: "enter 0.4s ease both" }}>
+        <div className="flex justify-between items-center mb-10 animate-[enter_0.4s_ease_both]">
           <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", margin: 0, letterSpacing: -0.3 }}>Pattern Analysis</h1>
-            <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "2px 0 0" }}>Three-stage AI inference pipeline</p>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-1">AI Intelligence Pipeline</h1>
+            <p className="text-sm font-medium text-slate-500">Three-stage advanced machine learning inference</p>
           </div>
-          <button onClick={run} disabled={loading} style={{
-            display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 20px",
-            background: loading ? "transparent" : "linear-gradient(135deg, #1D4ED8, #7C3AED)",
-            color: loading ? "var(--text)" : "#fff",
-            borderRadius: 10, border: loading ? "1px solid var(--border)" : "none",
-            fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: loading ? "wait" : "pointer",
-            boxShadow: loading ? "none" : "0 2px 12px rgba(29,78,216,0.25)",
-            transition: "all 0.3s",
-          }}>
-            {loading && <div style={{ width: 13, height: 13, border: "2px solid var(--border)", borderTop: "2px solid var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />}
-            {loading ? "Running…" : done ? "Re-run Pipeline" : "Run Pipeline"}
+          <button onClick={run} disabled={loading} className={`
+            inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold transition-all
+            ${loading ? 'bg-slate-100 text-slate-400 cursor-wait' : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/40 hover:-translate-y-0.5'}
+          `}>
+            {loading && <svg className="w-4 h-4 border-2 border-slate-300 border-t-indigo-500 rounded-full animate-spin" viewBox="0 0 24 24" />}
+            {loading ? "Processing..." : done ? "Re-run Pipeline" : "Initialize Pipeline"}
           </button>
         </div>
 
         {/* ═══ Pipeline Stepper ═══ */}
-        <div style={{ marginBottom: 28, animation: "enter 0.4s ease 40ms both" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
+        <div className="mb-10 p-6 bg-white/60 backdrop-blur-xl border border-slate-200/60 rounded-3xl shadow-sm animate-[enter_0.4s_ease_40ms_both]">
+          <div className="flex items-center justify-between relative z-10 w-full max-w-2xl mx-auto">
             {steps.map((s, i) => {
               const active = loading && stage === i;
               const passed = done || (loading && stage > i);
+              const color = passed ? 'bg-emerald-500 border-emerald-500' : active ? 'bg-indigo-600 border-indigo-600' : 'bg-slate-100 border-slate-200';
+              const textColor = passed ? 'text-emerald-600' : active ? 'text-indigo-600' : 'text-slate-400';
               return (
-                <div key={s} style={{ display: "flex", alignItems: "center", flex: i < 2 ? 1 : undefined }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{
-                      width: 24, height: 24, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center",
-                      background: passed ? "#10B981" : active ? "var(--accent)" : "var(--card)",
-                      border: `1.5px solid ${passed ? "#10B981" : active ? "var(--accent)" : "var(--border)"}`,
-                      transition: "all 0.4s",
-                    }}>
-                      {passed ? (
-                        <svg style={{ width: 12, height: 12, color: "#fff" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
-                      ) : active ? (
-                        <div style={{ width: 8, height: 8, border: "1.5px solid #fff", borderTop: "1.5px solid transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                      ) : (
-                        <span style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)" }}>{i + 1}</span>
-                      )}
-                    </div>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: passed ? "#059669" : active ? "var(--accent)" : "var(--text-muted)", transition: "color 0.3s", whiteSpace: "nowrap" }}>{s}</span>
+                <div key={s} className="flex flex-col items-center gap-3 relative z-10">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border-2 shadow-sm transition-all duration-500 ${color} ${active ? 'scale-110 shadow-indigo-500/30' : ''}`}>
+                    {passed ? (
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                    ) : active ? (
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <span className="text-sm font-bold text-slate-400">{i + 1}</span>
+                    )}
                   </div>
-                  {i < 2 && <div style={{ flex: 1, height: 1, margin: "0 12px", background: passed ? "#10B981" : "var(--border)", transition: "background 0.5s" }} />}
+                  <span className={`text-sm font-bold ${textColor} transition-colors tracking-wide`}>{s}</span>
                 </div>
               );
             })}
-          </div>
-          {loading && (
-            <div style={{ height: 2, borderRadius: 2, overflow: "hidden", background: "var(--border)", marginTop: 14 }}>
-              <div style={{ height: "100%", width: `${((stage + 1) / 3) * 100}%`, borderRadius: 2, background: "linear-gradient(90deg, #2563EB, #8B5CF6, #2563EB)", backgroundSize: "200% 100%", animation: "flowBar 2s linear infinite", transition: "width 0.8s ease" }} />
+            
+            {/* Connecting Lines */}
+            <div className="absolute top-6 left-12 right-12 h-1 bg-slate-100 -z-10 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-emerald-500 via-indigo-500 to-indigo-500 transition-all duration-1000 ease-in-out" style={{ width: done ? '100%' : `${(stage / (steps.length - 1)) * 100}%` }} />
             </div>
-          )}
+          </div>
         </div>
 
         {/* ═══ Loading ═══ */}
         {init && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} style={{ height: 160, borderRadius: 14, border: "1px solid var(--border)", background: "linear-gradient(90deg, var(--card) 25%, var(--bg) 50%, var(--card) 75%)", backgroundSize: "400% 100%", animation: "shimmer 1.8s ease infinite" }} />
-            ))}
-          </div>
+           <div className="grid grid-cols-3 gap-6">
+             {Array.from({ length: 6 }).map((_, i) => (
+               <div key={i} className="h-40 rounded-3xl bg-slate-100/50 animate-pulse border border-slate-200/50" />
+             ))}
+           </div>
         )}
 
         {/* ═══ Results — Bento Grid ═══ */}
         {result && done && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 14, animation: "enter 0.5s ease 80ms both" }}>
+          <div className="grid grid-cols-12 gap-6 animate-[enter_0.5s_ease_80ms_both]">
 
-            {/* ── Stat: Classified ── */}
-            <div style={{ gridColumn: "span 4", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8B5CF6)", borderRadius: "14px 14px 0 0" }} />
-              <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Classified</p>
-              <p style={{ fontSize: 36, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: -2, lineHeight: 1 }}>
-                <Counter to={result.classified?.length ?? 0} />
-              </p>
-              <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "6px 0 0" }}>complaints analyzed</p>
-            </div>
-
-            {/* ── Stat: Clusters ── */}
-            <div style={{ gridColumn: "span 4", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #0EA5E9, #06B6D4)", borderRadius: "14px 14px 0 0" }} />
-              <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Clusters</p>
-              <p style={{ fontSize: 36, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: -2, lineHeight: 1 }}>
-                <Counter to={result.clusters?.length ?? 0} />
-              </p>
-              <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "6px 0 0" }}>semantic groups</p>
-            </div>
-
-            {/* ── Stat: Delayed ── */}
-            <div style={{ gridColumn: "span 4", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${delayed.length > 0 ? "#EF4444, #F97316" : "#10B981, #059669"})`, borderRadius: "14px 14px 0 0" }} />
-              <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Delayed</p>
-              <p style={{ fontSize: 36, fontWeight: 800, color: delayed.length > 0 ? "#EF4444" : "#10B981", margin: 0, letterSpacing: -2, lineHeight: 1 }}>
-                <Counter to={delayed.length} />
-              </p>
-              <div style={{ display: "flex", gap: 12, marginTop: 6 }}>
-                {sevBreakdown.critical > 0 && <span style={{ fontSize: 10, color: "#EF4444", fontWeight: 600 }}>● {sevBreakdown.critical} critical</span>}
-                {sevBreakdown.warning > 0 && <span style={{ fontSize: 10, color: "#F59E0B", fontWeight: 600 }}>● {sevBreakdown.warning} warning</span>}
+            {/* ── Stat Cards ── */}
+            {[
+              { title: "Classified", count: result.classified?.length ?? 0, sub: "analyzed anomalies", from: "from-blue-500", to: "to-indigo-500" },
+              { title: "Clusters", count: result.clusters?.length ?? 0, sub: "semantic groups", from: "from-sky-400", to: "to-cyan-500" },
+              { title: "Delayed", count: delayed.length, sub: "SLA violations", from: delayed.length ? "from-rose-500" : "from-emerald-400", to: delayed.length ? "to-pink-600" : "to-teal-500" }
+            ].map((stat, i) => (
+              <div key={i} className="col-span-12 md:col-span-4 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-xl">
+                <div className={`absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r ${stat.from} ${stat.to}`} />
+                <div className={`absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br ${stat.from} ${stat.to} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity`} />
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">{stat.title}</p>
+                <div className="flex items-end gap-2">
+                  <p className="text-5xl font-black text-slate-800 tracking-tighter">
+                    <Counter to={stat.count} />
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-slate-500 mt-2">{stat.sub}</p>
               </div>
-            </div>
+            ))}
 
-            {/* ── Category Distribution (Pie) ── */}
-            <div style={{ gridColumn: "span 5", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", minHeight: 260 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: "0 0 4px" }}>Category Distribution</p>
-              <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "0 0 12px" }}>AI classification breakdown</p>
+            {/* ── Category Distribution (3D Pie) ── */}
+            <div className="col-span-12 md:col-span-5 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+              <div>
+                <p className="text-lg font-bold text-slate-900 tracking-tight">Category Distribution</p>
+                <p className="text-xs font-medium text-slate-500">AI classification breakdown</p>
+              </div>
               {pieData.length > 0 ? (
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <div style={{ width: 140, height: 140 }}>
+                <div className="flex items-center gap-6 mt-4">
+                  <div className="w-36 h-36 shrink-0 chart-3d">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
-                        <Pie data={pieData} cx="50%" cy="50%" innerRadius={35} outerRadius={60} dataKey="value" strokeWidth={2} stroke="var(--card)">
-                          {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                        <defs>
+                          {PIE_COLORS.map((c, i) => (
+                            <linearGradient key={`pie_g_${i}`} id={`pie_g_${i}`} x1="0" y1="0" x2="1" y2="1">
+                              <stop offset="5%" stopColor={c} />
+                              <stop offset="95%" stopColor={c} stopOpacity={0.6} />
+                            </linearGradient>
+                          ))}
+                        </defs>
+                        <Pie data={pieData} cx="50%" cy="50%" innerRadius={40} outerRadius={65} dataKey="value" stroke="none">
+                          {pieData.map((_, i) => <Cell key={i} fill={`url(#pie_g_${i})`} />)}
                         </Pie>
-                        <Tooltip content={<ChartTip />} />
+                        <Tooltip content={<ChartTip />} cursor={{ fill: 'transparent' }} />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+                  <div className="flex flex-col gap-2 flex-1">
                     {pieData.map((d, i) => (
-                      <div key={d.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: 2, background: PIE_COLORS[i % PIE_COLORS.length] }} />
-                          <span style={{ fontSize: 11, color: "var(--text-secondary)" }}>{d.name}</span>
+                      <div key={d.name} className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2.5 h-2.5 rounded-sm shadow-sm" style={{ background: PIE_COLORS[i % PIE_COLORS.length] }} />
+                          <span className="text-xs font-bold text-slate-600">{d.name}</span>
                         </div>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", fontVariantNumeric: "tabular-nums" }}>{d.value}</span>
+                        <span className="text-xs font-black text-slate-900 bg-slate-100 px-2 py-0.5 rounded-lg">{d.value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
-              ) : <p style={{ fontSize: 12, color: "var(--text-muted)" }}>No data</p>}
+              ) : <p className="text-sm text-slate-400 py-10 text-center">No data available</p>}
             </div>
 
-            {/* ── Confidence Distribution (Bar) ── */}
-            <div style={{ gridColumn: "span 7", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", minHeight: 260 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: "0 0 4px" }}>Confidence Distribution</p>
-              <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "0 0 12px" }}>Model certainty across predictions</p>
-              <div style={{ width: "100%", height: 170 }}>
+            {/* ── Confidence Distribution (3D Bar) ── */}
+            <div className="col-span-12 md:col-span-7 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+              <div>
+                <p className="text-lg font-bold text-slate-900 tracking-tight">Confidence Distribution</p>
+                <p className="text-xs font-medium text-slate-500 mb-6">Model certainty across inferences</p>
+              </div>
+              <div className="w-full h-[180px] bar-3d">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={confBuckets} barSize={32}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                    <XAxis dataKey="range" tick={{ fontSize: 10, fill: "var(--text-muted)" }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} axisLine={false} tickLine={false} />
-                    <Tooltip content={<ChartTip />} />
-                    <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-                      {confBuckets.map((b, i) => <Cell key={i} fill={b.color} />)}
+                  <BarChart data={confBuckets} barSize={40}>
+                    <defs>
+                      {confBuckets.map((b, i) => (
+                        <linearGradient key={`bar_g_${i}`} id={`bar_g_${i}`} x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor={b.color} />
+                          <stop offset="50%" stopColor={b.color} stopOpacity={0.8} />
+                          <stop offset="100%" stopColor={b.color} stopOpacity={0.6} />
+                        </linearGradient>
+                      ))}
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} opacity={0.5} />
+                    <XAxis dataKey="range" tick={{ fontSize: 11, fill: "#64748b", fontWeight: 600 }} axisLine={false} tickLine={false} dy={10} />
+                    <YAxis tick={{ fontSize: 11, fill: "#64748b", fontWeight: 600 }} axisLine={false} tickLine={false} dx={-10} />
+                    <Tooltip content={<ChartTip />} cursor={{ fill: 'rgba(226, 232, 240, 0.4)' }} />
+                    <Bar dataKey="count" radius={[8, 8, 0, 0]}>
+                      {confBuckets.map((b, i) => <Cell key={i} fill={`url(#bar_g_${i})`} />)}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
@@ -278,40 +276,38 @@ export default function AIPipelinePage() {
             </div>
 
             {/* ── Classification Table ── */}
-            <div style={{ gridColumn: "span 12", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", overflow: "hidden" }}>
-              <div style={{ padding: "16px 22px 12px", borderBottom: "1px solid var(--border)" }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>Classification Results</p>
-                <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "2px 0 0" }}>{result.classified?.length || 0} complaints via BART-large-MNLI zero-shot</p>
+            <div className="col-span-12 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden">
+              <div className="px-6 py-5 border-b border-slate-200/60 bg-slate-50/50">
+                <p className="text-lg font-bold text-slate-900 tracking-tight">Classification Results</p>
+                <p className="text-xs font-medium text-slate-500">{result.classified?.length || 0} records via BART-large-MNLI zero-shot</p>
               </div>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <div className="overflow-x-auto">
+                <table className="w-full">
                   <thead>
-                    <tr style={{ background: "var(--bg)" }}>
+                    <tr className="bg-slate-50/80">
                       {["ID", "Complaint Text", "Predicted Category", "Confidence"].map(h => (
-                        <th key={h} style={{ textAlign: h === "Confidence" ? "right" : "left", padding: "8px 20px", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid var(--border)" }}>{h}</th>
+                        <th key={h} className={`px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest ${h === "Confidence" ? "text-right" : "text-left"} border-b border-slate-200/60`}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {(result.classified || []).slice(0, 10).map((c, i) => {
+                    {(result.classified || []).slice(0, 5).map((c, i) => {
                       const conf = Math.round(c.confidence * 100);
                       const cc = conf >= 80 ? "#10B981" : conf >= 50 ? "#F59E0B" : "#EF4444";
+                      const bg = conf >= 80 ? "bg-emerald-50 text-emerald-700 border-emerald-200" : conf >= 50 ? "bg-amber-50 text-amber-700 border-amber-200" : "bg-rose-50 text-rose-700 border-rose-200";
                       return (
-                        <tr key={c.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.1s" }}
-                          onMouseEnter={e => e.currentTarget.style.background = "var(--bg)"}
-                          onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                        >
-                          <td style={{ padding: "10px 20px", fontSize: 12, fontFamily: "'GeistMono', monospace", color: "var(--text-muted)", width: 64 }}>#{c.id}</td>
-                          <td style={{ padding: "10px 20px", fontSize: 12, color: "var(--text-secondary)", maxWidth: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.text}</td>
-                          <td style={{ padding: "10px 20px" }}>
-                            <span style={{ fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 6, background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text-secondary)" }}>{c.predicted_category}</span>
+                        <tr key={c.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                          <td className="px-6 py-4 text-xs font-bold text-indigo-600">#{c.id}</td>
+                          <td className="px-6 py-4 text-sm font-medium text-slate-700 max-w-[400px] truncate">{c.text}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-lg text-xs font-bold border ${bg}`}>{c.predicted_category}</span>
                           </td>
-                          <td style={{ padding: "10px 20px", textAlign: "right", width: 160 }}>
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
-                              <div style={{ width: 56, height: 4, borderRadius: 2, background: "var(--border)", overflow: "hidden" }}>
-                                <div style={{ width: `${conf}%`, height: "100%", borderRadius: 2, background: cc, transition: "width 0.6s ease", animationDelay: `${i * 50}ms` }} />
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-3">
+                              <div className="w-20 h-2 rounded-full bg-slate-200 overflow-hidden">
+                                <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${conf}%`, background: cc, animationDelay: `${i * 100}ms` }} />
                               </div>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: cc, minWidth: 28, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{conf}%</span>
+                              <span className="text-sm font-black w-10 text-right" style={{ color: cc }}>{conf}%</span>
                             </div>
                           </td>
                         </tr>
@@ -323,44 +319,33 @@ export default function AIPipelinePage() {
             </div>
 
             {/* ── Issue Clusters ── */}
-            <div style={{ gridColumn: "span 12" }}>
-              <div style={{ marginBottom: 12 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>Issue Clusters</p>
-                <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "2px 0 0" }}>{result.clusters?.length || 0} groups formed via MiniLM-L6 semantic similarity</p>
+            <div className="col-span-12">
+              <div className="mb-6">
+                <p className="text-xl font-bold text-slate-900 tracking-tight">Issue Clusters</p>
+                <p className="text-sm font-medium text-slate-500">{result.clusters?.length || 0} groups formed via MiniLM-L6 semantic similarity</p>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {(result.clusters || []).map((cluster, idx) => {
                   const clr = CLUSTER_COLORS[idx % CLUSTER_COLORS.length];
                   return (
-                    <div key={idx} style={{
-                      borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)",
-                      overflow: "hidden", animation: `enter 0.4s ease ${idx * 40}ms both`,
-                      transition: "border-color 0.2s, box-shadow 0.2s",
-                    }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = clr; e.currentTarget.style.boxShadow = `0 0 0 1px ${clr}20`; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "none"; }}
-                    >
-                      {/* Header */}
-                      <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: clr, boxShadow: `0 0 6px ${clr}50` }} />
-                          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>{cluster.cluster_label}</span>
+                    <div key={idx} className="bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group relative">
+                       <div className="absolute top-0 inset-x-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: clr }} />
+                      <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2.5 h-2.5 rounded-full" style={{ background: clr, boxShadow: `0 0 10px ${clr}` }} />
+                          <span className="text-sm font-bold text-slate-800">{cluster.cluster_label}</span>
                         </div>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: clr, background: `${clr}10`, padding: "2px 8px", borderRadius: 5 }}>{cluster.complaints.length}</span>
+                        <span className="text-xs font-black px-2 py-1 rounded-lg" style={{ color: clr, background: `${clr}1a` }}>{cluster.complaints.length}</span>
                       </div>
-                      {/* Items */}
-                      <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 4 }}>
+                      <div className="p-5 flex flex-col gap-3">
                         {cluster.complaints.slice(0, 3).map(comp => (
-                          <div key={comp.id} style={{ display: "flex", gap: 8, padding: "6px 8px", borderRadius: 6, background: "var(--bg)", border: "1px solid transparent", transition: "border-color 0.15s" }}
-                            onMouseEnter={e => e.currentTarget.style.borderColor = "var(--border)"}
-                            onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}
-                          >
-                            <span style={{ fontSize: 9, fontFamily: "monospace", color: "var(--text-muted)", flexShrink: 0, marginTop: 2 }}>#{comp.id}</span>
-                            <p style={{ fontSize: 11, color: "var(--text-secondary)", lineHeight: 1.4, margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{comp.text}</p>
+                          <div key={comp.id} className="flex gap-3 p-3 rounded-xl bg-slate-50/50 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-colors">
+                            <span className="text-[10px] font-bold text-indigo-400 mt-0.5 shrink-0">#{comp.id}</span>
+                            <p className="text-xs font-medium text-slate-600 line-clamp-2">{comp.text}</p>
                           </div>
                         ))}
                         {cluster.complaints.length > 3 && (
-                          <p style={{ fontSize: 10, color: "var(--text-muted)", textAlign: "center", margin: "2px 0 0", fontWeight: 500 }}>+{cluster.complaints.length - 3} more</p>
+                          <p className="text-[10px] font-bold text-slate-400 text-center uppercase tracking-widest mt-2">+{cluster.complaints.length - 3} more</p>
                         )}
                       </div>
                     </div>
@@ -371,45 +356,42 @@ export default function AIPipelinePage() {
 
             {/* ── Delayed Issues ── */}
             {delayed.length > 0 && (
-              <div style={{ gridColumn: "span 12", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", overflow: "hidden" }}>
-                <div style={{ padding: "16px 22px 12px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div className="col-span-12 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden mt-4">
+                <div className="px-6 py-5 border-b border-slate-200/60 bg-slate-50/50 flex justify-between items-center">
                   <div>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>SLA Delays Detected</p>
-                    <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "2px 0 0" }}>{delayed.length} issues past threshold</p>
+                    <p className="text-lg font-bold text-slate-900 tracking-tight">SLA Delays Detected</p>
+                    <p className="text-xs font-medium text-slate-500">{delayed.length} issues past threshold</p>
                   </div>
-                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                    {sevBreakdown.critical > 0 && <span style={{ fontSize: 10, fontWeight: 700, color: "#fff", background: "#EF4444", padding: "2px 8px", borderRadius: 5 }}>{sevBreakdown.critical} critical</span>}
-                    {sevBreakdown.warning > 0 && <span style={{ fontSize: 10, fontWeight: 700, color: "#92400E", background: "#FDE68A", padding: "2px 8px", borderRadius: 5 }}>{sevBreakdown.warning} warning</span>}
+                  <div className="flex gap-3 items-center">
+                    {sevBreakdown.critical > 0 && <span className="text-xs font-black text-rose-700 bg-rose-100 px-3 py-1 rounded-xl shadow-sm">{sevBreakdown.critical} CRITICAL</span>}
+                    {sevBreakdown.warning > 0 && <span className="text-xs font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-xl shadow-sm">{sevBreakdown.warning} WARNING</span>}
                   </div>
                 </div>
-                <div style={{ overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
                     <thead>
-                      <tr style={{ background: "var(--bg)" }}>
+                      <tr className="bg-slate-50/80">
                         {["Issue", "Complaint", "Department", "Days Open", "Severity", "Status"].map(h => (
-                          <th key={h} style={{ textAlign: "left", padding: "8px 20px", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid var(--border)" }}>{h}</th>
+                          <th key={h} className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest text-left border-b border-slate-200/60">{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       {delayed.slice(0, 15).map(d => {
-                        const sev = d.days_open >= 15 ? { label: "Critical", color: "#EF4444", bg: "#FEF2F2" } : d.days_open >= 7 ? { label: "Warning", color: "#D97706", bg: "#FFFBEB" } : { label: "Normal", color: "#059669", bg: "#ECFDF5" };
+                        const sev = d.days_open >= 15 ? { label: "Critical", color: "text-rose-600", bg: "bg-rose-50 border-rose-200" } : d.days_open >= 7 ? { label: "Warning", color: "text-amber-600", bg: "bg-amber-50 border-amber-200" } : { label: "Normal", color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-200" };
                         return (
-                          <tr key={d.issue_id ?? d.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.1s" }}
-                            onMouseEnter={e => e.currentTarget.style.background = "var(--bg)"}
-                            onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                          >
-                            <td style={{ padding: "10px 20px", fontSize: 12, fontFamily: "monospace", color: "var(--text-muted)" }}>ISS-{String(d.issue_id ?? d.id).padStart(3, "0")}</td>
-                            <td style={{ padding: "10px 20px", fontSize: 12, fontFamily: "monospace", color: "var(--text-muted)" }}>#{d.complaint_id}</td>
-                            <td style={{ padding: "10px 20px", fontSize: 12, color: "var(--text-secondary)" }}>{DEPT[d.department_id] || `Dept ${d.department_id}`}</td>
-                            <td style={{ padding: "10px 20px" }}>
-                              <span style={{ fontSize: 12, fontWeight: 700, color: sev.color, fontVariantNumeric: "tabular-nums" }}>{d.days_open}d</span>
+                          <tr key={d.issue_id ?? d.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                            <td className="px-6 py-4 text-xs font-bold text-slate-400">ISS-{String(d.issue_id ?? d.id).padStart(3, "0")}</td>
+                            <td className="px-6 py-4 text-xs font-bold text-indigo-500">#{d.complaint_id}</td>
+                            <td className="px-6 py-4 text-sm font-bold text-slate-700">{DEPT[d.department_id] || `Dept ${d.department_id}`}</td>
+                            <td className="px-6 py-4">
+                              <span className={`text-sm font-black w-10 block ${sev.color}`}>{d.days_open}d</span>
                             </td>
-                            <td style={{ padding: "10px 20px" }}>
-                              <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: sev.bg, color: sev.color, textTransform: "uppercase", letterSpacing: 0.5 }}>{sev.label}</span>
+                            <td className="px-6 py-4">
+                              <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest border ${sev.bg} ${sev.color}`}>{sev.label}</span>
                             </td>
-                            <td style={{ padding: "10px 20px" }}>
-                              <span style={{ fontSize: 10, fontWeight: 600, color: d.status === "escalated" ? "#EF4444" : d.status === "in_progress" ? "#D97706" : "#2563EB", textTransform: "capitalize" }}>{d.status.replace("_", " ")}</span>
+                            <td className="px-6 py-4">
+                              <span className={`text-xs font-bold capitalize ${d.status === 'escalated' ? 'text-rose-500' : d.status === 'in_progress' ? 'text-amber-500' : 'text-indigo-500'}`}>{d.status.replace("_", " ")}</span>
                             </td>
                           </tr>
                         );
@@ -419,31 +401,25 @@ export default function AIPipelinePage() {
                 </div>
               </div>
             )}
+
           </div>
         )}
 
         {/* ═══ Empty state ═══ */}
         {!init && !result && !loading && (
-          <div style={{ textAlign: "center", padding: "96px 0", animation: "enter 0.5s ease both" }}>
-            <div style={{
-              width: 56, height: 56, borderRadius: 14, margin: "0 auto 20px",
-              background: "linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))",
-              border: "1px solid rgba(99,102,241,0.15)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <svg style={{ width: 24, height: 24, color: "#2563EB" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex flex-col items-center justify-center py-32 animate-[enter_0.5s_ease_both]">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 flex items-center justify-center mb-6 shadow-sm">
+              <svg className="w-10 h-10 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082" />
               </svg>
             </div>
-            <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", margin: "0 0 6px" }}>Ready to analyze</p>
-            <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "0 0 24px", maxWidth: 320, marginLeft: "auto", marginRight: "auto" }}>
-              Run the AI pipeline to classify complaints, discover patterns, and detect SLA violations.
+            <p className="text-2xl font-extrabold text-slate-900 mb-2">Ready to Orchestrate</p>
+            <p className="text-sm font-medium text-slate-500 max-w-sm text-center mb-8">
+              Run the AI pipeline to classify complaints, discover unstructured patterns, and detect SLA violations across all departments.
             </p>
-            <button onClick={run} style={{
-              padding: "10px 24px", background: "linear-gradient(135deg, #1D4ED8, #7C3AED)", color: "#fff",
-              borderRadius: 10, border: "none", fontSize: 13, fontWeight: 600,
-              fontFamily: "inherit", cursor: "pointer", boxShadow: "0 4px 16px rgba(29,78,216,0.25)",
-            }}>Run Pipeline →</button>
+            <button onClick={run} className="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/40 hover:-translate-y-0.5 transition-all">
+              Initialize Pipeline →
+            </button>
           </div>
         )}
       </div>
