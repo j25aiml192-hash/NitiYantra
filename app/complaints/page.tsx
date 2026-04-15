@@ -418,7 +418,6 @@ export default function ComplaintsPage() {
                 </div>
               </div>
             )}
-            )}
           </div>
         )}
           </div> {/* End Left Pane */}
