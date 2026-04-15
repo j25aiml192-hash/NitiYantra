@@ -106,10 +106,13 @@ export default function SimulatorPage() {
 
   // Run simulation
   const runSimulation = useCallback(async () => {
+    console.log("[Simulator] Starting simulation with params:", { baseYear, collapseProb, phases, evmMillions });
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API}/simulator/run`, {
+      const url = `${API}/simulator/run`;
+      console.log("[Simulator] Fetching:", url);
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -120,12 +123,25 @@ export default function SimulatorPage() {
           seed: 42,
         }),
       });
-      if (!res.ok) throw new Error("Simulation failed");
+      console.log("[Simulator] Response status:", res.status);
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "Unknown error");
+        console.error("[Simulator] Error response:", errText);
+        throw new Error(`Simulation failed (${res.status}): ${errText}`);
+      }
       const data = await res.json();
+      console.log("[Simulator] Got result:", {
+        savings: data?.summary?.total_savings_cr,
+        states: data?.summary?.total_states,
+        events: data?.simulation_events?.length,
+        yearly: data?.yearly_data?.length,
+      });
       setResult(data);
       setSelectedYear(baseYear);
-    } catch {
-      setError("Simulation failed. Check backend connection.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      console.error("[Simulator] Failed:", msg);
+      setError(`Simulation failed: ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -134,6 +150,7 @@ export default function SimulatorPage() {
   // Auto-run on first load
   useEffect(() => {
     runSimulation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentYearData = result?.yearly_data.find(y => y.year === selectedYear);
@@ -577,6 +594,19 @@ export default function SimulatorPage() {
         <div style={{ textAlign: "center", padding: 80, color: "var(--text-muted)" }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🔄</div>
           <div style={{ fontSize: 16 }}>Running simulation...</div>
+        </div>
+      )}
+      {loading && result && (
+        <div style={{
+          position: "fixed", top: 80, right: 32, zIndex: 100,
+          padding: "10px 20px", borderRadius: 12,
+          background: "var(--card)", border: "1px solid #2563EB50",
+          boxShadow: "0 4px 20px rgba(37,99,235,0.15)",
+          fontSize: 13, fontWeight: 600, color: "#2563EB",
+          display: "flex", alignItems: "center", gap: 8,
+        }}>
+          <span style={{ animation: "spin 1s linear infinite", display: "inline-block" }}>🔄</span>
+          Re-running simulation...
         </div>
       )}
       {/* ═══ ELECTION READINESS INDEX ═══ */}
