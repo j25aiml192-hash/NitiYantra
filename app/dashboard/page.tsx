@@ -398,6 +398,10 @@ export default function DashboardPage() {
   const [allComplaints, setAllComplaints] = useState<Complaint[]>([]);
   const [performance, setPerformance] = useState<DeptPerformance[]>([]);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [govHealth, setGovHealth] = useState<any>(null);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
   const loadData = useCallback(async () => {
     if (isDeptWorker) { setLoading(false); return; }
@@ -408,11 +412,17 @@ export default function DashboardPage() {
       setAllComplaints(allC);
       setComplaints(allC.slice(0, 10));
       setPerformance(Array.isArray(p) ? p : []);
+      // Fetch governance health (non-blocking)
+      fetch(`${API_URL}/dashboard/governance-health`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d) setGovHealth(d); })
+        .catch(() => {});
     } catch {
       router.push("/login");
     } finally {
       setLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, isDeptWorker]);
 
   useEffect(() => { loadData(); }, [loadData]);
@@ -551,6 +561,94 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
+
+        {/* ═══ GOVERNANCE HEALTH SCORE ═══ */}
+        {govHealth && (
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-start gap-6">
+              {/* Score Circle */}
+              <div className="flex flex-col items-center shrink-0">
+                <div className="relative w-24 h-24">
+                  <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
+                    <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" strokeWidth="8" />
+                    <circle
+                      cx="60" cy="60" r="52" fill="none"
+                      stroke={govHealth.overall_score >= 80 ? "#059669" : govHealth.overall_score >= 60 ? "#d97706" : "#e11d48"}
+                      strokeWidth="8" strokeLinecap="round"
+                      strokeDasharray={2 * Math.PI * 52}
+                      strokeDashoffset={2 * Math.PI * 52 * (1 - govHealth.overall_score / 100)}
+                      className="transition-all duration-1000"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-extrabold text-[var(--text)]">{govHealth.overall_score}</span>
+                    <span className="text-[10px] text-[var(--text-muted)]">/ 100</span>
+                  </div>
+                </div>
+                <span className="mt-2 px-3 py-1 rounded-lg text-xs font-bold" style={{
+                  background: govHealth.overall_score >= 80 ? "rgba(5,150,105,0.1)" : govHealth.overall_score >= 60 ? "rgba(217,119,6,0.1)" : "rgba(225,29,72,0.1)",
+                  color: govHealth.overall_score >= 80 ? "#059669" : govHealth.overall_score >= 60 ? "#d97706" : "#e11d48",
+                }}>
+                  Grade: {govHealth.grade}
+                </span>
+              </div>
+
+              {/* Info + Departments */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 className="text-[15px] font-semibold text-[var(--text)] flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs">🏛</span>
+                      Governance Health Score
+                    </h3>
+                    <p className="text-[11px] text-[var(--text-muted)] mt-0.5">AI-powered department performance analysis</p>
+                  </div>
+                  <span className="text-[10px] px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-600 font-semibold">
+                    {govHealth.ai_provider || "AI"}
+                  </span>
+                </div>
+
+                {/* AI Insight */}
+                {govHealth.ai_insight && (
+                  <p className="text-[12px] text-[var(--text-secondary)] leading-relaxed mb-4 p-3 rounded-xl bg-[var(--bg)] border border-[var(--border)]">
+                    💡 {govHealth.ai_insight}
+                  </p>
+                )}
+
+                {/* Department Cards — horizontal scroll */}
+                <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "thin" }}>
+                  {govHealth.departments?.map((dept: { name: string; score: number; grade: string; trend: string; bottleneck: string }) => (
+                    <div key={dept.name} className="shrink-0 w-40 p-3 rounded-xl bg-[var(--bg)] border border-[var(--border)] hover:-translate-y-0.5 transition-all">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[11px] font-semibold text-[var(--text)]">{dept.name}</span>
+                        <span className="text-[10px] font-bold" style={{
+                          color: dept.score >= 80 ? "#059669" : dept.score >= 60 ? "#d97706" : "#e11d48",
+                        }}>
+                          {dept.grade}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg font-bold" style={{
+                          color: dept.score >= 80 ? "#059669" : dept.score >= 60 ? "#d97706" : "#e11d48",
+                        }}>{dept.score}</span>
+                        <span className="text-[10px]">
+                          {dept.trend === "improving" ? "📈" : dept.trend === "declining" ? "📉" : "➡️"}
+                        </span>
+                      </div>
+                      <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden mb-2">
+                        <div className="h-full rounded-full transition-all duration-700" style={{
+                          width: `${dept.score}%`,
+                          background: dept.score >= 80 ? "#059669" : dept.score >= 60 ? "#d97706" : "#e11d48",
+                        }} />
+                      </div>
+                      <p className="text-[9px] text-[var(--text-muted)] leading-tight line-clamp-2">{dept.bottleneck}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ═══ STAT CARDS (4 cols) ═══ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
