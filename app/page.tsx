@@ -113,7 +113,15 @@ export default function LandingPage() {
   const f = "'Inter', sans-serif";
 
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100vh", fontFamily: f }}>
+    <div style={{ background: "var(--bg)", minHeight: "100vh", fontFamily: f, position: "relative" }}>
+      {/* Grid background pattern */}
+      <div style={{
+        position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)",
+        backgroundSize: "48px 48px",
+        maskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%)",
+      }} />
       <style>{`
         @keyframes gradientShift {
           0%, 100% { background-position: 0% 50%; }
