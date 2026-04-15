@@ -5,9 +5,9 @@
 @tailwind utilities;
 
 :root {
-  --bg: #C7CB08;
-  --card: #D4D80A;
-  --card-hover: #C7CB08;
+  --bg: #DFDFE4;
+  --card: #EAEAEF;
+  --card-hover: #DFDFE4;
   --text: #0A0A0A;
   --text-secondary: #6B7280;
   --text-muted: #9CA3AF;
