@@ -594,6 +594,7 @@ export default function ComplaintsPage() {
 /* ═══════════════════════════════════════════════════ */
 const GRIEVANCE_DISTRICTS = ["Noida", "Ghaziabad", "Delhi", "Gurugram", "Faridabad"];
 const GRIEVANCE_SOURCES = ["Portal", "WhatsApp", "Phone", "Email"];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FORM_CATEGORY_COLORS: Record<string, string> = {
   Roads: "bg-amber-500", "Water Supply": "bg-blue-500", Electricity: "bg-yellow-500",
   Sanitation: "bg-emerald-500", "Public Safety": "bg-red-500", Other: "bg-slate-500",

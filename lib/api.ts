@@ -371,3 +371,58 @@ export async function fetchReadinessIndex(target_year: number = 2029): Promise<R
   if (!res.ok) throw new Error("Failed to fetch readiness index");
   return res.json();
 }
+
+/* ─── My Work (Ravi's Dashboard) ─── */
+export interface MyWorkComplaint {
+  id: number;
+  text: string;
+  source: string;
+  date_submitted: string;
+  district: string;
+  category: string;
+  status: string;
+  department_id: number | null;
+  assigned_to: number | null;
+  assigned_at: string | null;
+  escalated: boolean;
+  escalation_reason: string | null;
+  days_open: number;
+  sla_status: string;
+  is_overdue: boolean;
+}
+
+export interface MyWorkResponse {
+  complaints: MyWorkComplaint[];
+  total: number;
+}
+
+export interface ReportCard {
+  user: { username: string; role: string; department: string | null };
+  total_assigned: number;
+  resolved: number;
+  pending: number;
+  escalated: number;
+  resolution_rate: number;
+  avg_resolution_days: number;
+  sla_breached: number;
+  on_time_rate: number;
+  grade: string;
+  streak_days: number;
+  this_week_resolved: number;
+}
+
+export async function fetchMyWork(): Promise<MyWorkResponse> {
+  const res = await fetch(`${API}/complaints/my-work`, {
+    headers: { ...getAuthHeaders() },
+  });
+  if (!res.ok) throw new Error("Failed to fetch my work");
+  return res.json();
+}
+
+export async function fetchMyReportCard(): Promise<ReportCard> {
+  const res = await fetch(`${API}/complaints/my-report-card`, {
+    headers: { ...getAuthHeaders() },
+  });
+  if (!res.ok) throw new Error("Failed to fetch report card");
+  return res.json();
+}
