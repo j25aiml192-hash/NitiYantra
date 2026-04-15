@@ -526,7 +526,7 @@ export default function DebatePage() {
       `}</style>
 
       {/* ─── Header Section ─── */}
-      <div className="relative z-10 text-center mb-6 max-w-[600px]">
+      <div className="relative z-10 text-center mb-6 max-w-[500px]">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 mb-3 relative">
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
           <div className="absolute inset-0 rounded-full border-2 border-indigo-400 opacity-20 animate-ping" />
@@ -542,10 +542,10 @@ export default function DebatePage() {
 
       {/* ─── Main Container: Glass Modal ─── */}
       {state !== "debating" && (
-        <div className="glass-card w-full max-w-[660px] rounded-[32px] p-8 flex flex-col items-center">
+        <div className="glass-card w-full max-w-[600px] rounded-[32px] p-6 flex flex-col items-center">
           
           {/* Manual Input Group */}
-          <div className="w-full flex items-center gap-3 mb-6">
+          <div className="w-full flex items-center gap-3 mb-5">
             <div className="relative flex-1 group">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
@@ -571,7 +571,7 @@ export default function DebatePage() {
           </div>
 
           {/* Centerpiece: Animated Voice Button */}
-          <div className="relative mb-8 group">
+          <div className="relative mb-6 group">
             <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/15 transition-all" />
             
             {/* Visual sound waves */}
@@ -606,7 +606,7 @@ export default function DebatePage() {
           </div>
 
           {/* Autoplay Toggle Segment */}
-          <div className="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-slate-50/50 border border-slate-200/50 mb-8 transition-all hover:bg-white/80">
+          <div className="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-slate-50/50 border border-slate-200/50 mb-6 transition-all hover:bg-white/80">
             <span className="text-[11px] font-bold text-slate-600 tracking-tight">Auto-vocalize debate arguments</span>
             <label className="switch">
               <input type="checkbox" checked={autoPlay} onChange={toggleAutoPlay} />
