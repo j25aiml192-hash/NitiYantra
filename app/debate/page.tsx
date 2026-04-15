@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const SARVAM_KEY = process.env.NEXT_PUBLIC_SARVAM_API_KEY || "";
 
 interface DebateAgent {
   agent: string;
@@ -24,6 +25,98 @@ interface DebateResult {
 type DebateState = "idle" | "listening" | "processing" | "debating";
 type TTSSection = "lokniti" | "lokmitra" | "verdict" | null;
 
+// ── Speaker config for Sarvam ──
+const SARVAM_SPEAKERS: Record<string, string> = {
+  lokniti: "arvind",     // male, serious
+  lokmitra: "meera",     // female, confident
+  verdict: "amol",       // male, authoritative
+};
+
+const SECTION_LABELS: Record<string, string> = {
+  lokniti: "LokNiti is arguing...",
+  lokmitra: "LokMitra is countering...",
+  verdict: "Delivering verdict...",
+};
+
+// ── FIX 1: Strip markdown before TTS ──
+function cleanTextForSpeech(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "$1")   // remove bold
+    .replace(/\*(.*?)\*/g, "$1")        // remove italic
+    .replace(/#{1,6}\s/g, "")           // remove headers
+    .replace(/•\s/g, "")               // remove bullets
+    .replace(/^\d+\.\s/gm, "")         // remove numbered lists
+    .replace(/\n{2,}/g, ". ")          // double newlines to pause
+    .replace(/\n/g, " ")              // single newlines to space
+    .trim();
+}
+
+// ── FIX 2: Sarvam TTS with Web Speech fallback ──
+async function speakWithSarvam(
+  text: string,
+  speaker: string,
+  language: string
+): Promise<HTMLAudioElement | null> {
+  const cleanText = cleanTextForSpeech(text);
+  if (!cleanText) return null;
+  if (!SARVAM_KEY) return null; // No key → skip to fallback
+
+  try {
+    const response = await fetch("https://api.sarvam.ai/text-to-speech", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "api-subscription-key": SARVAM_KEY,
+      },
+      body: JSON.stringify({
+        inputs: [cleanText],
+        target_language_code: language === "hi" ? "hi-IN" : "en-IN",
+        speaker: speaker,
+        model: "bulbul:v3",
+        enable_preprocessing: true,
+      }),
+    });
+
+    if (!response.ok) throw new Error(`Sarvam returned ${response.status}`);
+
+    const data = await response.json();
+    if (!data.audios || !data.audios[0]) throw new Error("No audio in response");
+
+    const audio = new Audio(`data:audio/wav;base64,${data.audios[0]}`);
+    return audio;
+  } catch (err) {
+    console.warn("[TTS] Sarvam failed, falling back to Web Speech:", err);
+    return null;
+  }
+}
+
+function speakWithWebSpeech(
+  text: string,
+  section: TTSSection,
+  onEnd: () => void
+) {
+  if (typeof window === "undefined") return;
+  const cleanText = cleanTextForSpeech(text);
+  if (!cleanText) { onEnd(); return; }
+
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  utterance.rate = 0.9;
+  utterance.pitch = section === "lokniti" ? 0.9 : section === "lokmitra" ? 1.1 : 1.0;
+  utterance.lang = "en-IN";
+
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 1) {
+    if (section === "lokniti") utterance.voice = voices[0];
+    else if (section === "lokmitra") utterance.voice = voices[1];
+  }
+
+  utterance.onend = onEnd;
+  utterance.onerror = onEnd;
+  window.speechSynthesis.speak(utterance);
+}
+
 export default function DebatePage() {
   const [state, setState] = useState<DebateState>("idle");
   const [topic, setTopic] = useState("");
@@ -33,17 +126,17 @@ export default function DebatePage() {
   const [isSpeaking, setIsSpeaking] = useState<"lokniti" | "lokmitra" | null>(null);
   const [suggestedTopics, setSuggestedTopics] = useState<string[]>([]);
 
-  // TTS auto-play state
+  // TTS state
   const [ttsSection, setTtsSection] = useState<TTSSection>(null);
   const [ttsPaused, setTtsPaused] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
-  const ttsQueueRef = useRef<TTSSection[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const ttsActiveRef = useRef(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
 
-  // Load autoplay preference from localStorage
+  // Load autoplay preference
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("debate_autoplay");
@@ -51,7 +144,6 @@ export default function DebatePage() {
     }
   }, []);
 
-  // Save autoplay preference
   const toggleAutoPlay = () => {
     const next = !autoPlay;
     setAutoPlay(next);
@@ -68,103 +160,113 @@ export default function DebatePage() {
       .catch(() => {});
   }, []);
 
-  // ── TTS Auto-Play Engine ──
-  const speakSection = useCallback((section: TTSSection, debateData: DebateResult, lang: string) => {
-    if (typeof window === "undefined" || !section || !debateData) return;
-    window.speechSynthesis.cancel();
+  // ── TTS Engine: Sarvam → Web Speech fallback ──
+  const playSection = useCallback(async (
+    section: TTSSection,
+    debateData: DebateResult,
+    language: string,
+    onDone: () => void
+  ) => {
+    if (!section || !debateData) { onDone(); return; }
 
     let text = "";
     if (section === "lokniti") text = debateData.lokniti.argument;
     else if (section === "lokmitra") text = debateData.lokmitra.argument;
     else if (section === "verdict") text = debateData.verdict || "";
 
-    if (!text) {
-      // Skip empty section, move to next
-      processNextTTS();
-      return;
-    }
+    if (!text) { onDone(); return; }
 
-    const isHindi = lang === "hi";
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = isHindi ? 0.85 : 0.9;
-    utterance.pitch = section === "lokniti" ? 0.9 : section === "lokmitra" ? 1.1 : 1.0;
-    utterance.lang = isHindi ? "hi-IN" : "en-IN";
+    setTtsSection(section);
+    if (section === "lokniti" || section === "lokmitra") setIsSpeaking(section);
 
-    // Try to use different voices
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length > 1) {
-      if (section === "lokniti") utterance.voice = voices[0];
-      else if (section === "lokmitra") utterance.voice = voices[1];
-    }
+    const speaker = SARVAM_SPEAKERS[section] || "arvind";
+    const audio = await speakWithSarvam(text, speaker, language);
 
-    utterance.onstart = () => {
-      setTtsSection(section);
-      if (section === "lokniti" || section === "lokmitra") {
-        setIsSpeaking(section);
-      }
-    };
-
-    utterance.onend = () => {
-      setIsSpeaking(null);
-      processNextTTS();
-    };
-
-    utterance.onerror = () => {
-      setIsSpeaking(null);
-      processNextTTS();
-    };
-
-    window.speechSynthesis.speak(utterance);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const processNextTTS = useCallback(() => {
-    const next = ttsQueueRef.current.shift();
-    if (next) {
-      setTtsSection(next);
+    if (audio) {
+      // Sarvam succeeded
+      audioRef.current = audio;
+      audio.onended = () => {
+        setIsSpeaking(null);
+        audioRef.current = null;
+        onDone();
+      };
+      audio.onerror = () => {
+        setIsSpeaking(null);
+        audioRef.current = null;
+        // Fallback to Web Speech on playback error
+        speakWithWebSpeech(text, section, () => {
+          setIsSpeaking(null);
+          onDone();
+        });
+      };
+      audio.play().catch(() => {
+        // Autoplay blocked — fallback
+        speakWithWebSpeech(text, section, () => {
+          setIsSpeaking(null);
+          onDone();
+        });
+      });
     } else {
-      // Queue finished
-      setTtsSection(null);
-      setIsSpeaking(null);
-      ttsActiveRef.current = false;
+      // Sarvam failed or no key — fallback to Web Speech
+      speakWithWebSpeech(text, section, () => {
+        setIsSpeaking(null);
+        onDone();
+      });
     }
   }, []);
 
-  // React to ttsSection changes — speak current section
-  useEffect(() => {
-    if (ttsSection && result && ttsActiveRef.current) {
-      // detect language from topic (simple heuristic)
-      const lang = manualTopic ? "en" : "en";
-      speakSection(ttsSection, result, lang);
-    }
-  }, [ttsSection, result, manualTopic, speakSection]);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const startAutoTTS = useCallback((_debateData: DebateResult) => {
-    if (typeof window === "undefined") return;
-    window.speechSynthesis.cancel();
-
-    ttsQueueRef.current = ["lokmitra", "verdict"]; // lokniti plays first, rest queued
+  // Auto-play chain: LokNiti → LokMitra → Verdict
+  const startAutoTTS = useCallback((debateData: DebateResult) => {
     ttsActiveRef.current = true;
     setTtsPaused(false);
-    setTtsSection("lokniti");
-  }, []);
+
+    const language = "en";
+
+    // Chain: LokNiti → LokMitra → Verdict
+    playSection("lokniti", debateData, language, () => {
+      if (!ttsActiveRef.current) return;
+      playSection("lokmitra", debateData, language, () => {
+        if (!ttsActiveRef.current) return;
+        playSection("verdict", debateData, language, () => {
+          // All done
+          setTtsSection(null);
+          setIsSpeaking(null);
+          ttsActiveRef.current = false;
+        });
+      });
+    });
+  }, [playSection]);
 
   const pauseResumeTTS = () => {
-    if (typeof window === "undefined") return;
-    if (ttsPaused) {
-      window.speechSynthesis.resume();
-      setTtsPaused(false);
-    } else {
-      window.speechSynthesis.pause();
-      setTtsPaused(true);
+    if (audioRef.current) {
+      if (ttsPaused) {
+        audioRef.current.play();
+        setTtsPaused(false);
+      } else {
+        audioRef.current.pause();
+        setTtsPaused(true);
+      }
+    } else if (typeof window !== "undefined") {
+      // Web Speech fallback pause/resume
+      if (ttsPaused) {
+        window.speechSynthesis.resume();
+        setTtsPaused(false);
+      } else {
+        window.speechSynthesis.pause();
+        setTtsPaused(true);
+      }
     }
   };
 
   const stopTTS = () => {
-    if (typeof window === "undefined") return;
-    window.speechSynthesis.cancel();
-    ttsQueueRef.current = [];
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+    if (typeof window !== "undefined") {
+      window.speechSynthesis.cancel();
+    }
     ttsActiveRef.current = false;
     setTtsSection(null);
     setIsSpeaking(null);
@@ -233,7 +335,6 @@ export default function DebatePage() {
 
       // Auto-play TTS if enabled
       if (autoPlay) {
-        // Small delay to let UI render first
         setTimeout(() => startAutoTTS(data), 800);
       }
     } catch {
@@ -251,31 +352,31 @@ export default function DebatePage() {
     generateDebate(manualTopic.trim());
   };
 
-  // ── Manual Text-to-Speech ──
-  const speakArgument = (text: string, agent: "lokniti" | "lokmitra") => {
-    if (typeof window === "undefined") return;
-    stopTTS(); // Stop any auto-play first
-    window.speechSynthesis.cancel();
+  // ── Manual TTS (single agent) ──
+  const speakArgument = async (text: string, agent: "lokniti" | "lokmitra") => {
+    stopTTS();
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = agent === "lokniti" ? 0.9 : 1.1;
-    utterance.lang = "en-IN";
+    setIsSpeaking(agent);
+    setTtsSection(agent);
 
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length > 1) {
-      utterance.voice = agent === "lokniti" ? voices[0] : voices[1];
+    const speaker = SARVAM_SPEAKERS[agent] || "arvind";
+    const audio = await speakWithSarvam(text, speaker, "en");
+
+    if (audio) {
+      audioRef.current = audio;
+      audio.onended = () => { setIsSpeaking(null); setTtsSection(null); audioRef.current = null; };
+      audio.onerror = () => {
+        speakWithWebSpeech(text, agent, () => { setIsSpeaking(null); setTtsSection(null); });
+      };
+      audio.play().catch(() => {
+        speakWithWebSpeech(text, agent, () => { setIsSpeaking(null); setTtsSection(null); });
+      });
+    } else {
+      speakWithWebSpeech(text, agent, () => { setIsSpeaking(null); setTtsSection(null); });
     }
-
-    utterance.onstart = () => setIsSpeaking(agent);
-    utterance.onend = () => setIsSpeaking(null);
-
-    window.speechSynthesis.speak(utterance);
   };
 
   const stopSpeaking = () => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(null);
     stopTTS();
   };
 
@@ -286,13 +387,6 @@ export default function DebatePage() {
     setResult(null);
     setError("");
     stopSpeaking();
-  };
-
-  const sectionLabel = (s: TTSSection) => {
-    if (s === "lokniti") return "LokNiti";
-    if (s === "lokmitra") return "LokMitra";
-    if (s === "verdict") return "Verdict";
-    return "";
   };
 
   return (
@@ -351,7 +445,7 @@ export default function DebatePage() {
                 onChange={toggleAutoPlay}
                 style={{ accentColor: "#2563EB", width: 14, height: 14, cursor: "pointer" }}
               />
-              Auto-play after generation
+              Auto-play with Sarvam AI voices
             </label>
           </div>
 
@@ -652,12 +746,12 @@ export default function DebatePage() {
             ))}
           </div>
 
-          {/* Now speaking label */}
-          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", minWidth: 140, textAlign: "center" }}>
-            🔊 Now: <span style={{
+          {/* Now speaking label — contextual */}
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", minWidth: 200, textAlign: "center" }}>
+            🔊 <span style={{
               color: ttsSection === "lokniti" ? "#ef4444" : ttsSection === "lokmitra" ? "#2563EB" : "#8b5cf6",
             }}>
-              {sectionLabel(ttsSection)}
+              {SECTION_LABELS[ttsSection] || "Speaking..."}
             </span>
           </div>
 
