@@ -454,10 +454,10 @@ export default function DebatePage() {
           50% { filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.7)); }
         }
         .glass-card {
-          background: rgba(15, 23, 42, 0.4);
+          background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(24px) saturate(180%);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(255, 255, 255, 1);
+          box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
           position: relative;
           z-index: 10;
         }
@@ -467,7 +467,7 @@ export default function DebatePage() {
           inset: 0;
           border-radius: inherit;
           padding: 1px;
-          background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(99,102,241,0.1), rgba(255,255,255,0.05));
+          background: linear-gradient(135deg, rgba(255,255,255,1), rgba(99,102,241,0.2), rgba(255,255,255,0.8));
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
@@ -475,15 +475,15 @@ export default function DebatePage() {
           pointer-events: none;
         }
         .debate-input {
-          background: rgba(255, 255, 255, 0.03);
-          box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+          background: rgba(15, 23, 42, 0.04);
+          box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          color: white;
+          color: #0f172a;
         }
         .debate-input:focus {
-          background: rgba(255, 255, 255, 0.08);
+          background: #fff;
           border-color: #6366F1;
-          box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+          box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
         }
         .premium-btn {
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -506,10 +506,10 @@ export default function DebatePage() {
           position: absolute;
           cursor: pointer;
           top: 0; left: 0; right: 0; bottom: 0;
-          background-color: rgba(255,255,255,0.1);
+          background-color: #e2e8f0;
           transition: .4s;
           border-radius: 34px;
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid rgba(0,0,0,0.05);
         }
         .slider:before {
           position: absolute;
@@ -547,7 +547,7 @@ export default function DebatePage() {
           {/* Manual Input Group */}
           <div className="w-full flex items-center gap-3 mb-6">
             <div className="relative flex-1 group">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
               </span>
               <input
@@ -556,7 +556,7 @@ export default function DebatePage() {
                 onChange={e => setManualTopic(e.target.value)}
                 placeholder="Describe a policy or controversial topic..."
                 onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                className="debate-input w-full pl-11 pr-4 py-3.5 rounded-2xl border border-white/5 font-medium placeholder:text-slate-500 placeholder:font-normal outline-none text-sm"
+                className="debate-input w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200/50 font-medium placeholder:text-slate-400 placeholder:font-normal outline-none text-sm"
                 disabled={state === "processing"}
               />
             </div>
@@ -606,33 +606,36 @@ export default function DebatePage() {
           </div>
 
           {/* Autoplay Toggle Segment */}
-          <div className="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-white/5 border border-white/10 mb-8 transition-all hover:bg-white/10">
-            <span className="text-[11px] font-bold text-indigo-100/70 tracking-tight">Auto-vocalize debate arguments</span>
+          <div className="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-slate-50/50 border border-slate-200/50 mb-8 transition-all hover:bg-white/80">
+            <span className="text-[11px] font-bold text-slate-600 tracking-tight">Auto-vocalize debate arguments</span>
             <label className="switch">
               <input type="checkbox" checked={autoPlay} onChange={toggleAutoPlay} />
               <span className="slider"></span>
             </label>
+            <span className={`text-[11px] font-black uppercase ${autoPlay ? 'text-emerald-500' : 'text-slate-400'}`}>
+              {autoPlay ? "Active" : "Off"}
+            </span>
           </div>
 
           {/* Suggested Contextual Topics */}
           {suggestedTopics.length > 0 && state === "idle" && (
             <div className="w-full text-center">
-              <div className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-5 flex items-center justify-center gap-3">
-                <span className="w-8 h-[1px] bg-white/10" />
+              <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-5 flex items-center justify-center gap-3">
+                <span className="w-8 h-[1px] bg-slate-100" />
                 Intelligence Starters
-                <span className="w-8 h-[1px] bg-white/10" />
+                <span className="w-8 h-[1px] bg-slate-100" />
               </div>
               <div className="flex flex-wrap gap-2.5 justify-center">
                 {suggestedTopics.slice(0, 5).map((t, i) => (
                   <button
                     key={i}
                     onClick={() => { setManualTopic(t); generateDebate(t); }}
-                    className="group px-5 py-2.5 rounded-full bg-white/5 border border-white/10 shadow-sm hover:border-indigo-400/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
+                    className="group px-5 py-2.5 rounded-full bg-slate-50 border border-slate-200 shadow-sm hover:border-indigo-400 hover:bg-white hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
                   >
                     <span className="text-sm scale-90 group-hover:scale-110 transition-transform">
                       {getTopicIcon(t)}
                     </span>
-                    <span className="text-[12px] font-bold text-indigo-100 tracking-tight">
+                    <span className="text-[12px] font-bold text-slate-700 tracking-tight">
                       {t.length > 40 ? t.substring(0, 37) + "..." : t}
                     </span>
                   </button>
