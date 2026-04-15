@@ -32,6 +32,8 @@ interface ClassifyResult {
   confidence: number;
   department: string;
   complaintId: number | null;
+  aiProvider?: string;
+  model?: string;
 }
 
 /* ── Step timeline component ── */
@@ -69,7 +71,7 @@ function RoutingTimeline({
       id: 2,
       icon: "⚡",
       title: "AI Analyzing...",
-      sub: "Running NitiYantra Keyword Engine v1",
+      sub: `Running ${result.aiProvider || "NVIDIA NIM"} ${result.model || "phi-3-mini-128k-instruct"}`,
       hasProgress: true,
     },
     {
@@ -295,7 +297,7 @@ export default function SubmitComplaintPage() {
         department_id: deptId,
       });
 
-      setResult({ category, confidence, department, complaintId: complaintRes?.id ?? null });
+      setResult({ category, confidence, department, complaintId: complaintRes?.id ?? null, aiProvider: aiRes.ai_provider, model: aiRes.model });
       toast.success("Complaint submitted and classified!");
       // Auto-redirect to complaints list after timeline animation finishes
       setTimeout(() => {
