@@ -119,7 +119,6 @@ function speakWithWebSpeech(
 
 export default function DebatePage() {
   const [state, setState] = useState<DebateState>("idle");
-  const [topic, setTopic] = useState("");
   const [manualTopic, setManualTopic] = useState("");
   const [result, setResult] = useState<DebateResult | null>(null);
   const [error, setError] = useState("");
@@ -319,7 +318,7 @@ export default function DebatePage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      setTopic(transcript);
+      setManualTopic(transcript);
       setState("processing");
       generateDebate(transcript);
     };
@@ -376,7 +375,6 @@ export default function DebatePage() {
       setError("Topic must be at least 5 characters");
       return;
     }
-    setTopic(manualTopic.trim());
     generateDebate(manualTopic.trim());
   };
 
@@ -410,131 +408,235 @@ export default function DebatePage() {
 
   const handleReset = () => {
     setState("idle");
-    setTopic("");
     setManualTopic("");
     setResult(null);
     setError("");
     stopSpeaking();
   };
 
+  const getTopicIcon = (t: string) => {
+    const lower = t.toLowerCase();
+    if (lower.includes("election")) return "🗳️";
+    if (lower.includes("ai") || lower.includes("tech")) return "🤖";
+    if (lower.includes("law") || lower.includes("justice")) return "⚖️";
+    if (lower.includes("money") || lower.includes("economy")) return "💰";
+    if (lower.includes("health")) return "🏥";
+    if (lower.includes("education")) return "🎓";
+    return "💡";
+  };
+
   return (
-    <div style={{ padding: "24px 32px", maxWidth: 1200, margin: "0 auto", paddingBottom: ttsSection ? 80 : 24 }}>
-      {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <h1 style={{ fontSize: 32, fontWeight: 800, color: "var(--text)", margin: 0 }}>
-          🎙️ Policy Debate Arena
+    <div className="relative min-h-[90vh] flex flex-col items-center justify-center py-12 px-6 overflow-hidden">
+      {/* ─── Premium Background Elements ─── */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(#1E40AF 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+      </div>
+
+      <style>{`
+        @keyframes debateFloat {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        @keyframes debatePulse {
+          0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+          70% { box-shadow: 0 0 0 20px rgba(99, 102, 241, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        @keyframes debateRipple {
+          0% { transform: scale(0.95); opacity: 0.5; }
+          50% { transform: scale(1.1); opacity: 0.3; }
+          100% { transform: scale(1.25); opacity: 0; }
+        }
+        @keyframes debateGlow {
+          0%, 100% { filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.4)); }
+          50% { filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.7)); }
+        }
+        .glass-card {
+          background: rgba(255, 255, 255, 0.65);
+          backdrop-filter: blur(24px) saturate(180%);
+          border: 1px solid rgba(99, 102, 241, 0.15);
+          box-shadow: 0 20px 60px -15px rgba(30, 64, 175, 0.08);
+          position: relative;
+          z-index: 10;
+        }
+        .glass-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          padding: 1px;
+          background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(99,102,241,0.1), rgba(255,255,255,0.4));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+        }
+        .debate-input {
+          background: rgba(255, 255, 255, 0.4);
+          box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .debate-input:focus {
+          background: #fff;
+          border-color: #6366F1;
+          box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+        }
+        .premium-btn {
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .premium-btn:hover {
+          transform: translateY(-2px);
+          filter: brightness(1.1);
+        }
+        .premium-btn:active {
+          transform: translateY(1px) scale(0.98);
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 44px;
+          height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background-color: #e2e8f0;
+          transition: .4s;
+          border-radius: 34px;
+          border: 1px solid rgba(0,0,0,0.05);
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 16px; width: 16px;
+          left: 3px; bottom: 3px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input:checked + .slider { background-color: #10B981; }
+        input:checked + .slider:before { transform: translateX(20px); }
+      `}</style>
+
+      {/* ─── Header Section ─── */}
+      <div className="relative z-10 text-center mb-10 max-w-[600px] translate-y-[-10px]">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 mb-6 relative">
+          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+          <div className="absolute inset-0 rounded-full border-2 border-indigo-400 opacity-20 animate-ping" />
+        </div>
+        <h1 className="text-[34px] font-black text-slate-900 tracking-tight leading-none mb-3">
+          Policy Debate Arena
         </h1>
-        <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 6 }}>
-          AI-powered multi-agent policy debate — speak or type a topic
+        <div className="h-[3px] w-12 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full mb-4 shadow-sm" />
+        <p className="text-[15px] font-medium text-slate-500/80 tracking-wide max-w-[400px] mx-auto italic">
+          Powering democratic discourse with advanced multi-agent intelligence
         </p>
       </div>
 
-      {/* Topic Input Area */}
+      {/* ─── Main Container: Glass Modal ─── */}
       {state !== "debating" && (
-        <div style={{
-          background: "var(--card)", borderRadius: 20, border: "1px solid var(--border)",
-          padding: 32, textAlign: "center", marginBottom: 24, maxWidth: 600, margin: "0 auto 24px",
-        }}>
-          {/* Manual Input */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-            <input
-              type="text"
-              value={manualTopic}
-              onChange={e => setManualTopic(e.target.value)}
-              placeholder="Type a debate topic..."
-              onKeyDown={e => e.key === "Enter" && handleSubmit()}
-              style={{
-                flex: 1, padding: "12px 16px", borderRadius: 12,
-                border: "1px solid var(--border)", background: "var(--bg)",
-                color: "var(--text)", fontSize: 14, outline: "none",
-              }}
-              disabled={state === "processing"}
-            />
+        <div className="glass-card w-full max-w-[680px] rounded-[32px] p-10 flex flex-col items-center">
+          
+          {/* Manual Input Group */}
+          <div className="w-full flex items-center gap-3 mb-8">
+            <div className="relative flex-1 group">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              </span>
+              <input
+                type="text"
+                value={manualTopic}
+                onChange={e => setManualTopic(e.target.value)}
+                placeholder="Describe a policy or controversial topic..."
+                onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                className="debate-input w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200/60 text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal outline-none"
+                disabled={state === "processing"}
+              />
+            </div>
             <button
               onClick={handleSubmit}
               disabled={state === "processing" || manualTopic.trim().length < 5}
-              style={{
-                padding: "12px 24px", borderRadius: 12, border: "none",
-                background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-                color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer",
-                opacity: state === "processing" ? 0.7 : 1,
-              }}
+              className="premium-btn px-8 py-4 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center gap-2 disabled:opacity-50"
             >
-              Debate!
+              <span>{state === "processing" ? "Analyzing..." : "Debate"}</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
             </button>
           </div>
 
-          {/* Auto-play toggle */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 16 }}>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 12, color: "var(--text-muted)" }}>
-              <input
-                type="checkbox"
-                checked={autoPlay}
-                onChange={toggleAutoPlay}
-                style={{ accentColor: "#2563EB", width: 14, height: 14, cursor: "pointer" }}
-              />
-              Auto-play with Sarvam AI voices
-            </label>
-          </div>
+          {/* Centerpiece: Animated Voice Button */}
+          <div className="relative mb-10 group">
+            <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/15 transition-all" />
+            
+            {/* Visual sound waves */}
+            {state === "listening" && (
+              <>
+                <div className="absolute inset-[-12px] border-2 border-indigo-400/30 rounded-full animate-[debateRipple_2s_infinite]" />
+                <div className="absolute inset-[-24px] border-2 border-indigo-300/20 rounded-full animate-[debateRipple_2s_infinite_1s]" />
+              </>
+            )}
 
-          {/* Voice Button */}
-          <div style={{ marginBottom: 16 }}>
-            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>— or —</span>
-          </div>
-          <button
-            onMouseDown={startListening}
-            onMouseUp={stopListening}
-            onMouseLeave={stopListening}
-            disabled={state === "processing"}
-            style={{
-              width: 80, height: 80, borderRadius: "50%", border: "none",
-              background: state === "listening"
-                ? "linear-gradient(135deg, #ef4444, #dc2626)"
-                : "linear-gradient(135deg, #2563EB, #1D4ED8)",
-              color: "#fff", fontSize: 28, cursor: "pointer",
-              boxShadow: state === "listening"
-                ? "0 0 0 8px rgba(239,68,68,0.2), 0 0 0 16px rgba(239,68,68,0.1)"
-                : "0 4px 20px rgba(99,102,241,0.3)",
-              transition: "all 0.2s ease",
-            }}
-          >
-            🎤
-          </button>
-          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
-            {state === "listening" ? "🔴 Listening... release to stop" :
-             state === "processing" ? "⏳ Generating debate..." :
-             "Hold to speak your topic"}
-          </div>
-
-          {/* Detected topic */}
-          {topic && (
-            <div style={{
-              marginTop: 16, padding: "8px 16px", borderRadius: 8,
-              background: "rgba(16,185,129,0.1)", color: "#10b981",
-              fontSize: 13, fontWeight: 600,
-            }}>
-              🎯 Topic: &quot;{topic}&quot;
+            <button
+              onMouseDown={startListening}
+              onMouseUp={stopListening}
+              onMouseLeave={stopListening}
+              disabled={state === "processing"}
+              className={`relative z-10 w-24 h-24 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl ${
+                state === "listening" 
+                  ? "bg-gradient-to-br from-rose-500 to-rose-700 animate-[debatePulse_1.5s_infinite]" 
+                  : "bg-gradient-to-br from-indigo-500 to-indigo-700 hover:scale-105 active:scale-95"
+              }`}
+            >
+              <div className="absolute inset-1 rounded-full border border-white/20" />
+              <span className="text-3xl filter drop-shadow-md">
+                {state === "listening" ? "⏹" : "🎙️"}
+              </span>
+            </button>
+            <div className={`mt-5 text-center text-[13px] font-bold tracking-widest uppercase transition-colors duration-300 ${state === 'listening' ? 'text-rose-500' : 'text-slate-400'}`}>
+              {state === "listening" ? "Recording Discourse..." :
+               state === "processing" ? "Intelligence Extraction..." :
+               "Hold to Speak"}
             </div>
-          )}
+          </div>
 
-          {/* Suggested Topics */}
+          {/* Autoplay Toggle Segment */}
+          <div className="flex items-center gap-4 py-3 px-6 rounded-2xl bg-slate-50/50 border border-slate-200/50 mb-10 transition-all hover:bg-white/80">
+            <span className="text-[12px] font-bold text-slate-600 tracking-tight">Auto-vocalize debate arguments</span>
+            <label className="switch">
+              <input type="checkbox" checked={autoPlay} onChange={toggleAutoPlay} />
+              <span className="slider"></span>
+            </label>
+            <span className={`text-[11px] font-black uppercase ${autoPlay ? 'text-emerald-500' : 'text-slate-400'}`}>
+              {autoPlay ? "Active" : "Off"}
+            </span>
+          </div>
+
+          {/* Suggested Contextual Topics */}
           {suggestedTopics.length > 0 && state === "idle" && (
-            <div style={{ marginTop: 20 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                Suggested Topics
+            <div className="w-full text-center">
+              <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-5 flex items-center justify-center gap-3">
+                <span className="w-8 h-[1px] bg-slate-200" />
+                Intelligence Starters
+                <span className="w-8 h-[1px] bg-slate-200" />
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center" }}>
+              <div className="flex flex-wrap gap-2.5 justify-center">
                 {suggestedTopics.slice(0, 5).map((t, i) => (
                   <button
                     key={i}
-                    onClick={() => { setManualTopic(t); setTopic(t); generateDebate(t); }}
-                    style={{
-                      padding: "5px 12px", borderRadius: 8, fontSize: 11,
-                      border: "1px solid var(--border)", background: "var(--bg)",
-                      color: "var(--text-secondary)", cursor: "pointer",
-                    }}
+                    onClick={() => { setManualTopic(t); generateDebate(t); }}
+                    className="group px-5 py-2.5 rounded-full bg-white border border-slate-200/80 shadow-sm hover:border-indigo-400/50 hover:shadow-lg hover:shadow-indigo-500/5 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
                   >
-                    {t.length > 50 ? t.substring(0, 47) + "..." : t}
+                    <span className="text-sm scale-90 group-hover:scale-110 transition-transform">
+                      {getTopicIcon(t)}
+                    </span>
+                    <span className="text-[12px] font-bold text-slate-700 tracking-tight">
+                      {t.length > 40 ? t.substring(0, 37) + "..." : t}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -544,151 +646,108 @@ export default function DebatePage() {
       )}
 
       {error && (
-        <div style={{
-          padding: 12, borderRadius: 10, background: "rgba(239,68,68,0.1)",
-          color: "#ef4444", fontSize: 13, textAlign: "center", marginBottom: 16,
-          maxWidth: 600, margin: "0 auto 16px",
-        }}>
-          {error}
+        <div className="relative z-10 mt-6 px-6 py-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-[13px] font-bold shadow-xl shadow-rose-900/5 animate-bounce">
+          ⚠️ {error}
         </div>
       )}
 
-      {/* Debate Arena */}
+      {/* Debate Arena (Result View) */}
       {result && state === "debating" && (
-        <>
-          {/* Topic Banner */}
-          <div style={{
-            textAlign: "center", marginBottom: 24,
-            padding: "12px 24px", borderRadius: 12,
-            background: "linear-gradient(135deg, #2563EB22, #8b5cf622)",
-            border: "1px solid #2563EB30",
-          }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Debate Topic
-            </span>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginTop: 4 }}>
-              &quot;{result.topic}&quot;
+        <div className="w-full max-w-[1240px] px-4 space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
+          {/* AI Banner */}
+          <div className="glass-card rounded-[24px] p-8 border-indigo-200/40 text-center relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <svg className="w-24 h-24 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <div style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 6 }}>
-              <span style={{ fontSize: 10, color: "var(--text-muted)" }}>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 mb-3">Intelligence Objective</div>
+            <h2 className="text-[26px] font-black text-slate-900 tracking-tighter mb-4 leading-tight">
+              &quot;{result.topic}&quot;
+            </h2>
+            <div className="flex items-center justify-center gap-3">
+              <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold ring-1 ring-indigo-200/50">
                 Source: {result.source}
               </span>
               {result.ai_provider && (
-                <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 4, background: "rgba(16,185,129,0.1)", color: "#10b981", fontWeight: 600 }}>
-                  {result.ai_provider}
+                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold ring-1 ring-emerald-200/50 animate-pulse">
+                  AI: {result.ai_provider}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Two Agent Cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 0, alignItems: "stretch" }}>
-            {/* LokNiti */}
-            <div style={{
-              background: "linear-gradient(135deg, #ef444412, #ef444406)",
-              borderRadius: 16, border: `1px solid ${ttsSection === "lokniti" ? "#ef4444" : "#ef444425"}`, padding: 24,
-              transition: "border-color 0.3s ease",
-              boxShadow: ttsSection === "lokniti" ? "0 0 20px rgba(239,68,68,0.15)" : "none",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #ef4444, #dc2626)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 20,
-                }}>
-                  ❓
-                </div>
-                <div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: "#ef4444" }}>{result.lokniti.agent}</div>
-                  <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{result.lokniti.role}</div>
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-0 items-stretch h-full">
+            {/* LokNiti (Opposition) */}
+            <div className={`glass-card rounded-3xl p-8 border-rose-200/40 transition-all duration-500 ${ttsSection === "lokniti" ? 'scale-[1.02] border-rose-500/50 ring-4 ring-rose-500/10 bg-white' : ''}`}>
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-700 shadow-xl shadow-rose-500/20 flex items-center justify-center text-2xl filter contrast-[1.1]">
+                    ❓
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-slate-800 leading-tight">{result.lokniti.agent}</h3>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokniti.role}</p>
+                  </div>
                 </div>
                 <button
                   onClick={() => isSpeaking === "lokniti" ? stopSpeaking() : speakArgument(result.lokniti.argument, "lokniti")}
-                  style={{
-                    marginLeft: "auto", padding: "6px 12px", borderRadius: 8,
-                    border: "1px solid #ef444440", background: isSpeaking === "lokniti" ? "#ef444420" : "transparent",
-                    color: "#ef4444", fontSize: 12, fontWeight: 600, cursor: "pointer",
-                  }}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokniti' ? 'bg-rose-500 text-white animate-pulse' : 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white'}`}
                 >
-                  {isSpeaking === "lokniti" ? "⏹ Stop" : "🔊 Listen"}
+                  {isSpeaking === "lokniti" ? "⏹" : "🔊"}
                 </button>
               </div>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--text-secondary)", margin: 0 }}>
+              <p className="text-[15px] leading-[1.8] text-slate-600/90 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokniti.argument}
               </p>
               {result.lokniti.key_points.length > 0 && (
-                <div style={{ marginTop: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#ef4444", marginBottom: 6, textTransform: "uppercase" }}>
-                    Key Points
-                  </div>
+                <div className="space-y-3 p-5 rounded-2xl bg-rose-50/50 border border-rose-100 shadow-inner">
+                  <div className="text-[10px] font-black uppercase text-rose-500 tracking-widest">Crucial Objections</div>
                   {result.lokniti.key_points.map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: "var(--text-muted)", padding: "3px 0" }}>
-                      • {p}
+                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
+                      <span className="text-rose-400 mt-1">◈</span>
+                      <span>{p}</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* VS Divider */}
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "center",
-              padding: "0 16px",
-            }}>
-              <div style={{
-                width: 48, height: 48, borderRadius: "50%",
-                background: "linear-gradient(135deg, #2563EB, #8b5cf6)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 14, fontWeight: 900, color: "#fff",
-                boxShadow: "0 4px 20px rgba(99,102,241,0.3)",
-              }}>
+            {/* VS CENTER */}
+            <div className="flex items-center justify-center px-6 relative">
+              <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-[13px] font-black text-white shadow-2xl relative z-10 border-4 border-white">
                 VS
               </div>
+              <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-gradient-to-b from-transparent via-slate-200 to-transparent translate-x-[-50%]" />
             </div>
 
-            {/* LokMitra */}
-            <div style={{
-              background: "linear-gradient(135deg, #2563EB12, #2563EB06)",
-              borderRadius: 16, border: `1px solid ${ttsSection === "lokmitra" ? "#2563EB" : "#2563EB25"}`, padding: 24,
-              transition: "border-color 0.3s ease",
-              boxShadow: ttsSection === "lokmitra" ? "0 0 20px rgba(37,99,235,0.15)" : "none",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 20,
-                }}>
-                  ⚖️
-                </div>
-                <div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: "#2563EB" }}>{result.lokmitra.agent}</div>
-                  <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{result.lokmitra.role}</div>
+            {/* LokMitra (Proposition) */}
+            <div className={`glass-card rounded-3xl p-8 border-indigo-200/40 transition-all duration-500 ${ttsSection === "lokmitra" ? 'scale-[1.02] border-indigo-500/50 ring-4 ring-indigo-500/10 bg-white' : ''}`}>
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 flex items-center justify-center text-2xl filter contrast-[1.1]">
+                    ⚖️
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-slate-800 leading-tight">{result.lokmitra.agent}</h3>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokmitra.role}</p>
+                  </div>
                 </div>
                 <button
                   onClick={() => isSpeaking === "lokmitra" ? stopSpeaking() : speakArgument(result.lokmitra.argument, "lokmitra")}
-                  style={{
-                    marginLeft: "auto", padding: "6px 12px", borderRadius: 8,
-                    border: "1px solid #2563EB40", background: isSpeaking === "lokmitra" ? "#2563EB20" : "transparent",
-                    color: "#2563EB", fontSize: 12, fontWeight: 600, cursor: "pointer",
-                  }}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokmitra' ? 'bg-indigo-500 text-white animate-pulse' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white'}`}
                 >
-                  {isSpeaking === "lokmitra" ? "⏹ Stop" : "🔊 Listen"}
+                  {isSpeaking === "lokmitra" ? "⏹" : "🔊"}
                 </button>
               </div>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--text-secondary)", margin: 0 }}>
+              <p className="text-[15px] leading-[1.8] text-slate-600/90 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokmitra.argument}
               </p>
               {result.lokmitra.key_points.length > 0 && (
-                <div style={{ marginTop: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#2563EB", marginBottom: 6, textTransform: "uppercase" }}>
-                    Key Points
-                  </div>
+                <div className="space-y-3 p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 shadow-inner">
+                  <div className="text-[10px] font-black uppercase text-indigo-500 tracking-widest">Defense Pillars</div>
                   {result.lokmitra.key_points.map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: "var(--text-muted)", padding: "3px 0" }}>
-                      • {p}
+                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
+                      <span className="text-indigo-400 mt-1">◈</span>
+                      <span>{p}</span>
                     </div>
                   ))}
                 </div>
@@ -696,123 +755,64 @@ export default function DebatePage() {
             </div>
           </div>
 
-          {/* Constitutional Articles */}
+          {/* References & Links */}
           {result.key_constitutional_articles && result.key_constitutional_articles.length > 0 && (
-            <div style={{
-              marginTop: 16, display: "flex", alignItems: "center", justifyContent: "center",
-              gap: 6, flexWrap: "wrap",
-            }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
-                Referenced:
-              </span>
+            <div className="flex items-center justify-center gap-2 flex-wrap pb-4">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-2">Constitutional Base:</span>
               {result.key_constitutional_articles.map((a, i) => (
-                <span key={i} style={{
-                  fontSize: 10, padding: "2px 8px", borderRadius: 6,
-                  background: "rgba(139,92,246,0.1)", color: "#8b5cf6", fontWeight: 600,
-                }}>
+                <div key={i} className="px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black shadow-sm ring-1 ring-amber-200/50 border border-white hover:bg-amber-100 transition-all cursor-default">
                   {a}
-                </span>
+                </div>
               ))}
             </div>
           )}
 
-          {/* Verdict */}
+          {/* Verdict Segment */}
           {result.verdict && (
-            <div style={{
-              marginTop: 24, padding: 20, borderRadius: 14,
-              background: "linear-gradient(135deg, #8b5cf622, #2563EB12)",
-              border: `1px solid ${ttsSection === "verdict" ? "#8b5cf6" : "#8b5cf630"}`, textAlign: "center",
-              transition: "border-color 0.3s ease",
-              boxShadow: ttsSection === "verdict" ? "0 0 20px rgba(139,92,246,0.15)" : "none",
-            }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                ⚖️ Moderator&apos;s Verdict
-              </span>
-              <p style={{ fontSize: 14, color: "var(--text-secondary)", marginTop: 8, lineHeight: 1.6 }}>
-                {result.verdict}
+            <div className={`glass-card rounded-3xl p-10 text-center border-indigo-200/50 transition-all duration-500 max-w-[900px] mx-auto ${ttsSection === 'verdict' ? 'ring-8 ring-indigo-500/5 border-indigo-500 scale-[1.01]' : ''}`}>
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-amber-50 text-amber-600 font-black uppercase text-[11px] tracking-[0.15em] mb-6 shadow-sm border border-amber-100 animate-[debateGlow_3s_infinite]">
+                ⚖️ AI Verdict
+              </div>
+              <p className="text-[17px] font-bold italic text-slate-800 leading-relaxed max-w-[700px] mx-auto tracking-tight">
+                &quot;{result.verdict}&quot;
               </p>
             </div>
           )}
 
-          {/* New Debate Button */}
-          <div style={{ textAlign: "center", marginTop: 24 }}>
+          <div className="flex items-center justify-center pt-8 pb-12">
             <button
               onClick={handleReset}
-              style={{
-                padding: "12px 32px", borderRadius: 12,
-                background: "var(--card)", color: "var(--text)",
-                fontWeight: 700, fontSize: 13, cursor: "pointer",
-                border: "1px solid var(--border)",
-              }}
+              className="premium-btn px-10 py-4 rounded-2xl bg-slate-900 text-white font-black text-[13px] uppercase tracking-widest shadow-2xl hover:bg-indigo-600"
             >
-              🔄 New Debate
+              🔄 Initialize New Arena
             </button>
           </div>
-        </>
+        </div>
       )}
 
-      {/* ── Floating TTS Control Bar ── */}
+      {/* ─── Persistent Voice Status Bar ─── */}
       {isPlaying && (
-        <div style={{
-          position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
-          background: "var(--card)", border: "1px solid var(--border)",
-          padding: "12px 24px", zIndex: 9999, borderRadius: 16,
-          display: "flex", alignItems: "center", gap: 16,
-          backdropFilter: "blur(12px)",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
-        }}>
-          {/* Progress dots */}
-          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-8 py-5 rounded-[24px] bg-white/90 backdrop-blur-2xl border border-indigo-100/50 shadow-2xl shadow-indigo-500/10 flex items-center gap-10 animate-in slide-in-from-bottom-10">
+          <div className="flex items-center gap-2">
             {(["lokniti", "lokmitra", "verdict"] as TTSSection[]).map((s) => (
-              <div key={s!} style={{
-                width: s === ttsSection ? 24 : 8, height: 8, borderRadius: 4,
-                background: s === ttsSection
-                  ? (s === "lokniti" ? "#ef4444" : s === "lokmitra" ? "#2563EB" : "#8b5cf6")
-                  : "var(--border)",
-                transition: "all 0.3s ease",
-              }} />
+              <div key={s!} className={`h-2.5 rounded-full transition-all duration-500 ${s === ttsSection ? 'w-10 ' + (s === 'lokniti' ? 'bg-rose-500' : s === 'lokmitra' ? 'bg-indigo-500' : 'bg-amber-500') : 'w-2.5 bg-slate-200'}`} />
             ))}
           </div>
 
-          {/* Speaker label */}
-          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", minWidth: 200, textAlign: "center" }}>
-            {ttsSection === "verdict" ? "⚖️" : "🎙"}{" "}
-            <span style={{
-              color: ttsSection === "lokniti" ? "#ef4444" : ttsSection === "lokmitra" ? "#2563EB" : "#8b5cf6",
-            }}>
-              {currentSpeaker || "Speaking..."}
-            </span>
+          <div className="flex items-center gap-4 min-w-[200px]">
+            <div className={`w-3 h-3 rounded-full animate-pulse ${ttsSection === 'lokniti' ? 'bg-rose-500' : ttsSection === 'lokmitra' ? 'bg-indigo-500' : 'bg-amber-500'}`} />
+            <div className="text-sm font-black text-slate-800 tracking-tight leading-none uppercase">
+              {currentSpeaker?.split(" ")[0]} <span className="text-slate-400 font-bold ml-1">is speaking</span>
+            </div>
           </div>
 
-          {/* Pause/Resume */}
-          <button
-            onClick={pauseResumeTTS}
-            title="Space to toggle"
-            style={{
-              padding: "6px 16px", borderRadius: 8, border: "1px solid var(--border)",
-              background: "var(--bg)", color: "var(--text)", fontSize: 12,
-              fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
-            }}
-          >
-            {ttsPaused ? "▶️ Resume" : "⏸️ Pause"}
-          </button>
-
-          {/* Stop */}
-          <button
-            onClick={stopTTS}
-            title="Esc to stop"
-            style={{
-              padding: "6px 16px", borderRadius: 8, border: "1px solid #ef444440",
-              background: "rgba(239,68,68,0.08)", color: "#ef4444", fontSize: 12,
-              fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
-            }}
-          >
-            ⏹️ Stop
-          </button>
-
-          {/* Keyboard hint */}
-          <div style={{ fontSize: 9, color: "var(--text-muted)", whiteSpace: "nowrap" }}>
-            Space: pause · Esc: stop
+          <div className="flex items-center gap-3 border-l border-slate-100 pl-8">
+            <button onClick={pauseResumeTTS} className="w-12 h-12 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all flex items-center justify-center text-lg shadow-sm">
+              {ttsPaused ? "▶️" : "⏸"}
+            </button>
+            <button onClick={stopTTS} className="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-lg shadow-sm">
+              ⏹
+            </button>
           </div>
         </div>
       )}
