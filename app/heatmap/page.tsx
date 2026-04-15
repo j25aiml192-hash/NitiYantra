@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useSidebar } from "@/lib/SidebarContext";
-import { fetchComplaints, ComplaintResponse } from "@/lib/api";
+import { fetchComplaints, fetchReadinessIndex, ComplaintResponse, ReadinessState } from "@/lib/api";
 import "leaflet/dist/leaflet.css";
 
 /* ─── types ─── */
@@ -15,8 +15,10 @@ interface DistrictMarker {
   delayed: number;
   active: number;
   resolved: number;
+  pending: number;
   categories: string[];
   severity: "critical" | "warning" | "normal";
+  complaints: ComplaintResponse[];
 }
 
 /* ─── State → LatLng + zoom mapping ─── */
@@ -60,8 +62,6 @@ const STATE_COORDS: Record<string, { center: [number, number]; zoom: number }> =
   "Dadra and Nagar Haveli and Daman and Diu": { center: [20.4283, 72.8397], zoom: 9 },
 };
 
-
-
 /* ─── district → coords lookup ─── */
 const DISTRICT_COORDS: Record<string, { lat: number; lng: number; state: string }> = {
   "delhi":             { lat: 28.6139, lng: 77.209,  state: "Delhi" },
@@ -99,7 +99,6 @@ const DISTRICT_COORDS: Record<string, { lat: number; lng: number; state: string 
   "chandigarh":        { lat: 30.7333, lng: 76.7794, state: "Chandigarh" },
   "bhopal":            { lat: 23.2599, lng: 77.4126, state: "Madhya Pradesh" },
   "patna":             { lat: 25.6093, lng: 85.1376, state: "Bihar" },
-  /* ── Additional cities for national coverage ── */
   "surat":             { lat: 21.1702, lng: 72.8311, state: "Gujarat" },
   "ahmedabad":         { lat: 23.0225, lng: 72.5714, state: "Gujarat" },
   "vadodara":          { lat: 22.3072, lng: 73.1812, state: "Gujarat" },
@@ -133,15 +132,24 @@ const DISTRICT_COORDS: Record<string, { lat: number; lng: number; state: string 
 
 const DEFAULT_COORDS = { lat: 28.6, lng: 77.2, state: "Delhi" };
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Roads: "#f59e0b", "Water Supply": "#06b6d4", Water: "#06b6d4",
-  Electricity: "#2563EB", Sanitation: "#10b981", "Public Safety": "#ef4444",
-  Infrastructure: "#8b5cf6", Healthcare: "#ec4899", Education: "#14b8a6",
-  Transport: "#f97316", Housing: "#a855f7", Environment: "#22c55e",
+/* ─── Category colors for markers ─── */
+const MARKER_CATEGORY_COLORS: Record<string, string> = {
+  'Roads': '#E24B4A',
+  'Water Supply': '#378ADD',
+  'Electricity': '#EF9F27',
+  'Sanitation': '#1D9E75',
+  'Public Safety': '#7F77DD',
+  'Healthcare': '#D4537E',
+  'Education': '#639922',
+  'Other': '#888780',
 };
 
-const getSeverityColor = (s: string) =>
-  ({ critical: "#dc2626", warning: "#eab308", normal: "#16a34a" }[s] ?? "#6b7280");
+const STATUS_COLORS: Record<string, string> = {
+  pending: '#EF9F27',
+  in_progress: '#378ADD',
+  resolved: '#1D9E75',
+  escalated: '#E24B4A',
+};
 
 /* ─── group complaints into district markers ─── */
 function buildMarkers(complaints: ComplaintResponse[]): DistrictMarker[] {
@@ -156,11 +164,11 @@ function buildMarkers(complaints: ComplaintResponse[]): DistrictMarker[] {
     const coords = DISTRICT_COORDS[key] || DEFAULT_COORDS;
     const total = items.length;
     const resolved = items.filter((i) => i.status === "resolved").length;
-    const escalated = items.filter((i) => i.escalated || i.status === "escalated" || i.status === "delayed" || i.status === "overdue").length;
+    const pending = items.filter((i) => i.status === "pending").length;
+    const escalated = items.filter((i) => i.escalated || i.status === "escalated").length;
     const active = total - resolved;
     const categories = Array.from(new Set(items.map((i) => i.category).filter(Boolean)));
 
-    /* Severity thresholds: escalated + unresolved ratio */
     const unresolved = total - resolved;
     const severity: "critical" | "warning" | "normal" =
       escalated >= 3 || (unresolved >= 4 && resolved === 0) ? "critical"
@@ -176,8 +184,10 @@ function buildMarkers(complaints: ComplaintResponse[]): DistrictMarker[] {
       delayed: escalated,
       active,
       resolved,
+      pending,
       categories,
       severity,
+      complaints: items,
     };
   });
 }
@@ -189,9 +199,13 @@ export default function HeatmapPage() {
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [complaints, setComplaints] = useState<ComplaintResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [regionLevel, setRegionLevel] = useState("state");
   const [filterState, setFilterState] = useState("All");
   const [notifOpen, setNotifOpen] = useState(false);
+
+  /* ONOE overlay state */
+  const [onoeOverlay, setOnoeOverlay] = useState(false);
+  const [readinessData, setReadinessData] = useState<ReadinessState[]>([]);
+  const [showMarkers, setShowMarkers] = useState(true);
 
   /* Listen for notification panel toggle from Header */
   useEffect(() => {
@@ -210,10 +224,12 @@ export default function HeatmapPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markersLayerRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const geoLayerRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const leafletRef = useRef<any>(null);
   const [mapReady, setMapReady] = useState(false);
 
-  /* Fetch complaints from backend */
+  /* Fetch complaints */
   const loadComplaints = useCallback(async () => {
     try {
       const data = await fetchComplaints();
@@ -231,6 +247,14 @@ export default function HeatmapPage() {
     return () => clearInterval(interval);
   }, [loadComplaints]);
 
+  /* Fetch readiness data when overlay toggled on */
+  useEffect(() => {
+    if (!onoeOverlay || readinessData.length > 0) return;
+    fetchReadinessIndex(2029).then(data => {
+      setReadinessData(data.readiness_index || []);
+    }).catch(err => console.error("Readiness fetch error:", err));
+  }, [onoeOverlay, readinessData.length]);
+
   /* Build markers from real data */
   const markers = useMemo(() => buildMarkers(complaints), [complaints]);
 
@@ -247,7 +271,8 @@ export default function HeatmapPage() {
   }, [markers, filterState]);
 
   const totalComplaints = filteredMarkers.reduce((a, d) => a + d.total, 0);
-  const criticalCount = filteredMarkers.filter((d) => d.severity === "critical").length;
+  const totalPending = filteredMarkers.reduce((a, d) => a + d.pending, 0);
+  const highRiskStates = readinessData.filter(r => r.score < 50).length;
   const stateIssues = selectedState ? filteredMarkers.filter((d) => d.state === selectedState) : [];
   const selectedData = selectedDistrict ? filteredMarkers.find((m) => m.district === selectedDistrict) ?? null : null;
 
@@ -257,10 +282,8 @@ export default function HeatmapPage() {
 
     const initMap = async () => {
       const L = await import("leaflet");
-
       leafletRef.current = L;
 
-      // Fix default icon paths
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
@@ -280,13 +303,11 @@ export default function HeatmapPage() {
         maxBounds: [[5.0, 66.0], [38.0, 99.0]],
         maxBoundsViscosity: 1.0,
         minZoom: 4,
-        maxZoom: 10,
+        maxZoom: 12,
       });
 
-      /* Fit map to India bounds instead of static center/zoom */
       map.fitBounds(indiaBounds, { padding: [20, 20] });
 
-      /* Clean, minimal tile layer */
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
         { maxZoom: 19, attribution: "" }
@@ -299,11 +320,9 @@ export default function HeatmapPage() {
         );
         if (geoRes.ok) {
           const indiaGeo = await geoRes.json();
-          // Build a world polygon with India as a hole
           const worldOuter: [number, number][] = [
             [-90, -180], [-90, 180], [90, 180], [90, -180], [-90, -180]
           ];
-          // Extract India coordinates (handle FeatureCollection or Feature)
           const features = indiaGeo.features || [indiaGeo];
           const indiaHoles: [number, number][][] = [];
           for (const feature of features) {
@@ -316,7 +335,6 @@ export default function HeatmapPage() {
               }
             }
           }
-          // Create mask polygon: world exterior with India holes
           const maskCoords = [worldOuter, ...indiaHoles];
           L.polygon(maskCoords, {
             fillColor: "#f8f4ec",
@@ -328,7 +346,6 @@ export default function HeatmapPage() {
             interactive: false,
           }).addTo(map);
 
-          // Add India border outline
           L.geoJSON(indiaGeo, {
             style: {
               color: "#2563EB",
@@ -345,13 +362,11 @@ export default function HeatmapPage() {
       }
 
       L.control.zoom({ position: "topleft" }).addTo(map);
-      L.control.attribution({ position: "bottomleft" }).addTo(map);
 
       const markersLayer = L.layerGroup().addTo(map);
       markersLayerRef.current = markersLayer;
       mapInstanceRef.current = map;
 
-      /* Click empty map area → smooth zoom-out to India */
       map.on("click", () => {
         setTimeout(() => {
           setSelectedState(null);
@@ -359,9 +374,7 @@ export default function HeatmapPage() {
         }, 100);
       });
 
-      /* Initial size fix */
       setTimeout(() => map.invalidateSize(), 300);
-
       setMapReady(true);
     };
 
@@ -372,6 +385,7 @@ export default function HeatmapPage() {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
         markersLayerRef.current = null;
+        geoLayerRef.current = null;
       }
     };
   }, []);
@@ -385,7 +399,7 @@ export default function HeatmapPage() {
     return () => clearTimeout(timer);
   }, [sidebarOpen]);
 
-  /* ═══ Re-render markers when data changes ═══ */
+  /* ═══ Re-render complaint markers ═══ */
   useEffect(() => {
     const L = leafletRef.current;
     const markersLayer = markersLayerRef.current;
@@ -393,52 +407,235 @@ export default function HeatmapPage() {
 
     markersLayer.clearLayers();
 
+    if (!showMarkers) return;
+
+    /* Instead of district-level grouped markers, show individual complaint pins */
     const visibleMarkers = selectedState
       ? filteredMarkers.filter((d) => d.state === selectedState)
       : filteredMarkers;
 
     visibleMarkers.forEach((d) => {
-      const color = getSeverityColor(d.severity);
-      const icon = L.divIcon({
-        className: "leaflet-custom-marker",
-        html: `
+      /* Show each complaint as an individual marker with slight offset */
+      d.complaints.forEach((c, idx) => {
+        const category = c.category || 'Other';
+        const status = c.status || 'pending';
+        const color = MARKER_CATEGORY_COLORS[category] || '#888780';
+        const statusColor = STATUS_COLORS[status] || '#888780';
+
+        /* Slight offset per complaint so they don't stack exactly */
+        const offsetLat = d.lat + (idx % 5) * 0.003 - 0.006;
+        const offsetLng = d.lng + (Math.floor(idx / 5) % 3) * 0.004 - 0.004;
+
+        const isEscalated = status === 'escalated';
+        const isResolved = status === 'resolved';
+        const isPending = status === 'pending';
+        const size = isEscalated ? 14 : isResolved ? 8 : 10;
+        const outerSize = size + 8;
+        const opacity = isResolved ? 0.4 : 1;
+        const pulseSpeed = isEscalated ? '1.2s' : '2s';
+
+        const shouldPulse = isPending || isEscalated;
+
+        const pulseHtml = shouldPulse ? `
           <div style="
-            width: 30px; height: 30px; border-radius: 50%;
-            background: ${color}; border: 3px solid white;
-            box-shadow: 0 2px 8px ${color}80, 0 0 0 4px ${color}20;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 11px; font-weight: 700;
-            cursor: pointer;
-            animation: markerFadeIn 0.4s ease-out;
-          ">${d.total}</div>`,
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-      });
+            position:absolute;
+            top:50%;left:50%;
+            transform:translate(-50%,-50%);
+            width:${outerSize}px;height:${outerSize}px;
+            border-radius:50%;
+            background:${color};
+            opacity:0.3;
+            animation:markerPulse ${pulseSpeed} infinite;
+          "></div>` : '';
 
-      const marker = L.marker([d.lat, d.lng], { icon });
-      marker.bindPopup(`
-        <div style="font-family: Inter, system-ui, sans-serif; min-width: 180px;">
-          <div style="font-weight: 700; font-size: 13px; color: #1e293b; margin-bottom: 4px;">${d.district}</div>
-          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background: ${color}; display: inline-block;"></span>
-            <span style="font-size: 11px; color: #64748b; text-transform: capitalize;">${d.severity}</span>
+        const icon = L.divIcon({
+          html: `
+            <div style="position:relative;width:${outerSize}px;height:${outerSize}px;opacity:${opacity}">
+              ${pulseHtml}
+              <div style="
+                position:absolute;
+                top:50%;left:50%;
+                transform:translate(-50%,-50%);
+                width:${size}px;height:${size}px;
+                border-radius:50%;
+                background:${color};
+                border:2px solid white;
+                box-shadow:0 1px 4px rgba(0,0,0,0.3);
+              "></div>
+            </div>`,
+          className: '',
+          iconSize: [outerSize, outerSize],
+          iconAnchor: [outerSize / 2, outerSize / 2],
+        });
+
+        const truncatedText = c.text.length > 80 ? c.text.slice(0, 80) + '…' : c.text;
+        const dateStr = (() => {
+          try {
+            return new Date(c.date_submitted).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+          } catch { return 'N/A'; }
+        })();
+
+        const marker = L.marker([offsetLat, offsetLng], { icon });
+        marker.bindPopup(`
+          <div style="min-width:200px;padding:4px;font-family:Inter,system-ui,sans-serif">
+            <div style="font-weight:600;font-size:14px;margin-bottom:4px;color:#1e293b">${category}</div>
+            <div style="font-size:12px;color:#666;margin-bottom:6px">${c.district}</div>
+            <div style="font-size:12px;margin-bottom:8px;color:#475569;line-height:1.4">${truncatedText}</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:${statusColor};color:white;text-transform:capitalize">${status.replace('_', ' ')}</span>
+              <span style="font-size:11px;color:#888">${dateStr}</span>
+            </div>
           </div>
-          <div style="font-size: 11px; color: #475569;">
-            <strong style="color: #1e293b;">${d.total}</strong> total •
-            <strong style="color: #16a34a;">${d.resolved}</strong> resolved •
-            <strong style="color: #dc2626;">${d.delayed}</strong> delayed
-          </div>
-        </div>
-      `, { className: "leaflet-premium-popup" });
+        `, { className: 'leaflet-premium-popup' });
 
-      marker.on("click", () => {
-        setSelectedState(d.state);
-        setSelectedDistrict(d.district);
+        marker.on("click", () => {
+          setSelectedState(d.state);
+          setSelectedDistrict(d.district);
+        });
+
+        markersLayer.addLayer(marker);
       });
-
-      markersLayer.addLayer(marker);
     });
-  }, [filteredMarkers, selectedState, mapReady]);
+  }, [filteredMarkers, selectedState, mapReady, showMarkers]);
+
+  /* ═══ ONOE GeoJSON Overlay ═══ */
+  useEffect(() => {
+    const L = leafletRef.current;
+    const map = mapInstanceRef.current;
+    if (!L || !map || !mapReady) return;
+
+    /* Remove old GeoJSON layer */
+    if (geoLayerRef.current) {
+      map.removeLayer(geoLayerRef.current);
+      geoLayerRef.current = null;
+    }
+
+    if (!onoeOverlay || readinessData.length === 0) return;
+
+    /* Build readiness lookup — case-insensitive */
+    const readinessMap = new Map<string, ReadinessState>();
+    readinessData.forEach(r => {
+      readinessMap.set(r.state.toLowerCase(), r);
+    });
+
+    const getReadinessColor = (score: number) => {
+      if (score >= 70) return '#1D9E75';
+      if (score >= 50) return '#EF9F27';
+      return '#E24B4A';
+    };
+
+    const getGrade = (score: number) => {
+      if (score >= 90) return 'A+';
+      if (score >= 80) return 'A';
+      if (score >= 70) return 'B+';
+      if (score >= 60) return 'B';
+      if (score >= 50) return 'C';
+      if (score >= 40) return 'D';
+      return 'F';
+    };
+
+    /* Try loading India state GeoJSON */
+    const loadGeoJSON = async () => {
+      let geoData = null;
+      const urls = [
+        'https://cdn.jsdelivr.net/npm/india-geojson@1.0.0/state.json',
+        'https://raw.githubusercontent.com/geohacker/india/master/state/india_state.geojson',
+      ];
+
+      for (const url of urls) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            geoData = await res.json();
+            break;
+          }
+        } catch { continue; }
+      }
+
+      if (!geoData) {
+        console.warn("Could not load India state GeoJSON for ONOE overlay");
+        return;
+      }
+
+      /* Count complaints per state */
+      const complaintsByState = new Map<string, { total: number; pending: number }>();
+      complaints.forEach(c => {
+        const d = (c.district || '').toLowerCase().trim();
+        const stName = DISTRICT_COORDS[d]?.state || '';
+        if (stName) {
+          const existing = complaintsByState.get(stName.toLowerCase()) || { total: 0, pending: 0 };
+          existing.total++;
+          if (c.status === 'pending') existing.pending++;
+          complaintsByState.set(stName.toLowerCase(), existing);
+        }
+      });
+
+      const geoLayer = L.geoJSON(geoData, {
+        style: (feature: { properties?: { NAME_1?: string; name?: string; ST_NM?: string } }) => {
+          const name = (feature?.properties?.NAME_1 || feature?.properties?.name || feature?.properties?.ST_NM || '').toLowerCase();
+          const rState = readinessMap.get(name);
+          const color = rState ? getReadinessColor(rState.score) : '#B4B2A9';
+          return {
+            fillColor: color,
+            fillOpacity: 0.35,
+            weight: 1,
+            color: 'white',
+            opacity: 0.8,
+          };
+        },
+        onEachFeature: (feature: { properties?: { NAME_1?: string; name?: string; ST_NM?: string } }, layer: { on: (event: string, handler: () => void) => void; setStyle: (style: object) => void; bindPopup: (content: string, options?: object) => void }) => {
+          const name = (feature?.properties?.NAME_1 || feature?.properties?.name || feature?.properties?.ST_NM || '');
+          const nameLower = name.toLowerCase();
+          const rState = readinessMap.get(nameLower);
+          const cData = complaintsByState.get(nameLower);
+          const color = rState ? getReadinessColor(rState.score) : '#B4B2A9';
+          const grade = rState ? getGrade(rState.score) : '—';
+          const riskBadgeColor = rState ? (rState.score >= 70 ? '#1D9E75' : rState.score >= 50 ? '#EF9F27' : '#E24B4A') : '#B4B2A9';
+          const riskLabel = rState ? (rState.score >= 70 ? 'Low Risk' : rState.score >= 50 ? 'Moderate Risk' : 'High Risk') : 'No Data';
+
+          layer.on('mouseover', () => {
+            layer.setStyle({ fillOpacity: 0.6, weight: 2 });
+          });
+          layer.on('mouseout', () => {
+            layer.setStyle({ fillOpacity: 0.35, weight: 1 });
+          });
+
+          const popupContent = `
+            <div style="min-width:220px;padding:4px;font-family:Inter,system-ui,sans-serif">
+              <div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:6px">${name}</div>
+              ${rState ? `
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                  <span style="font-size:22px;font-weight:800;color:${color}">${rState.score}</span>
+                  <span style="font-size:14px;color:#64748b;font-weight:600">— ${grade}</span>
+                  <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:${riskBadgeColor};color:white;font-weight:600">${riskLabel}</span>
+                </div>
+                <div style="font-size:11px;color:#475569;margin-bottom:3px">
+                  📅 ${rState.years_until_election}y to election • ${rState.status}
+                </div>
+                <div style="font-size:11px;color:#475569;margin-bottom:3px">
+                  🗳 ${rState.constituencies} constituencies • ${rState.booths.toLocaleString()} booths
+                </div>
+                ${cData ? `<div style="font-size:11px;color:#475569;margin-bottom:3px">
+                  📋 ${cData.total} complaints (${cData.pending} pending)
+                </div>` : ''}
+                <div style="font-size:10px;color:#94a3b8;margin-bottom:6px">
+                  ⚠ Key risk: ${rState.key_risk}
+                </div>
+                <a href="/simulator" style="display:inline-block;font-size:11px;padding:4px 12px;border-radius:8px;background:#6366f1;color:white;text-decoration:none;font-weight:600">View full analysis →</a>
+              ` : `<div style="font-size:12px;color:#94a3b8">No readiness data available</div>`}
+            </div>
+          `;
+
+          layer.bindPopup(popupContent, { className: 'leaflet-premium-popup', maxWidth: 280 });
+        },
+      });
+
+      geoLayer.addTo(map);
+      geoLayerRef.current = geoLayer;
+    };
+
+    loadGeoJSON();
+  }, [onoeOverlay, readinessData, mapReady, complaints]);
 
   /* ═══ FlyTo when state changes ═══ */
   useEffect(() => {
@@ -452,7 +649,6 @@ export default function HeatmapPage() {
         easeLinearity: 0.25
       });
     } else {
-      /* Reset to full India view — smooth zoom-out */
       map.flyToBounds(
         [[5.5, 67.0], [37.5, 98.0]],
         { duration: 1.2, padding: [10, 10], easeLinearity: 0.25 }
@@ -481,11 +677,7 @@ export default function HeatmapPage() {
     }
   };
 
-  const legend = [
-    { label: "High", color: "#dc2626" },
-    { label: "Medium", color: "#eab308" },
-    { label: "Low", color: "#16a34a" },
-  ];
+  const categoryLegend = Object.entries(MARKER_CATEGORY_COLORS);
 
   return (
     <div className="h-screen bg-[var(--card)] text-[var(--text)] flex flex-col">
@@ -498,9 +690,10 @@ export default function HeatmapPage() {
         .leaflet-premium-popup .leaflet-popup-tip {
           box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         }
-        .leaflet-custom-marker {
-          background: transparent !important;
-          border: none !important;
+        @keyframes markerPulse {
+          0% { transform: translate(-50%,-50%) scale(1); opacity: 0.3; }
+          70% { transform: translate(-50%,-50%) scale(1.8); opacity: 0; }
+          100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
         }
         @keyframes markerFadeIn {
           from { opacity: 0; transform: scale(0.5); }
@@ -508,11 +701,10 @@ export default function HeatmapPage() {
         }
       `}</style>
 
-      {/* ═══ TOP BAR — Modern Glassmorphism ═══ */}
+      {/* ═══ TOP BAR ═══ */}
       <div className="h-[56px] bg-[var(--card)] border-b border-[var(--border)] flex items-center justify-between px-6 shrink-0 backdrop-blur-sm">
         {/* Left: Title + Status */}
         <div className="flex items-center gap-3">
-          {/* Icon badge */}
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-sm shadow-indigo-500/20">
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -535,7 +727,7 @@ export default function HeatmapPage() {
             </div>
           </div>
 
-          {/* Breadcrumb navigation */}
+          {/* Breadcrumb */}
           {selectedState && (
             <>
               <div className="w-px h-6 bg-[var(--border)] mx-1" />
@@ -567,42 +759,100 @@ export default function HeatmapPage() {
           )}
         </div>
 
-        {/* Right: Stats + Legend */}
-        <div className="flex items-center gap-4">
-          {/* Mini stats pills */}
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold text-[var(--text-secondary)] bg-[var(--bg)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
-              {filteredMarkers.length} districts
+        {/* Right: Stat pills */}
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-semibold text-[var(--text-secondary)] bg-[var(--bg)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
+            📋 {totalComplaints} complaints
+          </span>
+          <span className="text-[10px] font-semibold text-amber-500 bg-amber-500/8 px-2.5 py-1 rounded-lg border border-amber-500/15">
+            ⏳ {totalPending} pending
+          </span>
+          {onoeOverlay && highRiskStates > 0 && (
+            <span className="text-[10px] font-semibold text-red-500 bg-red-500/8 px-2.5 py-1 rounded-lg border border-red-500/15">
+              🔴 {highRiskStates} high risk states
             </span>
-            {criticalCount > 0 && (
-              <span className="text-[10px] font-semibold text-red-500 bg-red-500/8 px-2.5 py-1 rounded-lg border border-red-500/15">
-                {criticalCount} critical
-              </span>
-            )}
-          </div>
-
-          {/* Severity legend */}
-          <div className="flex items-center gap-0.5 bg-[var(--bg)] px-3 py-1.5 rounded-xl border border-[var(--border)]">
-            {legend.map((l, i) => (
-              <div key={l.label} className="flex items-center gap-1" style={{ marginLeft: i > 0 ? 8 : 0 }}>
-                <span className="w-2 h-2 rounded-full inline-block ring-1 ring-white/50" style={{ background: l.color }} />
-                <span className="text-[10px] font-medium text-[var(--text-muted)]">{l.label}</span>
-              </div>
-            ))}
-          </div>
+          )}
         </div>
       </div>
 
       {/* ═══ MAIN ═══ */}
       <div className="flex-1 flex min-h-0 relative">
 
-        {/* ─── LEAFLET MAP (inline, respects sidebar) ─── */}
+        {/* ─── LEAFLET MAP ─── */}
         <div className="flex-1 relative overflow-hidden rounded-xl border border-[var(--border)] shadow-[0_10px_30px_rgba(0,0,0,0.04)] m-1.5 transition-all duration-300 ease-in-out">
           <div
             ref={mapContainerRef}
             className="w-full h-full"
             style={{ minHeight: "calc(100vh - 260px)" }}
           />
+
+          {/* ── ONOE Toggle Button ── */}
+          <button
+            onClick={() => setOnoeOverlay(!onoeOverlay)}
+            className={`absolute top-3 right-3 z-[500] px-3 py-2 rounded-xl text-xs font-bold shadow-lg transition-all flex items-center gap-2 ${
+              onoeOverlay
+                ? 'bg-indigo-600 text-white shadow-indigo-500/30 hover:bg-indigo-500'
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 shadow-sm'
+            }`}
+          >
+            <span className={`w-2 h-2 rounded-full ${onoeOverlay ? 'bg-emerald-300 animate-pulse' : 'bg-slate-300'}`} />
+            ONOE Overlay {onoeOverlay ? 'ON' : 'OFF'}
+          </button>
+
+          {/* ── Layer Controls ── */}
+          <div className="absolute top-14 right-3 z-[500] bg-white/95 backdrop-blur-md rounded-xl border border-slate-200 shadow-lg p-3 space-y-2">
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Layers</p>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showMarkers}
+                onChange={(e) => setShowMarkers(e.target.checked)}
+                className="w-3.5 h-3.5 rounded accent-indigo-500"
+              />
+              <span className="text-[11px] font-medium text-slate-600">Complaint markers</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={onoeOverlay}
+                onChange={(e) => setOnoeOverlay(e.target.checked)}
+                className="w-3.5 h-3.5 rounded accent-indigo-500"
+              />
+              <span className="text-[11px] font-medium text-slate-600">ONOE readiness</span>
+            </label>
+          </div>
+
+          {/* ── Category Legend (bottom-left) ── */}
+          <div className="absolute bottom-3 left-3 z-[500] bg-white/95 backdrop-blur-md rounded-xl border border-slate-200 shadow-lg p-3">
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-2">Categories</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+              {categoryLegend.map(([cat, color]) => (
+                <div key={cat} className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 ring-1 ring-white/50" style={{ background: color }} />
+                  <span className="text-[10px] text-slate-500 font-medium">{cat}</span>
+                </div>
+              ))}
+            </div>
+            {onoeOverlay && (
+              <>
+                <div className="border-t border-slate-100 mt-2 pt-2">
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">ONOE Readiness</p>
+                  <div className="space-y-1">
+                    {[
+                      { label: 'Ready (70+)', color: '#1D9E75' },
+                      { label: 'Moderate (50-69)', color: '#EF9F27' },
+                      { label: 'At Risk (<50)', color: '#E24B4A' },
+                    ].map(l => (
+                      <div key={l.label} className="flex items-center gap-1.5">
+                        <span className="w-4 h-2 rounded-sm" style={{ background: l.color, opacity: 0.5 }} />
+                        <span className="text-[10px] text-slate-500 font-medium">{l.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Hint at bottom */}
           {!selectedState && !loading && (
@@ -612,7 +862,7 @@ export default function HeatmapPage() {
           )}
         </div>
 
-        {/* ═══ FLOATING GLASSMORPHISM PANEL (overlaps map) ═══ */}
+        {/* ═══ FLOATING PANEL ═══ */}
         <div
           className="absolute w-80 z-[500] bg-[var(--card)]/70 backdrop-blur-xl border border-white/40 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] ring-1 ring-black/5 hover:shadow-[0_25px_70px_rgba(0,0,0,0.18)] overflow-auto"
           style={{
@@ -644,19 +894,6 @@ export default function HeatmapPage() {
             </button>
           )}
 
-          {/* Region Level */}
-          <div className="mb-4">
-            <label className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-medium block mb-1.5">Region Level</label>
-            <select
-              value={regionLevel}
-              onChange={(e) => setRegionLevel(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-[var(--card)]/50 backdrop-blur-md border border-white/40 text-xs text-[var(--text-secondary)] outline-none focus:ring-2 focus:ring-[#6495ED]/40 transition-all cursor-pointer"
-            >
-              <option value="state">State / UT</option>
-              <option value="district">District</option>
-            </select>
-          </div>
-
           {/* Target State */}
           <div className="mb-4">
             <label className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-medium block mb-1.5">Target State</label>
@@ -672,7 +909,7 @@ export default function HeatmapPage() {
             </select>
           </div>
 
-          {/* Quick state buttons (states with data) */}
+          {/* Quick access */}
           {!selectedState && stateList.length > 0 && (
             <div className="mb-4">
               <label className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-medium block mb-2">Quick Access</label>
@@ -697,12 +934,12 @@ export default function HeatmapPage() {
               <span className="text-xs font-semibold text-[#4f7df3]">{totalComplaints}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[10px] text-[var(--text-muted)]">Districts</span>
-              <span className="text-xs font-semibold text-[#6495ED]">{filteredMarkers.length}</span>
+              <span className="text-[10px] text-[var(--text-muted)]">Pending</span>
+              <span className="text-xs font-semibold text-amber-500">{totalPending}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[10px] text-[var(--text-muted)]">High Priority</span>
-              <span className="text-xs font-semibold text-[#3b6fd4]">{criticalCount}</span>
+              <span className="text-[10px] text-[var(--text-muted)]">Districts</span>
+              <span className="text-xs font-semibold text-[#6495ED]">{filteredMarkers.length}</span>
             </div>
           </div>
 
@@ -720,8 +957,8 @@ export default function HeatmapPage() {
                 <div className="grid grid-cols-3 gap-1.5 mb-3">
                   {[
                     { label: "Total",    val: stateIssues.reduce((a, d) => a + d.total, 0),    c: "#3b82f6" },
-                    { label: "Delayed",  val: stateIssues.reduce((a, d) => a + d.delayed, 0),  c: "#60a5fa" },
-                    { label: "Resolved", val: stateIssues.reduce((a, d) => a + d.resolved, 0), c: "#93c5fd" },
+                    { label: "Pending",  val: stateIssues.reduce((a, d) => a + d.pending, 0),  c: "#EF9F27" },
+                    { label: "Resolved", val: stateIssues.reduce((a, d) => a + d.resolved, 0), c: "#1D9E75" },
                   ].map((s) => (
                     <div key={s.label} className="bg-[var(--card)]/50 rounded-lg p-1.5 text-center border border-white/30">
                       <p className="text-xs font-bold m-0" style={{ color: s.c }}>{s.val}</p>
@@ -742,7 +979,7 @@ export default function HeatmapPage() {
                           : "bg-[var(--card)]/40 border-transparent hover:bg-[var(--card)]/60"
                       }`}
                     >
-                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: getSeverityColor(d.severity) }} />
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: MARKER_CATEGORY_COLORS[d.categories[0]] || '#888780' }} />
                       <span className="text-[var(--text)] flex-1">{d.district}</span>
                       <span className="text-[10px] text-gray-400">{d.total}</span>
                     </button>
@@ -753,16 +990,11 @@ export default function HeatmapPage() {
                 <div className={`overflow-hidden transition-all duration-700 ${selectedData ? "max-h-60 opacity-100 mt-3" : "max-h-0 opacity-0 mt-0"}`}>
                   {selectedData && (
                     <div className="pt-2 border-t border-black/5">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h4 className="text-xs font-bold text-[var(--text)] m-0">{selectedData.district}</h4>
-                        <span className="text-[8px] font-semibold text-white px-1.5 py-0.5 rounded-full" style={{ background: getSeverityColor(selectedData.severity) }}>
-                          {selectedData.severity.toUpperCase()}
-                        </span>
-                      </div>
+                      <h4 className="text-xs font-bold text-[var(--text)] m-0 mb-2">{selectedData.district}</h4>
                       <div className="space-y-1.5 mb-2">
                         {[
                           { label: "Active", val: selectedData.active, max: selectedData.total, c: "#3b82f6" },
-                          { label: "Resolved", val: selectedData.resolved, max: selectedData.total, c: "#93c5fd" },
+                          { label: "Resolved", val: selectedData.resolved, max: selectedData.total, c: "#1D9E75" },
                         ].map((bar) => (
                           <div key={bar.label}>
                             <div className="flex justify-between mb-0.5">
@@ -780,7 +1012,7 @@ export default function HeatmapPage() {
                       <div className="flex flex-wrap gap-1">
                         {selectedData.categories.map((cat) => (
                           <span key={cat} className="text-[9px] px-1.5 py-0.5 rounded-full font-medium"
-                            style={{ background: (CATEGORY_COLORS[cat] ?? "#94a3b8") + "18", color: CATEGORY_COLORS[cat] ?? "#64748b" }}>
+                            style={{ background: (MARKER_CATEGORY_COLORS[cat] ?? "#94a3b8") + "18", color: MARKER_CATEGORY_COLORS[cat] ?? "#64748b" }}>
                             {cat}
                           </span>
                         ))}

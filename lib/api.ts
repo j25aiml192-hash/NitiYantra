@@ -332,3 +332,42 @@ export async function generateDebate(topic: string, language: string = "en"): Pr
   if (!res.ok) throw new Error("Failed to generate debate");
   return res.json();
 }
+
+/* ─── Election Readiness Index ─── */
+export interface ReadinessState {
+  state: string;
+  type: string;
+  score: number;
+  grade: string;
+  voters_cr: number;
+  constituencies: number;
+  booths: number;
+  term_end_year: number;
+  years_until_election: number;
+  status: string;
+  key_risk: string;
+  breakdown: {
+    time: number;
+    infrastructure: number;
+    budget: number;
+    security: number;
+    digital: number;
+  };
+}
+
+export interface ReadinessIndexResponse {
+  readiness_index: ReadinessState[];
+  national_average: number;
+  target_year: number;
+  total_states: number;
+  imminent_count: number;
+  model: string;
+}
+
+export async function fetchReadinessIndex(target_year: number = 2029): Promise<ReadinessIndexResponse> {
+  const res = await fetch(`${API}/election/readiness-index?target_year=${target_year}`, {
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to fetch readiness index");
+  return res.json();
+}
