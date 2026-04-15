@@ -58,6 +58,12 @@ export interface DelayedIssue {
 export interface ClassifyResult {
   category: string;
   confidence: number;
+  urgency?: string;
+  district?: string;
+  suggested_department?: string;
+  reasoning?: string;
+  ai_provider?: string;
+  model?: string;
 }
 
 export interface ClusterResult {

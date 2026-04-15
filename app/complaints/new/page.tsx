@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { createComplaint, classifyComplaint } from "@/lib/api";
 
 const DISTRICTS = ["Noida", "Ghaziabad", "Delhi", "Gurugram", "Faridabad"];
-const SOURCES = ["Portal", "WhatsApp", "Phone", "Email"];
+const SOURCES = ["web", "mobile_app", "phone", "email", "twitter"];
 
 const CATEGORY_COLORS: Record<string, string> = {
   Roads: "bg-amber-500",
@@ -32,6 +32,8 @@ interface ClassifyResult {
   confidence: number;
   department: string;
   complaintId: number | null;
+  aiProvider?: string;
+  model?: string;
 }
 
 /* ── Step timeline component ── */
@@ -69,7 +71,7 @@ function RoutingTimeline({
       id: 2,
       icon: "⚡",
       title: "AI Analyzing...",
-      sub: "Running NitiYantra Keyword Engine v1",
+      sub: `Running ${result.aiProvider || "NVIDIA NIM"} ${result.model || "phi-3-mini-128k-instruct"}`,
       hasProgress: true,
     },
     {
@@ -289,13 +291,13 @@ export default function SubmitComplaintPage() {
       const complaintRes = await createComplaint({
         text,
         district,
-        source: source.toLowerCase(),
+        source,
         category: category,
         status: "in_progress",
         department_id: deptId,
       });
 
-      setResult({ category, confidence, department, complaintId: complaintRes?.id ?? null });
+      setResult({ category, confidence, department, complaintId: complaintRes?.id ?? null, aiProvider: aiRes.ai_provider, model: aiRes.model });
       toast.success("Complaint submitted and classified!");
       // Auto-redirect to complaints list after timeline animation finishes
       setTimeout(() => {

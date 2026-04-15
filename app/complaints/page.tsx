@@ -798,7 +798,7 @@ export default function ComplaintsPage() {
 /*  GRIEVANCE MODAL                                    */
 /* ═══════════════════════════════════════════════════ */
 const GRIEVANCE_DISTRICTS = ["Noida", "Ghaziabad", "Delhi", "Gurugram", "Faridabad"];
-const GRIEVANCE_SOURCES = ["Portal", "WhatsApp", "Phone", "Email"];
+const GRIEVANCE_SOURCES = ["web", "mobile_app", "phone", "email", "twitter"];
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FORM_CATEGORY_COLORS: Record<string, string> = {
   Roads: "bg-amber-500", "Water Supply": "bg-blue-500", Electricity: "bg-yellow-500",
@@ -811,6 +811,7 @@ const DEPT_MAP: Record<string, string> = {
 
 interface ClassifyResult {
   category: string; confidence: number; department: string; complaintId: number | null;
+  aiProvider?: string; model?: string;
 }
 
 function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResult; onReset: () => void; onViewAll: () => void }) {
@@ -831,7 +832,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
 
   const steps = [
     { id: 1, icon: "✅", title: "Complaint Received", sub: "Your complaint has been logged in the system" },
-    { id: 2, icon: "⚡", title: "AI Analyzing...", sub: "Running NitiYantra Keyword Engine v1", hasProgress: true },
+    { id: 2, icon: "⚡", title: "AI Analyzing...", sub: `Running ${result.aiProvider || "NVIDIA NIM"} ${result.model || "phi-3-mini-128k-instruct"}`, hasProgress: true },
     { id: 3, icon: "🏷", title: `Classified: ${result.category}`, sub: `Confidence: ${result.confidence}%`, hasConfidence: true },
     { id: 4, icon: "🔀", title: `Routing to ${result.department}`, sub: "Assigning to responsible department", hasDept: true },
     { id: 5, icon: "✅", title: "Successfully Assigned", sub: result.complaintId ? `Complaint #${result.complaintId} is now being tracked` : "Your complaint is now being tracked", hasActions: true },
@@ -930,12 +931,12 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
 
       // Step 3: Create complaint WITH the AI-classified category and department
       const complaintRes = await createComplaint({
-        text, district, source: source.toLowerCase(),
+        text, district, source,
         category: category,
         status: "in_progress",
         department_id: deptId,
       });
-      setResult({ category, confidence, department, complaintId: complaintRes?.id ?? null });
+      setResult({ category, confidence, department, complaintId: complaintRes?.id ?? null, aiProvider: aiRes.ai_provider, model: aiRes.model });
       toast.success("Complaint submitted and classified!");
     } catch {
       toast.error("Failed to submit complaint");
