@@ -376,7 +376,7 @@ export default function ElectionPage() {
                           ))}
                         </Pie>
                         <Tooltip 
-                           formatter={(v: number) => `${v}%`} 
+                           formatter={(v: string | number | readonly (string | number)[] | undefined) => `${v ?? 0}%`} 
                            contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 8px 20px rgba(0,0,0,0.06)', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)' }}
                            itemStyle={{ fontWeight: 600, color: '#64748b', fontSize: '11px' }}
                         />
