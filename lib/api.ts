@@ -426,3 +426,26 @@ export async function fetchMyReportCard(): Promise<ReportCard> {
   if (!res.ok) throw new Error("Failed to fetch report card");
   return res.json();
 }
+
+/* ─── Complaint Timeline ─── */
+export interface TimelineEvent {
+  event: string;
+  timestamp: string | null;
+  actor: string;
+  description: string;
+  icon: string;
+  status: "completed" | "upcoming";
+}
+
+export interface TimelineResponse {
+  complaint_id: number;
+  timeline: TimelineEvent[];
+}
+
+export async function fetchComplaintTimeline(complaintId: number): Promise<TimelineResponse> {
+  const res = await fetch(`${API}/complaints/${complaintId}/timeline`, {
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to fetch timeline");
+  return res.json();
+}

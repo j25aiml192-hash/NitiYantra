@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { fetchComplaints, createComplaint, classifyComplaint, assignComplaint, getDepartmentStaff, getCurrentUser } from "@/lib/api";
+import { fetchComplaints, createComplaint, classifyComplaint, assignComplaint, getDepartmentStaff, getCurrentUser, fetchComplaintTimeline, TimelineEvent } from "@/lib/api";
 import { SkeletonTable } from "@/components/Skeleton";
 import toast from "react-hot-toast";
 
@@ -73,6 +73,11 @@ export default function ComplaintsPage() {
   /* grievance modal */
   const [showGrievanceModal, setShowGrievanceModal] = useState(false);
 
+  /* detail panel tab & timeline */
+  const [detailTab, setDetailTab] = useState<"details" | "timeline">("details");
+  const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
+  const [timelineLoading, setTimelineLoading] = useState(false);
+
   /* assignment panel state */
   const currentUser = getCurrentUser();
   const [assignDeptId, setAssignDeptId] = useState<number | null>(null);
@@ -96,6 +101,20 @@ export default function ComplaintsPage() {
   }, []);
 
   useEffect(() => { loadComplaints(); }, [loadComplaints]);
+
+  /* fetch timeline when selecting a complaint */
+  useEffect(() => {
+    if (selected) {
+      setDetailTab("details");
+      setTimelineLoading(true);
+      fetchComplaintTimeline(selected.id)
+        .then((res) => setTimeline(res.timeline))
+        .catch(() => setTimeline([]))
+        .finally(() => setTimelineLoading(false));
+    } else {
+      setTimeline([]);
+    }
+  }, [selected]);
 
   /* filtered list */
   const filtered = complaints.filter((c) => {
@@ -415,6 +434,25 @@ export default function ComplaintsPage() {
               </button>
             </div>
 
+            {/* ── Tab Bar ── */}
+            <div className="px-6 pt-4 flex gap-1 border-b border-[var(--border)]">
+              {(["details", "timeline"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setDetailTab(tab)}
+                  className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition-all capitalize ${
+                    detailTab === tab
+                      ? "bg-[var(--bg)] text-[var(--text)] border border-[var(--border)] border-b-transparent -mb-px"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+                  }`}
+                >
+                  {tab === "timeline" ? "⏱ Journey" : "📋 Details"}
+                </button>
+              ))}
+            </div>
+
+            {/* ── Details Tab ── */}
+            {detailTab === "details" && (
             <div className="p-6 space-y-6">
               {/* Status + Category badges */}
               <div className="flex flex-wrap gap-2">
@@ -483,6 +521,66 @@ export default function ComplaintsPage() {
                 </span>
               </div>
             </div>
+            )}
+
+            {/* ── Timeline Tab ── */}
+            {detailTab === "timeline" && (
+              <div className="p-6">
+                <h3 className="text-sm font-bold text-[var(--text)] mb-4 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-[10px]">⏱</span>
+                  Complaint Journey
+                </h3>
+                {timelineLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : timeline.length === 0 ? (
+                  <p className="text-sm text-[var(--text-muted)] text-center py-8">No timeline events found</p>
+                ) : (
+                  <div className="relative">
+                    {/* Vertical line */}
+                    <div className="absolute left-[11px] top-2 bottom-2 w-[2px] bg-[var(--border)]" />
+                    <div className="space-y-0">
+                      {timeline.map((evt, idx) => {
+                        const isUpcoming = evt.status === "upcoming";
+                        const dotColorMap: Record<string, string> = {
+                          file: "bg-blue-500", ai: "bg-violet-500", assign: "bg-indigo-500",
+                          warning: "bg-amber-500", breach: "bg-red-500", escalate: "bg-red-600",
+                          resolved: "bg-emerald-500",
+                        };
+                        const dotColor = isUpcoming ? "bg-[var(--border)] border-2 border-dashed border-[var(--text-muted)]" : (dotColorMap[evt.icon] || "bg-slate-500");
+                        const iconMap: Record<string, string> = {
+                          file: "📄", ai: "⚡", assign: "🔀", warning: "⚠️", breach: "🔴", escalate: "🚨", resolved: "✅",
+                        };
+
+                        return (
+                          <div key={idx} className={`flex items-start gap-4 py-3 ${isUpcoming ? "opacity-50" : ""}`}>
+                            {/* Dot */}
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] shrink-0 z-10 ${dotColor} ${!isUpcoming ? "shadow-md" : ""}`}>
+                              {isUpcoming ? "" : <span>{iconMap[evt.icon] || "●"}</span>}
+                            </div>
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-sm font-semibold ${isUpcoming ? "text-[var(--text-muted)] italic" : "text-[var(--text)]"}`}>
+                                {evt.description}
+                              </p>
+                              <div className="flex items-center gap-3 mt-0.5">
+                                <span className="text-[10px] text-[var(--text-muted)]">
+                                  {evt.timestamp ? new Date(evt.timestamp).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"}
+                                </span>
+                                <span className="text-[10px] text-[var(--text-muted)]">
+                                  by {evt.actor}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
               {/* Escalation banner */}
               {selected.escalated && (
