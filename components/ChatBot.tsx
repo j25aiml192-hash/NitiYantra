@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { usePathname } from "next/navigation"
+import Image from "next/image"
 
 interface Message {
   role: "user" | "model"
@@ -197,7 +198,7 @@ export default function ChatBot() {
           onClick={() => { setOpen(!open); setUnread(false) }}
           className="relative w-12 h-12 rounded-full bg-indigo-500 text-white border-none shadow-[0_10px_25px_rgba(79,125,243,0.3)] cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-[0_12px_30px_rgba(79,125,243,0.45)]"
         >
-          <img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 22, height: 22, filter: "invert(1)" }} />
+          <Image src="/nityantralogo.svg" alt="NitiYantra" width={22} height={22} style={{ filter: "invert(1)" }} />
           {unread && (
             <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 border-2" style={{ borderColor: "var(--card)" }} />
           )}
@@ -276,7 +277,7 @@ export default function ChatBot() {
                 background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                 display: "flex", alignItems: "center",
                 justifyContent: "center", padding: 4,
-              }}><img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 18, height: 18, filter: "invert(1)" }} /></div>
+              }}><Image src="/nityantralogo.svg" alt="NitiYantra" width={18} height={18} style={{ filter: "invert(1)" }} /></div>
               <div>
                 <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 600 }}>
                   NitiYantra AI
@@ -338,7 +339,7 @@ export default function ChatBot() {
                   margin: "0 auto 10px",
                   display: "flex", alignItems: "center",
                   justifyContent: "center", padding: 6,
-                }}><img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 24, height: 24, filter: "invert(1)" }} /></div>
+                }}><Image src="/nityantralogo.svg" alt="NitiYantra" width={24} height={24} style={{ filter: "invert(1)" }} /></div>
                 <p style={{ color: "var(--text)", fontSize: 13,
                             fontWeight: 600, marginBottom: 6 }}>
                   NitiYantra AI

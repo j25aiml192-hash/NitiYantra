@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { getCurrentUser } from "@/lib/api";
 import { useAuth } from "@/lib/AuthContext";
@@ -169,7 +170,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 flexShrink: 0, padding: 5,
               }}
             >
-              <img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 20, height: 20, filter: "invert(1)" }} />
+              <Image src="/nityantralogo.svg" alt="NitiYantra" width={20} height={20} style={{ filter: "invert(1)" }} />
             </div>
             {!collapsed && (
               <div style={{ whiteSpace: "nowrap", opacity: 1, transition: "opacity 0.15s ease 0.1s" }}>

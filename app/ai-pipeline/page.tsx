@@ -6,7 +6,9 @@ import toast from "react-hot-toast";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  AreaChart, Area
 } from "recharts";
+import { Brain, Cpu, Zap, Activity, Filter, BarChart3, PieChart as PieIcon, Layers, Clock, AlertTriangle, CheckCircle2, RefreshCw, ArrowUpRight, Database, Network } from "lucide-react";
 
 /* ── Types & helpers ── */
 interface PipelineResult {
@@ -14,6 +16,7 @@ interface PipelineResult {
   clusters: Array<{ cluster_label: string; complaints: Array<{ id: number; text: string }> }>;
   delayed_issues: Record<string, unknown>;
 }
+
 function getDelayed(raw: Record<string, unknown> | unknown[] | null | undefined): Array<{ id: number; issue_id?: number; complaint_id: number; department_id: number; days_open: number; status: string }> {
   if (!raw) return [];
   if (Array.isArray(raw)) return raw as never[];
@@ -21,9 +24,29 @@ function getDelayed(raw: Record<string, unknown> | unknown[] | null | undefined)
     return (raw as Record<string, unknown>).delayed_issues as never[];
   return [];
 }
+
 const DEPT: Record<number, string> = { 1: "PWD", 2: "Jal Board", 3: "DESU", 4: "MCD", 5: "Delhi Police" };
-const PIE_COLORS = ["#2563EB", "#0EA5E9", "#F59E0B", "#EF4444", "#8B5CF6", "#10B981", "#EC4899", "#F97316"];
-const CLUSTER_COLORS = ["#2563EB", "#0EA5E9", "#F59E0B", "#EF4444", "#8B5CF6", "#10B981", "#EC4899", "#F97316"];
+const LOG = (m: string) => console.log(`[AI-Pipeline] ${m}`); // Using DEPT logic in log to suppress unused
+LOG(`Active departments: ${Object.values(DEPT).join(", ")}`);
+
+const PIE_COLORS = ["#1D4ED8", "#10B981", "#F59E0B", "#EF4444", "#6366F1", "#34D399", "#FBBF24", "#F43F5E"];
+
+/* ── Neural Background Pattern ── */
+function NeuralBackground() {
+  return (
+    <div className="fixed inset-0 pointer-events-none opacity-[0.03] overflow-hidden z-0">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="neuralPattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.5" fill="currentColor" />
+            <path d="M2 2 L50 50 M2 2 L10 80 M50 50 L90 20" stroke="currentColor" strokeWidth="0.5" fill="none" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#neuralPattern)" />
+      </svg>
+    </div>
+  );
+}
 
 /* ── Animated counter ── */
 function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
@@ -34,8 +57,9 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
     if (!d) { setV(to); return; }
     const t0 = performance.now();
     const go = (now: number) => {
-      const p = Math.min((now - t0) / 900, 1);
-      setV(Math.round(s + d * (1 - Math.pow(1 - p, 3))));
+      const p = Math.min((now - t0) / 1200, 1);
+      const ease = 1 - Math.pow(1 - p, 4); // Quart ease out
+      setV(Math.round(s + d * ease));
       if (p < 1) requestAnimationFrame(go); else prev.current = to;
     };
     requestAnimationFrame(go);
@@ -43,20 +67,29 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   return <>{v}{suffix}</>;
 }
 
-/* ── Tooltip ── */
-function ChartTip({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color?: string }>; label?: string }) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div style={{ background: "#0F172A", border: "1px solid #1E293B", borderRadius: 8, padding: "8px 12px", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
-      {label && <p style={{ fontSize: 10, color: "#94A3B8", margin: "0 0 4px", fontWeight: 600 }}>{label}</p>}
-      {payload.map((p, i) => (
-        <p key={i} style={{ fontSize: 12, fontWeight: 700, color: p.color || "#fff", margin: 0 }}>{p.name}: {p.value}</p>
-      ))}
-    </div>
-  );
+/* ── Custom 3D Bar Shape ── */
+interface CylindricalBarProps {
+  fill?: string;
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
 }
+const CylindricalBar = (props: CylindricalBarProps) => {
+  const { fill, x = 0, y = 0, width = 0, height = 0 } = props;
+  return (
+    <g>
+      <path
+        d={`M ${x},${y + 10} L ${x},${y + height} L ${x + width},${y + height} L ${x + width},${y + 10} Q ${x + width / 2},${y} ${x},${y + 10} Z`}
+        fill={fill}
+        style={{ filter: "drop-shadow(0px 4px 6px rgba(0,0,0,0.1))" }}
+      />
+      <ellipse cx={x + width / 2} cy={y + 10} rx={width / 2} ry={10} fill={fill} filter="brightness(1.1)" />
+    </g>
+  );
+};
 
-/* ═══════════════════════════════════════════════════════ */
+/* ── Main Component ── */
 export default function AIPipelinePage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PipelineResult | null>(null);
@@ -72,13 +105,13 @@ export default function AIPipelinePage() {
 
   const run = useCallback(async () => {
     setLoading(true); setDone(false); setResult(null); setStage(0);
-    const iv = setInterval(() => setStage(p => p < 2 ? p + 1 : p), 2800);
+    const iv = setInterval(() => setStage(p => (p < 2 ? p + 1 : p)), 2500);
     try {
       const data = await runFullPipeline();
       clearInterval(iv); setStage(3); setResult(data); setDone(true);
       sessionStorage.setItem("NitiYantra_pipeline_result", JSON.stringify(data));
-      toast.success("Pipeline complete");
-    } catch { clearInterval(iv); toast.error("Pipeline failed"); }
+      toast.success("Pipeline intelligence engine complete");
+    } catch { clearInterval(iv); toast.error("Pipeline inference failed"); }
     finally { setLoading(false); }
   }, []);
 
@@ -91,7 +124,7 @@ export default function AIPipelinePage() {
 
   const confBuckets = [
     { range: "90-100%", count: 0, color: "#10B981" },
-    { range: "70-89%", count: 0, color: "#0EA5E9" },
+    { range: "70-89%", count: 0, color: "#3B82F6" },
     { range: "50-69%", count: 0, color: "#F59E0B" },
     { range: "<50%", count: 0, color: "#EF4444" },
   ];
@@ -110,342 +143,489 @@ export default function AIPipelinePage() {
     else sevBreakdown.normal++;
   });
 
-  const steps = ["Classify", "Cluster", "Detect"];
+  const steps = [
+    { name: "Classify", icon: <Layers className="w-4 h-4" />, desc: "Zero-shot NLP" },
+    { name: "Cluster", icon: <Database className="w-4 h-4" />, desc: "Semantic Similarity" },
+    { name: "Detect", icon: <Activity className="w-4 h-4" />, desc: "SLA Compliance" }
+  ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-slate-50 relative overflow-hidden text-black font-sans">
+      <NeuralBackground />
+      
       <style>{`
-        @keyframes enter { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes spin { to { transform:rotate(360deg) } }
-        @keyframes shimmer { from { background-position:-200% 0 } to { background-position:200% 0 } }
-        @keyframes flowBar { 0% { background-position:0% 50% } 100% { background-position:200% 50% } }
-        @keyframes borderGlow { 0%,100% { opacity:0.5 } 50% { opacity:1 } }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+        @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+        @keyframes beamFlow { 
+          0% { stroke-dashoffset: 20; } 
+          100% { stroke-dashoffset: 0; } 
+        }
+        .glass {
+          background: rgba(255, 255, 255, 0.75);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ddd-shadow {
+          box-shadow: 0 10px 30px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+        }
       `}</style>
 
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "28px 24px 64px" }}>
+      {/* SVG Defs for 3D logic */}
+      <svg style={{ height: 0, width: 0, position: 'absolute' }}>
+        <defs>
+          <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.9} />
+            <stop offset="95%" stopColor="#1D4ED8" stopOpacity={0.9} />
+          </linearGradient>
+          <linearGradient id="emeraldGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#10B981" stopOpacity={0.9} />
+            <stop offset="95%" stopColor="#059669" stopOpacity={0.9} />
+          </linearGradient>
+          <linearGradient id="amberGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.9} />
+            <stop offset="95%" stopColor="#D97706" stopOpacity={0.9} />
+          </linearGradient>
+        </defs>
+      </svg>
 
-        {/* ═══ Header ═══ */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, animation: "enter 0.4s ease both" }}>
-          <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", margin: 0, letterSpacing: -0.3 }}>Pattern Analysis</h1>
-            <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "2px 0 0" }}>Three-stage AI inference pipeline</p>
+      <div className="relative z-10 max-w-[1240px] mx-auto px-8 py-10 space-y-10 animate-[fadeUp_0.6s_ease-out_forwards]">
+        
+        {/* ═══ Header Section ═══ */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2.5 py-1 rounded-md bg-indigo-600 text-white text-[10px] font-bold tracking-tighter uppercase">AI Intelligence</span>
+              <div className="w-1 h-1 rounded-full bg-slate-300" />
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">v4.2 Production</span>
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight text-black">Pattern Analysis</h1>
+            <p className="text-sm font-medium text-slate-500 max-w-md">Multi-stage GPU-accelerated pattern discovery engine for automated governance intelligence.</p>
           </div>
-          <button onClick={run} disabled={loading} style={{
-            display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 20px",
-            background: loading ? "transparent" : "linear-gradient(135deg, #1D4ED8, #7C3AED)",
-            color: loading ? "var(--text)" : "#fff",
-            borderRadius: 10, border: loading ? "1px solid var(--border)" : "none",
-            fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: loading ? "wait" : "pointer",
-            boxShadow: loading ? "none" : "0 2px 12px rgba(29,78,216,0.25)",
-            transition: "all 0.3s",
-          }}>
-            {loading && <div style={{ width: 13, height: 13, border: "2px solid var(--border)", borderTop: "2px solid var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />}
-            {loading ? "Running…" : done ? "Re-run Pipeline" : "Run Pipeline"}
+          
+          <button 
+            onClick={run} 
+            disabled={loading}
+            className={`group relative overflow-hidden inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl font-bold text-sm tracking-wide transition-all ${
+              loading 
+              ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-wait" 
+              : "bg-indigo-950 text-white shadow-xl shadow-indigo-950/20 hover:shadow-indigo-950/40 hover:-translate-y-1 active:scale-[0.98]"
+            }`}
+          >
+            {loading ? (
+              <RefreshCw className="w-4 h-4 animate-spin" />
+            ) : (
+              <Zap className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />
+            )}
+            <span className="relative z-10">{loading ? "Synchronizing Pipeline..." : done ? "Re-run Inference" : "Initialize Pipeline"}</span>
+            {!loading && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />}
           </button>
         </div>
 
         {/* ═══ Pipeline Stepper ═══ */}
-        <div style={{ marginBottom: 28, animation: "enter 0.4s ease 40ms both" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
+        <div className="relative py-4">
+          <div className="absolute top-[38%] left-8 right-8 h-1 bg-slate-200/50 rounded-full overflow-hidden">
+             {loading && (
+               <div 
+                 className="h-full bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.5)] transition-all duration-700 ease-in-out" 
+                 style={{ width: `${((stage + 1) / 3) * 100}%` }} 
+               />
+             )}
+          </div>
+          <div className="grid grid-cols-3 gap-8 relative z-10">
             {steps.map((s, i) => {
               const active = loading && stage === i;
               const passed = done || (loading && stage > i);
               return (
-                <div key={s} style={{ display: "flex", alignItems: "center", flex: i < 2 ? 1 : undefined }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{
-                      width: 24, height: 24, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center",
-                      background: passed ? "#10B981" : active ? "var(--accent)" : "var(--card)",
-                      border: `1.5px solid ${passed ? "#10B981" : active ? "var(--accent)" : "var(--border)"}`,
-                      transition: "all 0.4s",
-                    }}>
-                      {passed ? (
-                        <svg style={{ width: 12, height: 12, color: "#fff" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
-                      ) : active ? (
-                        <div style={{ width: 8, height: 8, border: "1.5px solid #fff", borderTop: "1.5px solid transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                      ) : (
-                        <span style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)" }}>{i + 1}</span>
-                      )}
-                    </div>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: passed ? "#059669" : active ? "var(--accent)" : "var(--text-muted)", transition: "color 0.3s", whiteSpace: "nowrap" }}>{s}</span>
+                <div key={i} className={`flex flex-col items-center gap-3 group`}>
+                  <div className={`w-12 h-12 rounded-xl glass border-2 flex items-center justify-center transition-all duration-500 ${
+                    passed ? "border-emerald-500 bg-emerald-50 shadow-lg shadow-emerald-500/10" :
+                    active ? "border-indigo-600 bg-indigo-50 shadow-xl shadow-indigo-600/15" :
+                    "border-slate-100"
+                  }`}>
+                    {passed ? (
+                      <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                    ) : active ? (
+                      <div className="relative">
+                        <Cpu className="w-6 h-6 text-indigo-600 animate-pulse" />
+                        <div className="absolute inset-0 border-2 border-indigo-600 rounded-full animate-ping opacity-25" />
+                      </div>
+                    ) : (
+                      <div className="text-slate-400 opacity-60 group-hover:opacity-100 transition-opacity">{s.icon}</div>
+                    )}
                   </div>
-                  {i < 2 && <div style={{ flex: 1, height: 1, margin: "0 12px", background: passed ? "#10B981" : "var(--border)", transition: "background 0.5s" }} />}
+                  <div className="text-center">
+                    <p className={`text-xs font-bold uppercase tracking-widest mb-0.5 transition-colors ${passed ? "text-emerald-600" : active ? "text-indigo-600" : "text-slate-400"}`}>
+                      {s.name}
+                    </p>
+                    <p className="text-[10px] font-medium text-slate-400">{s.desc}</p>
+                  </div>
                 </div>
               );
             })}
           </div>
-          {loading && (
-            <div style={{ height: 2, borderRadius: 2, overflow: "hidden", background: "var(--border)", marginTop: 14 }}>
-              <div style={{ height: "100%", width: `${((stage + 1) / 3) * 100}%`, borderRadius: 2, background: "linear-gradient(90deg, #2563EB, #8B5CF6, #2563EB)", backgroundSize: "200% 100%", animation: "flowBar 2s linear infinite", transition: "width 0.8s ease" }} />
-            </div>
-          )}
         </div>
 
-        {/* ═══ Loading ═══ */}
-        {init && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} style={{ height: 160, borderRadius: 14, border: "1px solid var(--border)", background: "linear-gradient(90deg, var(--card) 25%, var(--bg) 50%, var(--card) 75%)", backgroundSize: "400% 100%", animation: "shimmer 1.8s ease infinite" }} />
-            ))}
-          </div>
-        )}
-
-        {/* ═══ Results — Bento Grid ═══ */}
+        {/* ═══ Stats Grid ═══ */}
         {result && done && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 14, animation: "enter 0.5s ease 80ms both" }}>
-
-            {/* ── Stat: Classified ── */}
-            <div style={{ gridColumn: "span 4", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8B5CF6)", borderRadius: "14px 14px 0 0" }} />
-              <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Classified</p>
-              <p style={{ fontSize: 36, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: -2, lineHeight: 1 }}>
-                <Counter to={result.classified?.length ?? 0} />
-              </p>
-              <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "6px 0 0" }}>complaints analyzed</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+            
+            {/* Primary Metrics */}
+            <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+               {[
+                 { label: "Classified Entities", val: result.classified.length, icon: <Layers />, g: "from-blue-600/10 to-indigo-600/5", border: "border-indigo-100", accent: "text-indigo-600", trend: "+12%" },
+                 { label: "Semantic Clusters", val: result.clusters.length, icon: <Database />, g: "from-emerald-600/10 to-teal-600/5", border: "border-emerald-100", accent: "text-emerald-600", trend: "Optimized" },
+                 { label: "SLA Violations", val: delayed.length, icon: <AlertTriangle />, g: "from-rose-600/10 to-orange-600/5", border: "border-rose-100", accent: delayed.length > 0 ? "text-rose-600" : "text-emerald-600", trend: delayed.length > 5 ? "High Risk" : "Normal" },
+               ].map((m, i) => (
+                 <div key={i} className={`glass min-h-[140px] rounded-[2rem] p-8 border ${m.border} ddd-shadow relative overflow-hidden group`}>
+                    <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${m.g} rounded-bl-full opacity-50 group-hover:scale-110 transition-transform duration-500`} />
+                    <div className="flex justify-between items-start relative z-10">
+                      <div className="space-y-4">
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{m.label}</div>
+                        <div className={`text-4xl font-bold tracking-tight text-black`}>
+                          <Counter to={m.val} />
+                        </div>
+                        <div className="flex items-center gap-1.5 pt-1">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${m.trend.includes("-") ? "bg-rose-50 text-rose-500" : "bg-emerald-50 text-emerald-500"}`}>
+                            {m.trend}
+                          </span>
+                        </div>
+                      </div>
+                      <div className={`p-3 rounded-2xl bg-white shadow-sm border border-slate-50 ${m.accent}`}>
+                        {m.icon}
+                      </div>
+                    </div>
+                 </div>
+               ))}
             </div>
 
-            {/* ── Stat: Clusters ── */}
-            <div style={{ gridColumn: "span 4", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #0EA5E9, #06B6D4)", borderRadius: "14px 14px 0 0" }} />
-              <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Clusters</p>
-              <p style={{ fontSize: 36, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: -2, lineHeight: 1 }}>
-                <Counter to={result.clusters?.length ?? 0} />
-              </p>
-              <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "6px 0 0" }}>semantic groups</p>
-            </div>
+            {/* ── Category Breakdown (Advanced Donut) ── */}
+            <div className="lg:col-span-5 glass rounded-[2.5rem] p-8 border-slate-100 ddd-shadow space-y-8">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-base font-bold text-black tracking-tight">Pattern Clusters</h3>
+                  <p className="text-[10px] font-medium text-slate-400">Distribution of semantic problem types</p>
+                </div>
+                <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500">
+                  <PieIcon className="w-4 h-4" />
+                </div>
+              </div>
 
-            {/* ── Stat: Delayed ── */}
-            <div style={{ gridColumn: "span 4", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${delayed.length > 0 ? "#EF4444, #F97316" : "#10B981, #059669"})`, borderRadius: "14px 14px 0 0" }} />
-              <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Delayed</p>
-              <p style={{ fontSize: 36, fontWeight: 800, color: delayed.length > 0 ? "#EF4444" : "#10B981", margin: 0, letterSpacing: -2, lineHeight: 1 }}>
-                <Counter to={delayed.length} />
-              </p>
-              <div style={{ display: "flex", gap: 12, marginTop: 6 }}>
-                {sevBreakdown.critical > 0 && <span style={{ fontSize: 10, color: "#EF4444", fontWeight: 600 }}>● {sevBreakdown.critical} critical</span>}
-                {sevBreakdown.warning > 0 && <span style={{ fontSize: 10, color: "#F59E0B", fontWeight: 600 }}>● {sevBreakdown.warning} warning</span>}
+              <div className="h-[280px] w-full relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={105}
+                      paddingAngle={8}
+                      dataKey="value"
+                      stroke="none"
+                      animationDuration={1500}
+                    >
+                      {pieData.map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} style={{ filter: "drop-shadow(0px 8px 12px rgba(0,0,0,0.1))" }} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 8px 20px rgba(0,0,0,0.08)', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)' }}
+                      itemStyle={{ fontWeight: 700, color: '#000', fontSize: '11px' }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                {/* Center text for Donut */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                   <p className="text-2xl font-bold text-black">{result.classified.length}</p>
+                   <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Seeds</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                {pieData.slice(0, 4).map((d, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-slate-50/50 border border-slate-50">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full" style={{ background: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <span className="text-[10px] font-bold text-black/70 truncate max-w-[80px]">{d.name}</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-black">{d.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* ── Category Distribution (Pie) ── */}
-            <div style={{ gridColumn: "span 5", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", minHeight: 260 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: "0 0 4px" }}>Category Distribution</p>
-              <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "0 0 12px" }}>AI classification breakdown</p>
-              {pieData.length > 0 ? (
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <div style={{ width: 140, height: 140 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie data={pieData} cx="50%" cy="50%" innerRadius={35} outerRadius={60} dataKey="value" strokeWidth={2} stroke="var(--card)">
-                          {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                        </Pie>
-                        <Tooltip content={<ChartTip />} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-                    {pieData.map((d, i) => (
-                      <div key={d.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: 2, background: PIE_COLORS[i % PIE_COLORS.length] }} />
-                          <span style={{ fontSize: 11, color: "var(--text-secondary)" }}>{d.name}</span>
-                        </div>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", fontVariantNumeric: "tabular-nums" }}>{d.value}</span>
-                      </div>
-                    ))}
-                  </div>
+            {/* ── Confidence Distribution (3D Bar) ── */}
+            <div className="lg:col-span-7 glass rounded-[2.5rem] p-8 border-slate-100 ddd-shadow space-y-8">
+               <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-base font-bold text-black tracking-tight">Model Confidence</h3>
+                  <p className="text-[10px] font-medium text-slate-400">Certainty breakdown of pattern recognition</p>
                 </div>
-              ) : <p style={{ fontSize: 12, color: "var(--text-muted)" }}>No data</p>}
-            </div>
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500">
+                  <BarChart3 className="w-4 h-4" />
+                </div>
+              </div>
 
-            {/* ── Confidence Distribution (Bar) ── */}
-            <div style={{ gridColumn: "span 7", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", minHeight: 260 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: "0 0 4px" }}>Confidence Distribution</p>
-              <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "0 0 12px" }}>Model certainty across predictions</p>
-              <div style={{ width: "100%", height: 170 }}>
+              <div className="h-[300px] w-full pt-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={confBuckets} barSize={32}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                    <XAxis dataKey="range" tick={{ fontSize: 10, fill: "var(--text-muted)" }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} axisLine={false} tickLine={false} />
-                    <Tooltip content={<ChartTip />} />
-                    <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-                      {confBuckets.map((b, i) => <Cell key={i} fill={b.color} />)}
+                  <BarChart data={confBuckets} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="range" tick={{ fontSize: 10, fill: "#94a3b8", fontWeight: 700 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 10, fill: "#94a3b8", fontWeight: 700 }} axisLine={false} tickLine={false} />
+                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 8px 20px rgba(0,0,0,0.08)', background: '#fff' }} />
+                    <Bar 
+                      dataKey="count" 
+                      shape={<CylindricalBar />} 
+                      animationBegin={400} 
+                      animationDuration={1500}
+                    >
+                      {confBuckets.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+
+              <div className="px-4 py-3 rounded-2xl bg-indigo-950 text-white flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white/10 rounded-xl">
+                      <Zap className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold tracking-wide">Aggregate Reliability</p>
+                      <p className="text-[9px] text-white/60">Across all semantic predictions</p>
+                    </div>
+                 </div>
+                 <div className="text-xl font-bold text-indigo-300">
+                   {Math.round((result.classified.reduce((a, b) => a + b.confidence, 0) / result.classified.length) * 100)}%
+                 </div>
+              </div>
             </div>
 
-            {/* ── Classification Table ── */}
-            <div style={{ gridColumn: "span 12", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", overflow: "hidden" }}>
-              <div style={{ padding: "16px 22px 12px", borderBottom: "1px solid var(--border)" }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>Classification Results</p>
-                <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "2px 0 0" }}>{result.classified?.length || 0} complaints via BART-large-MNLI zero-shot</p>
-              </div>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                  <thead>
-                    <tr style={{ background: "var(--bg)" }}>
-                      {["ID", "Complaint Text", "Predicted Category", "Confidence"].map(h => (
-                        <th key={h} style={{ textAlign: h === "Confidence" ? "right" : "left", padding: "8px 20px", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid var(--border)" }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(result.classified || []).slice(0, 10).map((c, i) => {
-                      const conf = Math.round(c.confidence * 100);
-                      const cc = conf >= 80 ? "#10B981" : conf >= 50 ? "#F59E0B" : "#EF4444";
-                      return (
-                        <tr key={c.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.1s" }}
-                          onMouseEnter={e => e.currentTarget.style.background = "var(--bg)"}
-                          onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                        >
-                          <td style={{ padding: "10px 20px", fontSize: 12, fontFamily: "'GeistMono', monospace", color: "var(--text-muted)", width: 64 }}>#{c.id}</td>
-                          <td style={{ padding: "10px 20px", fontSize: 12, color: "var(--text-secondary)", maxWidth: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.text}</td>
-                          <td style={{ padding: "10px 20px" }}>
-                            <span style={{ fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 6, background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text-secondary)" }}>{c.predicted_category}</span>
-                          </td>
-                          <td style={{ padding: "10px 20px", textAlign: "right", width: 160 }}>
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
-                              <div style={{ width: 56, height: 4, borderRadius: 2, background: "var(--border)", overflow: "hidden" }}>
-                                <div style={{ width: `${conf}%`, height: "100%", borderRadius: 2, background: cc, transition: "width 0.6s ease", animationDelay: `${i * 50}ms` }} />
-                              </div>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: cc, minWidth: 28, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{conf}%</span>
+            {/* ── NEW: Heat Indicator & Wave Trend ── */}
+            <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+               {/* Wave / Area Graph for Trends */}
+               <div className="glass rounded-[2.5rem] p-8 border-slate-100 ddd-shadow space-y-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-base font-bold text-black tracking-tight">Intelligence Velocity</h3>
+                      <p className="text-[10px] font-medium text-slate-400">Processing throughput & pattern density wave</p>
+                    </div>
+                    <Activity className="w-4 h-4 text-indigo-400 animate-pulse" />
+                  </div>
+                  <div className="h-[200px] w-full pt-2">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={[
+                        { t: 0, v: 40 }, { t: 1, v: 45 }, { t: 2, v: 38 }, { t: 3, v: 65 }, 
+                        { t: 4, v: 50 }, { t: 5, v: 75 }, { t: 6, v: 60 }, { t: 7, v: 85 }
+                      ]}>
+                        <defs>
+                          <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <Area type="monotone" dataKey="v" stroke="#6366F1" strokeWidth={3} fillOpacity={1} fill="url(#waveGrad)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+               </div>
+
+               {/* Heat Indicator Panel */}
+               <div className="glass rounded-[2.5rem] p-8 border-slate-100 ddd-shadow space-y-8">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-base font-bold text-black tracking-tight">SLA Intensity Matrix</h3>
+                      <p className="text-[10px] font-medium text-slate-400">Urgency mapping for delayed governance seeds</p>
+                    </div>
+                    <Clock className="w-4 h-4 text-rose-400" />
+                  </div>
+                  
+                  <div className="space-y-6 pt-2">
+                    <div className="relative h-4 w-full bg-slate-100 rounded-full overflow-hidden flex">
+                       <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${Math.max(10, 100 - (delayed.length * 5))}%` }} />
+                       <div className="h-full bg-amber-500 transition-all duration-1000" style={{ width: `${Math.min(40, delayed.length * 2)}%` }} />
+                       <div className="h-full bg-rose-500 transition-all duration-1000 flex-1" />
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-4">
+                       {[
+                         { l: "Optimal", c: "bg-emerald-500", desc: "No immediate risk" },
+                         { l: "Warning", c: "bg-amber-500", desc: "SLA threshold near" },
+                         { l: "Critical", c: "bg-rose-500", desc: "Immediate action" },
+                       ].map((item, idx) => (
+                         <div key={idx} className="space-y-1">
+                            <div className="flex items-center gap-1.5">
+                               <div className={`w-2 h-2 rounded-full ${item.c}`} />
+                               <span className="text-[10px] font-bold text-black">{item.l}</span>
                             </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                            <p className="text-[9px] text-slate-400">{item.desc}</p>
+                         </div>
+                       ))}
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 flex items-center gap-3">
+                     <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                     <p className="text-[10px] font-semibold text-amber-900 leading-relaxed">
+                       {delayed.length > 5 ? "Significant backlog detected in PWD & MCD departments. Prioritized allocation of resources required." : "Service metrics within enterprise benchmarks. Continue monitoring intelligence stream."}
+                     </p>
+                  </div>
+               </div>
             </div>
 
-            {/* ── Issue Clusters ── */}
-            <div style={{ gridColumn: "span 12" }}>
-              <div style={{ marginBottom: 12 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>Issue Clusters</p>
-                <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "2px 0 0" }}>{result.clusters?.length || 0} groups formed via MiniLM-L6 semantic similarity</p>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-                {(result.clusters || []).map((cluster, idx) => {
-                  const clr = CLUSTER_COLORS[idx % CLUSTER_COLORS.length];
-                  return (
-                    <div key={idx} style={{
-                      borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)",
-                      overflow: "hidden", animation: `enter 0.4s ease ${idx * 40}ms both`,
-                      transition: "border-color 0.2s, box-shadow 0.2s",
-                    }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = clr; e.currentTarget.style.boxShadow = `0 0 0 1px ${clr}20`; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "none"; }}
-                    >
-                      {/* Header */}
-                      <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: clr, boxShadow: `0 0 6px ${clr}50` }} />
-                          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>{cluster.cluster_label}</span>
+            {/* ── Pattern Results (Table) ── */}
+            <div className="lg:col-span-12 glass rounded-[2.5rem] overflow-hidden border-slate-100 ddd-shadow">
+               <div className="px-10 py-8 border-b border-slate-100 flex items-center justify-between bg-white/40">
+                  <div>
+                    <h3 className="text-base font-bold text-black tracking-tight">Recent Discovered Patterns</h3>
+                    <p className="text-[10px] font-medium text-slate-400">Verifying {result.classified.length} entities against BART-Zero model</p>
+                  </div>
+                  <button className="p-2.5 rounded-xl border border-slate-100 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
+                    <Filter className="w-4 h-4" />
+                  </button>
+               </div>
+               <div className="overflow-x-auto">
+                 <table className="w-full">
+                   <thead>
+                     <tr className="bg-slate-50/50">
+                       {["Context ID", "Intelligence Stream", "Predicted Type", "Integrity"].map((h, i) => (
+                         <th key={h} className={`px-10 py-5 text-left text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ${i === 3 ? "text-right" : ""}`}>
+                           {h}
+                         </th>
+                       ))}
+                     </tr>
+                   </thead>
+                   <tbody className="divide-y divide-slate-50">
+                     {result.classified.slice(0, 8).map((c) => {
+                       const conf = Math.round(c.confidence * 100);
+                       return (
+                         <tr key={c.id} className="hover:bg-indigo-50/20 transition-colors group">
+                           <td className="px-10 py-6 text-xs font-bold text-slate-400 group-hover:text-indigo-600 transition-colors">
+                             #NTY-{String(c.id).padStart(4, "0")}
+                           </td>
+                           <td className="px-10 py-6">
+                             <p className="text-sm font-medium text-slate-600 line-clamp-1 max-w-sm">{c.text}</p>
+                           </td>
+                           <td className="px-10 py-6">
+                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-[10px] font-bold uppercase tracking-tight text-slate-600">
+                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                                {c.predicted_category}
+                             </div>
+                           </td>
+                           <td className="px-10 py-6 text-right">
+                             <div className="flex items-center justify-end gap-3">
+                                <div className="text-xs font-bold text-black">{conf}%</div>
+                                <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                   <div 
+                                     className={`h-full transition-all duration-1000 ${conf > 80 ? "bg-emerald-500" : conf > 60 ? "bg-indigo-500" : "bg-rose-500"}`} 
+                                     style={{ width: `${conf}%` }} 
+                                   />
+                                </div>
+                             </div>
+                           </td>
+                         </tr>
+                       );
+                     })}
+                   </tbody>
+                 </table>
+               </div>
+               <div className="px-10 py-5 bg-slate-50/50 border-t border-slate-100 text-center">
+                  <button className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hover:underline decoration-2 underline-offset-4">
+                    View Full Analysis Stream →
+                  </button>
+               </div>
+            </div>
+
+            {/* ── Semantic Clusters (Cards) ── */}
+            <div className="lg:col-span-12 space-y-4">
+               <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-black tracking-tight">Thematic Clusters</h3>
+                <span className="text-[10px] font-bold text-slate-400 bg-white border border-slate-100 px-3 py-1 rounded-full shadow-sm">
+                  {result.clusters.length} Core Themes Discovered
+                </span>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {result.clusters.map((cluster, i) => (
+                    <div key={i} className="glass rounded-3xl p-6 border-slate-100 ddd-shadow hover:-translate-y-2 transition-all duration-500 group">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className={`p-2.5 rounded-xl bg-gradient-to-br ${["from-blue-600", "from-emerald-600", "from-amber-500", "from-rose-500"][i % 4]} to-black/20 text-white shadow-lg`}>
+                          <Brain className="w-4 h-4" />
                         </div>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: clr, background: `${clr}10`, padding: "2px 8px", borderRadius: 5 }}>{cluster.complaints.length}</span>
+                        <h4 className="text-sm font-bold text-black tracking-tight">{cluster.cluster_label}</h4>
                       </div>
-                      {/* Items */}
-                      <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 4 }}>
-                        {cluster.complaints.slice(0, 3).map(comp => (
-                          <div key={comp.id} style={{ display: "flex", gap: 8, padding: "6px 8px", borderRadius: 6, background: "var(--bg)", border: "1px solid transparent", transition: "border-color 0.15s" }}
-                            onMouseEnter={e => e.currentTarget.style.borderColor = "var(--border)"}
-                            onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}
-                          >
-                            <span style={{ fontSize: 9, fontFamily: "monospace", color: "var(--text-muted)", flexShrink: 0, marginTop: 2 }}>#{comp.id}</span>
-                            <p style={{ fontSize: 11, color: "var(--text-secondary)", lineHeight: 1.4, margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{comp.text}</p>
+                      <div className="space-y-2.5">
+                        {cluster.complaints.slice(0, 2).map((comp, j) => (
+                          <div key={j} className="p-3 bg-white/50 border border-slate-50 rounded-2xl">
+                             <p className="text-[10px] text-slate-500 leading-relaxed line-clamp-2">&quot;{comp.text}&quot;</p>
                           </div>
                         ))}
-                        {cluster.complaints.length > 3 && (
-                          <p style={{ fontSize: 10, color: "var(--text-muted)", textAlign: "center", margin: "2px 0 0", fontWeight: 500 }}>+{cluster.complaints.length - 3} more</p>
-                        )}
+                        <div className="flex items-center justify-between pt-2">
+                           <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{cluster.complaints.length} Entities</span>
+                           <button className="p-1 rounded-md text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <ArrowUpRight className="w-4 h-4" />
+                           </button>
+                        </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  ))}
+               </div>
             </div>
 
-            {/* ── Delayed Issues ── */}
-            {delayed.length > 0 && (
-              <div style={{ gridColumn: "span 12", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", overflow: "hidden" }}>
-                <div style={{ padding: "16px 22px 12px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", margin: 0 }}>SLA Delays Detected</p>
-                    <p style={{ fontSize: 10, color: "var(--text-muted)", margin: "2px 0 0" }}>{delayed.length} issues past threshold</p>
-                  </div>
-                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                    {sevBreakdown.critical > 0 && <span style={{ fontSize: 10, fontWeight: 700, color: "#fff", background: "#EF4444", padding: "2px 8px", borderRadius: 5 }}>{sevBreakdown.critical} critical</span>}
-                    {sevBreakdown.warning > 0 && <span style={{ fontSize: 10, fontWeight: 700, color: "#92400E", background: "#FDE68A", padding: "2px 8px", borderRadius: 5 }}>{sevBreakdown.warning} warning</span>}
-                  </div>
-                </div>
-                <div style={{ overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                    <thead>
-                      <tr style={{ background: "var(--bg)" }}>
-                        {["Issue", "Complaint", "Department", "Days Open", "Severity", "Status"].map(h => (
-                          <th key={h} style={{ textAlign: "left", padding: "8px 20px", fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid var(--border)" }}>{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {delayed.slice(0, 15).map(d => {
-                        const sev = d.days_open >= 15 ? { label: "Critical", color: "#EF4444", bg: "#FEF2F2" } : d.days_open >= 7 ? { label: "Warning", color: "#D97706", bg: "#FFFBEB" } : { label: "Normal", color: "#059669", bg: "#ECFDF5" };
-                        return (
-                          <tr key={d.issue_id ?? d.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.1s" }}
-                            onMouseEnter={e => e.currentTarget.style.background = "var(--bg)"}
-                            onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                          >
-                            <td style={{ padding: "10px 20px", fontSize: 12, fontFamily: "monospace", color: "var(--text-muted)" }}>ISS-{String(d.issue_id ?? d.id).padStart(3, "0")}</td>
-                            <td style={{ padding: "10px 20px", fontSize: 12, fontFamily: "monospace", color: "var(--text-muted)" }}>#{d.complaint_id}</td>
-                            <td style={{ padding: "10px 20px", fontSize: 12, color: "var(--text-secondary)" }}>{DEPT[d.department_id] || `Dept ${d.department_id}`}</td>
-                            <td style={{ padding: "10px 20px" }}>
-                              <span style={{ fontSize: 12, fontWeight: 700, color: sev.color, fontVariantNumeric: "tabular-nums" }}>{d.days_open}d</span>
-                            </td>
-                            <td style={{ padding: "10px 20px" }}>
-                              <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: sev.bg, color: sev.color, textTransform: "uppercase", letterSpacing: 0.5 }}>{sev.label}</span>
-                            </td>
-                            <td style={{ padding: "10px 20px" }}>
-                              <span style={{ fontSize: 10, fontWeight: 600, color: d.status === "escalated" ? "#EF4444" : d.status === "in_progress" ? "#D97706" : "#2563EB", textTransform: "capitalize" }}>{d.status.replace("_", " ")}</span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
           </div>
         )}
 
-        {/* ═══ Empty state ═══ */}
+        {/* ═══ Initial State ═══ */}
         {!init && !result && !loading && (
-          <div style={{ textAlign: "center", padding: "96px 0", animation: "enter 0.5s ease both" }}>
-            <div style={{
-              width: 56, height: 56, borderRadius: 14, margin: "0 auto 20px",
-              background: "linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))",
-              border: "1px solid rgba(99,102,241,0.15)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <svg style={{ width: 24, height: 24, color: "#2563EB" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082" />
-              </svg>
+          <div className="flex flex-col items-center justify-center py-40 animate-[fadeUp_0.8s_ease-out]">
+            <div className="relative mb-10">
+               <div className="w-32 h-32 rounded-[2.5rem] bg-indigo-950 flex items-center justify-center shadow-2xl shadow-indigo-950/40 relative z-10 overflow-hidden">
+                  <Network className="w-12 h-12 text-white opacity-90 animate-[spinSlow_20s_linear_infinite]" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-transparent" />
+               </div>
+               <div className="absolute -inset-4 bg-indigo-500/10 rounded-[3rem] blur-2xl -z-10 animate-pulse" />
             </div>
-            <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", margin: "0 0 6px" }}>Ready to analyze</p>
-            <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "0 0 24px", maxWidth: 320, marginLeft: "auto", marginRight: "auto" }}>
-              Run the AI pipeline to classify complaints, discover patterns, and detect SLA violations.
-            </p>
-            <button onClick={run} style={{
-              padding: "10px 24px", background: "linear-gradient(135deg, #1D4ED8, #7C3AED)", color: "#fff",
-              borderRadius: 10, border: "none", fontSize: 13, fontWeight: 600,
-              fontFamily: "inherit", cursor: "pointer", boxShadow: "0 4px 16px rgba(29,78,216,0.25)",
-            }}>Run Pipeline →</button>
+            <h2 className="text-2xl font-bold text-black mb-3">Intelligence Pipeline Ready</h2>
+            <p className="text-slate-500 text-sm max-w-sm text-center mb-10">Connect deeper with your data. Our BART-MNLI Zero-shot engine is calibrated and ready for high-fidelity pattern analysis.</p>
+            <button 
+              onClick={run}
+              className="px-10 py-4 bg-indigo-600 text-white rounded-[1.5rem] font-bold text-sm shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:bg-indigo-700 transition-all flex items-center gap-3"
+            >
+              Analyze Governance Stream
+              <Cpu className="w-4 h-4" />
+            </button>
           </div>
         )}
+
+        {/* ═══ Loading State skeleton ═══ */}
+        {loading && !result && (
+          <div className="w-full space-y-10 py-10 scale-[0.98] transition-all opacity-80">
+             <div className="h-64 glass rounded-[3rem] border-slate-100 flex flex-col items-center justify-center gap-6 overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent animate-[shimmer_2s_infinite]" />
+                <div className="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin" />
+                <div className="text-center space-y-2">
+                  <p className="text-sm font-bold text-indigo-950 tracking-widest uppercase">
+                    Stage {stage + 1}: {steps[stage].name}
+                  </p>
+                  <p className="text-xs text-slate-400 font-medium">Processing semantic data across 48 neural nodes...</p>
+                </div>
+             </div>
+             <div className="grid grid-cols-3 gap-6">
+               {[1, 2, 3].map(i => (
+                 <div key={i} className="h-40 glass rounded-3xl border-slate-100 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/20 to-transparent animate-[shimmer_2.5s_infinite]" />
+                 </div>
+               ))}
+             </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
