@@ -129,14 +129,7 @@ export default function SocialPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] relative overflow-hidden">
-      {/* ─── Fibonacci Grid Background ─── */}
-      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px)", backgroundSize: "55px 55px" }} />
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)", backgroundSize: "89px 89px" }} />
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 20%, rgba(223,223,228,0.8) 0%, transparent 100%)" }} />
-      </div>
-
+    <div className="min-h-screen bg-transparent text-[var(--text)] relative overflow-hidden">
       {/* ─── Animations ─── */}
       <style>{`
         @keyframes crSlide {

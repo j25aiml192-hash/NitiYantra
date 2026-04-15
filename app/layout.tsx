@@ -50,6 +50,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Global Pantone Background + Grid */}
+        <div style={{ position: "fixed", inset: 0, zIndex: -1, backgroundColor: "#53565A" }}>
+          <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "55px 55px" }} />
+          <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)", backgroundSize: "89px 89px" }} />
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 20%, rgba(255,255,255,0.06) 0%, transparent 100%)" }} />
+        </div>
+
         <Navbar />
         <LayoutShell>{children}</LayoutShell>
         <Toaster

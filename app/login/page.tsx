@@ -40,7 +40,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--bg)", fontFamily: "Inter, sans-serif" }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "transparent", fontFamily: "Inter, sans-serif" }}>
       <style>{`
         @keyframes loginFadeIn {
           from { opacity: 0; transform: translateY(16px); }

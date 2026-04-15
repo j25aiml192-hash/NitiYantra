@@ -316,7 +316,7 @@ export default function SubmitComplaintPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] p-6 md:p-10 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent p-6 md:p-10 relative overflow-hidden">
       <div className="max-w-2xl mx-auto relative z-10">
 
         <div className="mb-8">

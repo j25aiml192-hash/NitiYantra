@@ -85,7 +85,7 @@ export default function MyWorkPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-sm text-[var(--text-muted)]">Loading your dashboard…</p>
@@ -95,7 +95,7 @@ export default function MyWorkPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+    <div className="min-h-screen bg-transparent text-[var(--text)]">
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(12px); }

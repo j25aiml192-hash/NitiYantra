@@ -192,7 +192,7 @@ export default function ComplaintsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden">
+    <div className="min-h-screen bg-transparent relative overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-6">
 
         {/* ── Page Title ── */}

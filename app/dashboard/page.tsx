@@ -529,13 +529,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden">
-      {/* ─── Fibonacci Grid Background ─── */}
-      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px)", backgroundSize: "55px 55px" }} />
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,0,0,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.055) 1px, transparent 1px)", backgroundSize: "89px 89px" }} />
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(223,223,228,0.75) 0%, transparent 100%)" }} />
-      </div>
+    <div className="min-h-screen bg-transparent relative overflow-hidden">
 
       {/* ─── Dashboard Animations ─── */}
       <style>{`

@@ -185,7 +185,7 @@ export default function SettingsPage() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen pb-12" style={{ background: "var(--bg)" }}>
+    <div className="min-h-screen pb-12" style={{ background: "transparent" }}>
       <style>{`@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }`}</style>
 
       {/* ── iOS Large Title ── */}
