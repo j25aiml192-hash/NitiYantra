@@ -236,41 +236,19 @@ export default function LandingPage() {
           animation: "glowPulse 4s ease-in-out infinite",
         }} />
 
-        {/* Badge pill */}
-        <div className="float-in float-d1" style={{ marginBottom: 24, position: "relative", zIndex: 1 }}>
-          <span style={{
-            display: "inline-flex", alignItems: "center", gap: 6,
-            fontSize: 12, fontWeight: 600, color: "var(--accent)",
-            background: "var(--card)", padding: "7px 18px",
-            borderRadius: 999, border: "1px solid var(--border)",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-          }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981", animation: "pulse-dot 2s ease infinite" }} />
-            AI-Powered Governance Intelligence
-          </span>
-        </div>
-
-        {/* Calligraphic Logo — gradient rendered through mask */}
-        <div className="hero-logo-wrap" style={{ position: "relative", zIndex: 1, marginBottom: 24, display: "flex", justifyContent: "center" }}>
-          <div style={{
-            position: "relative",
-            width: "clamp(340px, 60vw, 580px)",
-            aspectRatio: "1.8",
-          }}>
-            {/* Gradient layer masked by the logo image */}
-            <div style={{
-              position: "absolute", inset: 0,
-              background: "linear-gradient(180deg, #1E1B4B 0%, #312E81 30%, #4F46E5 70%, #6366F1 100%)",
-              WebkitMaskImage: "url(/NitiYantra-hero.png)",
-              WebkitMaskSize: "contain",
-              WebkitMaskRepeat: "no-repeat",
-              WebkitMaskPosition: "center",
-              maskImage: "url(/NitiYantra-hero.png)",
-              maskSize: "contain",
-              maskRepeat: "no-repeat",
-              maskPosition: "center",
-            }} />
-          </div>
+        {/* Calligraphic Logo — centered hero image */}
+        <div className="hero-logo-wrap" style={{ position: "relative", zIndex: 1, marginBottom: 32, display: "flex", justifyContent: "center" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/nityantra-hero.png"
+            alt="NitiYantra"
+            style={{
+              width: "clamp(300px, 55vw, 520px)",
+              height: "auto",
+              objectFit: "contain",
+              filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.08))",
+            }}
+          />
         </div>
 
         {/* Subtitle + Description */}
