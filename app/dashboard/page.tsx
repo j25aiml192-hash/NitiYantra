@@ -621,90 +621,100 @@ export default function DashboardPage() {
 
         {/* ═══ GOVERNANCE HEALTH SCORE ═══ */}
         {govHealth && (
-          <div className="dash-in dash-d2 dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)" }}>
-            {/* Decorative glow orb */}
-            <div className="absolute -left-8 -top-8 w-40 h-40 rounded-full glow-orb" style={{ background: "radial-gradient(circle, rgba(29,78,216,0.12), transparent 70%)" }} />
-            <div className="relative flex items-start gap-6">
-              {/* Score Circle */}
-              <div className="flex flex-col items-center shrink-0">
-                <div className="relative w-24 h-24" style={{ animation: "pulseRing 3s ease-in-out infinite" }}>
-                  <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
-                    <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" strokeWidth="8" />
-                    <circle
-                      cx="60" cy="60" r="52" fill="none"
-                      stroke={govHealth.overall_score >= 80 ? "#059669" : govHealth.overall_score >= 60 ? "#d97706" : "#e11d48"}
-                      strokeWidth="8" strokeLinecap="round"
-                      strokeDasharray={2 * Math.PI * 52}
-                      strokeDashoffset={2 * Math.PI * 52 * (1 - govHealth.overall_score / 100)}
-                      className="transition-all duration-1000"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-extrabold text-[var(--text)]">{govHealth.overall_score}</span>
-                    <span className="text-[10px] text-[var(--text-muted)]">/ 100</span>
+          <div className="dash-in dash-d2 grid grid-cols-1 lg:grid-cols-[200px_1fr] xl:grid-cols-[240px_1fr] gap-6 mt-6 relative z-10">
+            {/* LEFT BOX: Score Circle */}
+            <div className="bg-slate-50/80 backdrop-blur-xl border border-slate-200 rounded-3xl p-6 flex flex-col items-center justify-center shadow-sm relative overflow-hidden transition-all hover:shadow-md h-full">
+              {/* Decorative shimmer */}
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-indigo-400 to-transparent opacity-50" />
+              <div className="relative w-32 h-32 flex items-center justify-center mb-6">
+                <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" strokeWidth="8" />
+                  <circle
+                    cx="60" cy="60" r="52" fill="none"
+                    stroke={govHealth.overall_score >= 80 ? "#10b981" : govHealth.overall_score >= 60 ? "#f59e0b" : "#f43f5e"}
+                    strokeWidth="8" strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 52}
+                    strokeDashoffset={2 * Math.PI * 52 * (1 - govHealth.overall_score / 100)}
+                    className="transition-all duration-1000"
+                    style={{ dropShadow: "0 4px 6px rgba(0,0,0,0.1)" }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-4xl font-extrabold text-slate-800 tracking-tighter">{govHealth.overall_score}</span>
+                  <span className="text-xs font-semibold text-slate-400">/ 100</span>
+                </div>
+              </div>
+              <span className="px-5 py-2 rounded-xl text-sm font-bold shadow-sm" style={{
+                background: govHealth.overall_score >= 80 ? "#ecfdf5" : govHealth.overall_score >= 60 ? "#fffbeb" : "#fff1f2",
+                color: govHealth.overall_score >= 80 ? "#059669" : govHealth.overall_score >= 60 ? "#d97706" : "#e11d48",
+                border: `1px solid ${govHealth.overall_score >= 80 ? "#34d399" : govHealth.overall_score >= 60 ? "#fcd34d" : "#fda4af"}`
+              }}>
+                Grade: {govHealth.grade}
+              </span>
+            </div>
+
+            {/* RIGHT BOX: Info & Departments */}
+            <div className="bg-slate-50/60 backdrop-blur-md border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  </div>
+                  <div>
+                    <h3 className="text-[17px] font-bold text-slate-900 tracking-tight">Governance Health Score</h3>
+                    <p className="text-[12px] text-slate-500 font-medium tracking-wide">AI-powered department performance analysis</p>
                   </div>
                 </div>
-                <span className="mt-2 px-3 py-1 rounded-full text-xs font-bold" style={{
-                  background: govHealth.overall_score >= 80 ? "rgba(5,150,105,0.1)" : govHealth.overall_score >= 60 ? "rgba(217,119,6,0.1)" : "rgba(225,29,72,0.1)",
-                  color: govHealth.overall_score >= 80 ? "#059669" : govHealth.overall_score >= 60 ? "#d97706" : "#e11d48",
-                }}>
-                  Grade: {govHealth.grade}
+                <span className="text-xs px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-600 font-bold tracking-widest uppercase border border-emerald-200 shadow-sm">
+                  {govHealth.ai_provider || "NIM"}
                 </span>
               </div>
 
-              {/* Info + Departments */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <h3 className="text-[15px] font-semibold text-[var(--text)] flex items-center gap-2">
-                      <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs shadow-md shadow-indigo-500/20">🏛</span>
-                      Governance Health Score
-                    </h3>
-                    <p className="text-[11px] text-[var(--text-muted)] mt-0.5 ml-9">AI-powered department performance analysis</p>
-                  </div>
-                  <span className="text-[10px] px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold border border-emerald-500/15">
-                    {govHealth.ai_provider || "AI"}
-                  </span>
+              {/* AI Insight */}
+              {govHealth.ai_insight && (
+                <div className="text-[13px] text-slate-600 font-medium leading-relaxed mb-6 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm relative pr-6">
+                  <span className="absolute top-4 left-4 text-amber-500 text-lg leading-none">💡</span>
+                  <p className="pl-8">{govHealth.ai_insight}</p>
                 </div>
+              )}
 
-                {/* AI Insight */}
-                {govHealth.ai_insight && (
-                  <p className="text-[12px] text-[var(--text-secondary)] leading-relaxed mb-4 p-3 rounded-xl bg-[var(--bg)] border border-[var(--border)]">
-                    💡 {govHealth.ai_insight}
-                  </p>
-                )}
-
-                {/* Department Cards */}
-                <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "thin" }}>
-                  {govHealth.departments?.map((dept: { name: string; score: number; grade: string; trend: string; bottleneck: string }) => (
-                    <div key={dept.name} className="shrink-0 w-40 p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-default">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[11px] font-semibold text-[var(--text)]">{dept.name}</span>
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md" style={{
-                          color: dept.score >= 80 ? "#059669" : dept.score >= 60 ? "#d97706" : "#e11d48",
-                          background: dept.score >= 80 ? "rgba(5,150,105,0.08)" : dept.score >= 60 ? "rgba(217,119,6,0.08)" : "rgba(225,29,72,0.08)",
+              {/* Department Cards */}
+              <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar flex-1 items-end">
+                {govHealth.departments?.map((dept: { name: string; score: number; grade: string; trend: string; bottleneck: string }) => {
+                  const isRed = dept.score < 60;
+                  const isAmber = dept.score >= 60 && dept.score < 80;
+                  const bdColor = isRed ? "border-rose-200" : isAmber ? "border-amber-200" : "border-emerald-200";
+                  const bgColor = "bg-white";
+                  return (
+                    <div key={dept.name} className={`shrink-0 w-[200px] p-4 rounded-2xl ${bgColor} border ${bdColor} shadow-sm group hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative overflow-hidden`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-[13px] font-bold text-slate-800">{dept.name}</span>
+                        <span className="text-[11px] font-bold w-6 h-6 flex items-center justify-center rounded-full" style={{
+                          color: isRed ? "#e11d48" : isAmber ? "#d97706" : "#059669",
+                          background: isRed ? "#ffe4e6" : isAmber ? "#fef3c7" : "#d1fae5"
                         }}>
                           {dept.grade}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-lg font-bold" style={{
-                          color: dept.score >= 80 ? "#059669" : dept.score >= 60 ? "#d97706" : "#e11d48",
+                      <div className="flex items-baseline gap-2 mb-3">
+                        <span className="text-2xl font-black tracking-tighter" style={{
+                          color: isRed ? "#f43f5e" : isAmber ? "#f59e0b" : "#10b981",
                         }}>{dept.score}</span>
-                        <span className="text-[10px]">
+                        <span className="text-xs">
                           {dept.trend === "improving" ? "📈" : dept.trend === "declining" ? "📉" : "➡️"}
                         </span>
                       </div>
-                      <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden mb-2">
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden mb-3">
                         <div className="h-full rounded-full transition-all duration-700" style={{
                           width: `${dept.score}%`,
-                          background: dept.score >= 80 ? "linear-gradient(90deg, #059669, #34d399)" : dept.score >= 60 ? "linear-gradient(90deg, #d97706, #fbbf24)" : "linear-gradient(90deg, #e11d48, #fb7185)",
+                          background: isRed ? "linear-gradient(90deg, #f43f5e, #fb7185)" : isAmber ? "linear-gradient(90deg, #f59e0b, #fbbf24)" : "linear-gradient(90deg, #10b981, #34d399)",
                         }} />
                       </div>
-                      <p className="text-[9px] text-[var(--text-muted)] leading-tight line-clamp-2">{dept.bottleneck}</p>
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 truncate">{dept.bottleneck || "Monitoring"}</p>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             </div>
           </div>
