@@ -77,12 +77,19 @@ export default function SimulatorPage() {
   const [loading, setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(2029);
   const [error, setError] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [readiness, setReadiness] = useState<any>(null);
 
   // Fetch presets
   useEffect(() => {
     fetch(`${API}/simulator/presets`)
       .then(r => r.json())
       .then(data => setPresets(data))
+      .catch(() => {});
+    // Fetch readiness index
+    fetch(`${API}/election/readiness-index`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setReadiness(data); })
       .catch(() => {});
   }, []);
 
@@ -570,6 +577,84 @@ export default function SimulatorPage() {
         <div style={{ textAlign: "center", padding: 80, color: "var(--text-muted)" }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🔄</div>
           <div style={{ fontSize: 16 }}>Running simulation...</div>
+        </div>
+      )}
+      {/* ═══ ELECTION READINESS INDEX ═══ */}
+      {readiness && readiness.readiness_index && (
+        <div style={{
+          background: "var(--card)", borderRadius: 16, border: "1px solid var(--border)",
+          padding: 24, marginTop: 32,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg, #2563EB, #7c3aed)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📊</span>
+                Election Readiness Index
+              </h3>
+              <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>
+                {readiness.total_states} states/UTs — {readiness.imminent_count} imminent elections
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: readiness.national_average >= 60 ? "#059669" : "#d97706" }}>
+                  {readiness.national_average}
+                </div>
+                <div style={{ fontSize: 9, color: "var(--text-muted)", textTransform: "uppercase" as const, fontWeight: 600 }}>Nat. Avg</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Table */}
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--border)", background: "var(--bg)" }}>
+                  {["State/UT", "Score", "Grade", "Status", "Term End", "Voters (Cr)", "Constituencies", "Key Risk"].map(h => (
+                    <th key={h} style={{ textAlign: "left", padding: "8px 12px", fontSize: 10, fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" as const, letterSpacing: "0.05em" }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {readiness.readiness_index.map((r: { state: string; score: number; grade: string; status: string; term_end_year: number; voters_cr: number; constituencies: number; key_risk: string; type: string }, i: number) => (
+                  <tr key={r.state} style={{ borderBottom: "1px solid var(--border)", background: i % 2 === 1 ? "var(--bg)" : "transparent" }}>
+                    <td style={{ padding: "8px 12px", fontWeight: 600, color: "var(--text)" }}>
+                      {r.state}
+                      <span style={{ fontSize: 9, color: "var(--text-muted)", marginLeft: 4 }}>({r.type})</span>
+                    </td>
+                    <td style={{ padding: "8px 12px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div style={{ width: 60, height: 6, borderRadius: 3, background: "var(--border)", overflow: "hidden" }}>
+                          <div style={{ height: "100%", borderRadius: 3, width: `${r.score}%`, background: r.score >= 70 ? "#059669" : r.score >= 50 ? "#d97706" : "#e11d48", transition: "width 0.7s ease" }} />
+                        </div>
+                        <span style={{ fontWeight: 700, color: r.score >= 70 ? "#059669" : r.score >= 50 ? "#d97706" : "#e11d48" }}>{r.score}</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: "8px 12px" }}>
+                      <span style={{ padding: "2px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700, background: r.score >= 70 ? "rgba(5,150,105,0.1)" : r.score >= 50 ? "rgba(217,119,6,0.1)" : "rgba(225,29,72,0.1)", color: r.score >= 70 ? "#059669" : r.score >= 50 ? "#d97706" : "#e11d48" }}>
+                        {r.grade}
+                      </span>
+                    </td>
+                    <td style={{ padding: "8px 12px" }}>
+                      <span style={{ padding: "2px 8px", borderRadius: 6, fontSize: 10, fontWeight: 600, background: r.status === "Imminent" ? "rgba(239,68,68,0.1)" : r.status === "Upcoming" ? "rgba(217,119,6,0.1)" : "rgba(5,150,105,0.1)", color: r.status === "Imminent" ? "#ef4444" : r.status === "Upcoming" ? "#d97706" : "#059669" }}>
+                        {r.status === "Imminent" && "🔴 "}{r.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: "8px 12px", color: "var(--text-secondary)", fontWeight: 500 }}>{r.term_end_year}</td>
+                    <td style={{ padding: "8px 12px", color: "var(--text-muted)" }}>{r.voters_cr}</td>
+                    <td style={{ padding: "8px 12px", color: "var(--text-muted)" }}>{r.constituencies}</td>
+                    <td style={{ padding: "8px 12px", color: "var(--text-muted)", fontSize: 10, maxWidth: 160 }}>{r.key_risk}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div style={{ marginTop: 12, fontSize: 10, color: "var(--text-muted)", fontStyle: "italic" }}>
+            {readiness.model}
+          </div>
         </div>
       )}
     </div>
