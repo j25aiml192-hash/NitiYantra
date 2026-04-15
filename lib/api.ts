@@ -449,3 +449,64 @@ export async function fetchComplaintTimeline(complaintId: number): Promise<Timel
   if (!res.ok) throw new Error("Failed to fetch timeline");
   return res.json();
 }
+
+/* ─── Social Intelligence ─── */
+export interface SocialComplaint {
+  title: string;
+  url: string;
+  category: string | null;
+  district: string | null;
+  urgency: string | null;
+  summary: string | null;
+  upvotes: number;
+  ai_provider: string | null;
+}
+
+export interface RedditScanResponse {
+  source: string;
+  subreddit: string;
+  posts_scanned: number;
+  complaints_detected: number;
+  complaints: SocialComplaint[];
+}
+
+export interface UrlAnalyzeResponse {
+  url: string;
+  is_complaint: boolean;
+  category: string | null;
+  district: string | null;
+  urgency: string | null;
+  summary: string | null;
+  ai_provider: string | null;
+  text_extracted: number;
+}
+
+export async function redditScan(subreddit: string, query: string, limit: number): Promise<RedditScanResponse> {
+  const res = await fetch(`${API}/social/reddit-scan`, {
+    method: "POST",
+    headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ subreddit, query, limit }),
+  });
+  if (!res.ok) throw new Error("Reddit scan failed");
+  return res.json();
+}
+
+export async function importSocialComplaint(post: SocialComplaint): Promise<{ complaint_id: number; message: string }> {
+  const res = await fetch(`${API}/social/import-complaint`, {
+    method: "POST",
+    headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ reddit_post: post }),
+  });
+  if (!res.ok) throw new Error("Import failed");
+  return res.json();
+}
+
+export async function analyzeUrl(url: string): Promise<UrlAnalyzeResponse> {
+  const res = await fetch(`${API}/social/analyze-url`, {
+    method: "POST",
+    headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ url }),
+  });
+  if (!res.ok) throw new Error("URL analysis failed");
+  return res.json();
+}
