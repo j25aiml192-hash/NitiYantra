@@ -510,3 +510,36 @@ export async function analyzeUrl(url: string): Promise<UrlAnalyzeResponse> {
   if (!res.ok) throw new Error("URL analysis failed");
   return res.json();
 }
+
+/* ─── Reassignment ─── */
+export interface AvailableStaff {
+  id: number;
+  username: string;
+  active_complaints: number;
+  total_assigned: number;
+  resolved: number;
+  available: boolean;
+}
+
+export async function getAvailableStaff(departmentId: number): Promise<{ department_id: number; staff: AvailableStaff[] }> {
+  const res = await fetch(`${API}/complaints/available-staff/${departmentId}`, {
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to fetch staff availability");
+  return res.json();
+}
+
+export async function reassignComplaint(
+  complaintId: number,
+  newDepartmentId: number,
+  newAssignedTo: number | null,
+  reason: string
+): Promise<{ complaint_id: number; new_department_name: string | null; new_assigned_to_name: string | null }> {
+  const res = await fetch(`${API}/complaints/${complaintId}/reassign`, {
+    method: "PUT",
+    headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ new_department_id: newDepartmentId, new_assigned_to: newAssignedTo, reason }),
+  });
+  if (!res.ok) throw new Error("Reassignment failed");
+  return res.json();
+}

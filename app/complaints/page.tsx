@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { fetchComplaints, createComplaint, classifyComplaint, assignComplaint, getDepartmentStaff, getCurrentUser, fetchComplaintTimeline, TimelineEvent } from "@/lib/api";
+import { fetchComplaints, createComplaint, classifyComplaint, assignComplaint, getDepartmentStaff, getCurrentUser, fetchComplaintTimeline, TimelineEvent, reassignComplaint, getAvailableStaff, AvailableStaff } from "@/lib/api";
 import { SkeletonTable } from "@/components/Skeleton";
 import toast from "react-hot-toast";
 
@@ -86,6 +86,15 @@ export default function ComplaintsPage() {
   const [staffList, setStaffList] = useState<StaffMember[]>([]);
   const [assigning, setAssigning] = useState(false);
   const [loadingStaff, setLoadingStaff] = useState(false);
+
+  /* reassignment panel */
+  const [showReassign, setShowReassign] = useState(false);
+  const [reassignDeptId, setReassignDeptId] = useState<number | null>(null);
+  const [reassignStaffId, setReassignStaffId] = useState<number | null>(null);
+  const [reassignReason, setReassignReason] = useState("");
+  const [reassignStaffList, setReassignStaffList] = useState<AvailableStaff[]>([]);
+  const [loadingReassignStaff, setLoadingReassignStaff] = useState(false);
+  const [reassigning, setReassigning] = useState(false);
 
   const loadComplaints = useCallback(async () => {
     setLoading(true);
@@ -652,6 +661,104 @@ export default function ComplaintsPage() {
                       )}
                     </button>
                   </div>
+                </div>
+              )}
+
+              {/* Reassignment Panel */}
+              {currentUser?.role === "office_staff" && selected.assigned_to && (
+                <div className="px-6 pb-6">
+                  {!showReassign ? (
+                    <button
+                      onClick={() => setShowReassign(true)}
+                      className="w-full py-2.5 bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)] text-xs font-semibold rounded-xl hover:bg-[var(--border)] transition-all"
+                    >
+                      🔄 Reassign Complaint
+                    </button>
+                  ) : (
+                    <div className="border-t border-[var(--border)] pt-5">
+                      <h4 className="text-sm font-semibold text-[var(--text)] flex items-center gap-2 mb-4">
+                        🔄 Reassign Complaint
+                      </h4>
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1.5">New Department</label>
+                          <select
+                            value={reassignDeptId || ""}
+                            onChange={async (e) => {
+                              const id = Number(e.target.value);
+                              setReassignDeptId(id);
+                              setReassignStaffId(null);
+                              if (id) {
+                                setLoadingReassignStaff(true);
+                                try {
+                                  const data = await getAvailableStaff(id);
+                                  setReassignStaffList(data.staff);
+                                } catch { setReassignStaffList([]); }
+                                setLoadingReassignStaff(false);
+                              }
+                            }}
+                            className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-amber-500/30 appearance-none cursor-pointer"
+                          >
+                            <option value="">Select dept…</option>
+                            {Object.entries(DEPT_NAMES).map(([id, name]) => (
+                              <option key={id} value={id}>{name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-semibold mb-1.5">Assign To</label>
+                          <select
+                            value={reassignStaffId || ""}
+                            onChange={(e) => setReassignStaffId(Number(e.target.value) || null)}
+                            disabled={!reassignDeptId || loadingReassignStaff}
+                            className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-amber-500/30 appearance-none cursor-pointer disabled:opacity-50"
+                          >
+                            <option value="">{loadingReassignStaff ? "Loading…" : "Select staff…"}</option>
+                            {reassignStaffList.map((s) => (
+                              <option key={s.id} value={s.id}>
+                                {s.username} ({s.active_complaints} active){s.available ? " ✓" : " ⚠"}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <textarea
+                        value={reassignReason}
+                        onChange={(e) => setReassignReason(e.target.value)}
+                        placeholder="Reason for reassignment…"
+                        rows={2}
+                        className="w-full px-3 py-2.5 bg-[var(--card)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all resize-none mb-3"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={async () => {
+                            if (!reassignDeptId) return;
+                            setReassigning(true);
+                            try {
+                              const res = await reassignComplaint(selected.id, reassignDeptId, reassignStaffId, reassignReason || "Manual reassignment");
+                              toast.success(`Reassigned to ${res.new_department_name || "dept"}${res.new_assigned_to_name ? " — " + res.new_assigned_to_name : ""}`);
+                              setShowReassign(false);
+                              setReassignDeptId(null);
+                              setReassignStaffId(null);
+                              setReassignReason("");
+                              loadComplaints();
+                            } catch { toast.error("Reassignment failed"); }
+                            setReassigning(false);
+                          }}
+                          disabled={!reassignDeptId || reassigning}
+                          className="flex-1 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-amber-600/20 transition-all disabled:opacity-50 text-sm"
+                        >
+                          {reassigning ? "Reassigning…" : "🔄 Confirm Reassign"}
+                        </button>
+                        <button
+                          onClick={() => { setShowReassign(false); setReassignDeptId(null); setReassignStaffId(null); setReassignReason(""); }}
+                          className="px-4 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)] text-sm rounded-xl hover:bg-[var(--border)] transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
           </div>
