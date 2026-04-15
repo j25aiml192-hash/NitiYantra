@@ -228,8 +228,8 @@ export default function SocialPage() {
               <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[var(--bg)]" style={{ animation: "crPulse 2s ease-in-out infinite" }} />
             </div>
             <div>
-              <h1 className="text-[24px] font-bold text-[var(--text)] tracking-tight">Crowd Monitor</h1>
-              <p className="text-[13px] text-[var(--text-muted)] mt-0.5">Scan social media & news for civic complaints in real time</p>
+              <h1 className="text-[24px] font-bold text-slate-50 tracking-tight">Crowd Monitor</h1>
+              <p className="text-[13px] text-slate-300 mt-0.5">Scan social media & news for civic complaints in real time</p>
             </div>
           </div>
         </div>

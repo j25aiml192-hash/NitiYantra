@@ -148,14 +148,14 @@ export default function MeetingTrackerPage() {
       {/* Page Header */}
       <div className="max-w-7xl mx-auto mb-6">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-semibold text-[var(--text)]">
+          <h1 className="text-2xl font-semibold text-slate-50">
             Decision Extractor
           </h1>
           <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100">
             AI Powered
           </span>
         </div>
-        <p className="text-sm text-[var(--text-muted)]">
+        <p className="text-sm text-slate-300">
           Paste any meeting transcript and our AI will extract action items, deadlines, and responsibilities
         </p>
       </div>
