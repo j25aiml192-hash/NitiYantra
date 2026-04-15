@@ -409,6 +409,160 @@ export default function SimulatorPage() {
               ))}
             </div>
           </div>
+
+          {/* ── ONOE Savings Calculator ── */}
+          <div style={{ marginTop: 24 }}>
+            <h2 style={{
+              fontSize: 22, fontWeight: 800, color: "var(--text)", margin: 0, marginBottom: 16,
+              display: "flex", alignItems: "center", gap: 10,
+            }}>
+              💰 ONOE Savings Calculator
+              <span style={{
+                fontSize: 10, fontWeight: 600, background: "#10b98118", color: "#10b981",
+                padding: "3px 10px", borderRadius: 20,
+              }}>
+                CMS India 2024
+              </span>
+            </h2>
+
+            {/* Top stat cards */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 20 }}>
+              {[
+                {
+                  label: "Current System Cost (per cycle)",
+                  value: "₹1,88,000 Cr",
+                  sub: "28 states × ₹3,000 Cr + 8 UTs × ₹500 Cr + ₹1,00,000 Cr Lok Sabha",
+                  color: "#ef4444",
+                },
+                {
+                  label: "ONOE Cost (per cycle)",
+                  value: "₹1,20,000 Cr",
+                  sub: "All elections conducted simultaneously",
+                  color: "#10b981",
+                },
+                {
+                  label: "Savings Per Cycle",
+                  value: "₹68,000 Cr",
+                  sub: "36% cost reduction per 5-year cycle",
+                  color: "#6366f1",
+                },
+                {
+                  label: "20-Year Savings (4 cycles)",
+                  value: "₹2,72,000 Cr",
+                  sub: "Directed to development, education, healthcare",
+                  color: "#f59e0b",
+                },
+              ].map((card, i) => (
+                <div key={i} style={{
+                  padding: 18, borderRadius: 14,
+                  background: `linear-gradient(135deg, ${card.color}12, ${card.color}06)`,
+                  border: `1px solid ${card.color}25`,
+                }}>
+                  <div style={{ fontSize: 10, fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    {card.label}
+                  </div>
+                  <div style={{ fontSize: 24, fontWeight: 800, color: card.color, marginTop: 6 }}>
+                    {card.value}
+                  </div>
+                  <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 4, lineHeight: 1.4 }}>
+                    {card.sub}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Cost Comparison Chart + Governance Days */}
+            <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 20, marginBottom: 20 }}>
+              {/* Bar Chart: Current vs ONOE */}
+              <div style={{
+                background: "var(--card)", borderRadius: 14, border: "1px solid var(--border)", padding: 20,
+              }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", margin: 0, marginBottom: 12 }}>
+                  📊 Cost Comparison: Current System vs ONOE
+                </h3>
+                <ResponsiveContainer width="100%" height={260}>
+                  <BarChart data={[
+                    { cycle: "2029-34", current: 188000, onoe: 120000 },
+                    { cycle: "2034-39", current: 199280, onoe: 127200 },
+                    { cycle: "2039-44", current: 211240, onoe: 134830 },
+                    { cycle: "2044-49", current: 223910, onoe: 142920 },
+                  ]}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                    <XAxis dataKey="cycle" tick={{ fontSize: 11, fill: "var(--text-muted)" }} />
+                    <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}K Cr`} />
+                    <Tooltip
+                      formatter={(value: number) => [`₹${value.toLocaleString()} Cr`, ""]}
+                      contentStyle={{
+                        background: "var(--card)", border: "1px solid var(--border)",
+                        borderRadius: 10, fontSize: 12,
+                      }}
+                    />
+                    <Bar dataKey="current" fill="#ef4444" radius={[6, 6, 0, 0]} name="Current System" />
+                    <Bar dataKey="onoe" fill="#10b981" radius={[6, 6, 0, 0]} name="ONOE System" />
+                  </BarChart>
+                </ResponsiveContainer>
+                <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 8 }}>
+                  <span style={{ fontSize: 11, display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: 2, background: "#ef4444" }} />
+                    <span style={{ color: "var(--text-muted)" }}>Current System</span>
+                  </span>
+                  <span style={{ fontSize: 11, display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: 2, background: "#10b981" }} />
+                    <span style={{ color: "var(--text-muted)" }}>ONOE System</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Governance Days Saved */}
+              <div style={{
+                background: "linear-gradient(135deg, #f59e0b12, #f59e0b06)",
+                borderRadius: 14, border: "1px solid #f59e0b30", padding: 24,
+                display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
+                textAlign: "center",
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Model Code of Conduct Days Eliminated
+                </div>
+                <div style={{ fontSize: 56, fontWeight: 800, color: "#f59e0b", marginTop: 12, lineHeight: 1 }}>
+                  2,800
+                </div>
+                <div style={{ fontSize: 14, color: "var(--text-secondary)", marginTop: 8, fontWeight: 600 }}>
+                  governance days saved over 20 years
+                </div>
+                <div style={{
+                  marginTop: 20, fontSize: 11, color: "var(--text-muted)", lineHeight: 1.6,
+                  borderTop: "1px solid var(--border)", paddingTop: 16,
+                }}>
+                  <div style={{ marginBottom: 8 }}>
+                    <span style={{ fontWeight: 700, color: "#ef4444" }}>Current:</span>{" "}
+                    ~200 MCC days/year across states
+                  </div>
+                  <div style={{ marginBottom: 8 }}>
+                    <span style={{ fontWeight: 700, color: "#10b981" }}>ONOE:</span>{" "}
+                    Only 60 MCC days per 5-year cycle
+                  </div>
+                  <div>
+                    <span style={{ fontWeight: 700, color: "#6366f1" }}>Net:</span>{" "}
+                    ~140 extra governance days/year recovered
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Disclaimer */}
+            <div style={{
+              padding: "12px 20px", borderRadius: 10,
+              background: "var(--card)", border: "1px solid var(--border)",
+              fontSize: 11, color: "var(--text-muted)", fontStyle: "italic",
+              display: "flex", alignItems: "center", gap: 8,
+            }}>
+              <span>⚠️</span>
+              <span>
+                Figures based on CMS India 2024 data and HLC Kovind Committee Report (March 2024).
+                Inflation estimated at 6% p.a. Actual savings may vary based on political conditions and implementation timeline.
+              </span>
+            </div>
+          </div>
         </>
       )}
 
