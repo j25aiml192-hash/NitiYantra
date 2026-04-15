@@ -798,7 +798,7 @@ export default function ComplaintsPage() {
 /*  GRIEVANCE MODAL                                    */
 /* ═══════════════════════════════════════════════════ */
 const GRIEVANCE_DISTRICTS = ["Noida", "Ghaziabad", "Delhi", "Gurugram", "Faridabad"];
-const GRIEVANCE_SOURCES = ["Portal", "WhatsApp", "Phone", "Email"];
+const GRIEVANCE_SOURCES = ["web", "mobile_app", "phone", "email", "twitter"];
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FORM_CATEGORY_COLORS: Record<string, string> = {
   Roads: "bg-amber-500", "Water Supply": "bg-blue-500", Electricity: "bg-yellow-500",
@@ -930,7 +930,7 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
 
       // Step 3: Create complaint WITH the AI-classified category and department
       const complaintRes = await createComplaint({
-        text, district, source: source.toLowerCase(),
+        text, district, source,
         category: category,
         status: "in_progress",
         department_id: deptId,

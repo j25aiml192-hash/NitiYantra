@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { createComplaint, classifyComplaint } from "@/lib/api";
 
 const DISTRICTS = ["Noida", "Ghaziabad", "Delhi", "Gurugram", "Faridabad"];
-const SOURCES = ["Portal", "WhatsApp", "Phone", "Email"];
+const SOURCES = ["web", "mobile_app", "phone", "email", "twitter"];
 
 const CATEGORY_COLORS: Record<string, string> = {
   Roads: "bg-amber-500",
@@ -289,7 +289,7 @@ export default function SubmitComplaintPage() {
       const complaintRes = await createComplaint({
         text,
         district,
-        source: source.toLowerCase(),
+        source,
         category: category,
         status: "in_progress",
         department_id: deptId,
