@@ -636,7 +636,7 @@ export default function DashboardPage() {
                     strokeDasharray={2 * Math.PI * 52}
                     strokeDashoffset={2 * Math.PI * 52 * (1 - govHealth.overall_score / 100)}
                     className="transition-all duration-1000"
-                    style={{ dropShadow: "0 4px 6px rgba(0,0,0,0.1)" }}
+                    style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }}
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
