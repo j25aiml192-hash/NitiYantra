@@ -221,7 +221,7 @@ export default function ComplaintsPage() {
         </div>
 
         {/* GOLDEN RATIO WRAPPER */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 flex-1 items-start">
+        <div className={`grid grid-cols-1 gap-6 flex-1 items-start transition-all duration-300 ${selected ? "lg:grid-cols-[1.618fr_1fr]" : ""}`}>
           
           {/* ══ LEFT PANE: LIST ══ */}
           <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden flex flex-col h-full min-h-[600px]">
@@ -423,21 +423,11 @@ export default function ComplaintsPage() {
           </div> {/* End Left Pane */}
 
           {/* ══ RIGHT PANE: INTELLIGENCE ══ */}
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative flex flex-col h-full min-h-[600px] overflow-hidden">
-            <div className="shimmerLine" />
-            
-            {!selected ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-8 text-center animate-fade-in">
-                <div className="w-16 h-16 rounded-3xl bg-[var(--bg)] flex items-center justify-center mb-4 border border-[var(--border)] shadow-sm">
-                  <svg className="w-8 h-8 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-                  </svg>
-                </div>
-                <h3 className="text-sm font-semibold text-[var(--text)] mb-1">No Complaint Selected</h3>
-                <p className="text-xs text-[var(--text-muted)] max-w-[200px]">Select a grievance from the registry to view its intelligence report, timeline, and assignment routing.</p>
-              </div>
-            ) : (
-              <div className="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar animate-slide-in">
+          {selected && (
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative flex flex-col h-full min-h-[600px] overflow-hidden animate-slide-in">
+              <div className="shimmerLine" />
+              
+              <div className="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar">
                 {/* Header */}
                 <div className="sticky top-0 bg-[var(--card)] backdrop-blur-xl border-b border-[var(--border)] px-6 py-4 flex items-center justify-between z-10">
                   <div className="flex items-center gap-3">
@@ -778,8 +768,8 @@ export default function ComplaintsPage() {
                 </div>
               )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
       {/* CSS */}
