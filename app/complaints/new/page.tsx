@@ -116,8 +116,8 @@ function RoutingTimeline({
         <div className="absolute left-[15px] top-4 bottom-4 w-[2px]"
           style={{
             background: step >= 5
-              ? "linear-gradient(to bottom, #6366f1, #22c55e)"
-              : "linear-gradient(to bottom, #6366f1, var(--border))",
+              ? "linear-gradient(to bottom, #2563EB, #22c55e)"
+              : "linear-gradient(to bottom, #2563EB, var(--border))",
           }}
         />
 
@@ -207,7 +207,7 @@ function RoutingTimeline({
                       <svg width="48" height="2" className="overflow-visible">
                         <line
                           x1="0" y1="1" x2="48" y2="1"
-                          stroke="#6366f1"
+                          stroke="#2563EB"
                           strokeWidth="2"
                           strokeDasharray="4 3"
                           strokeDashoffset="48"

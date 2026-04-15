@@ -188,7 +188,7 @@ export default function DebatePage() {
               disabled={state === "processing" || manualTopic.trim().length < 5}
               style={{
                 padding: "12px 24px", borderRadius: 12, border: "none",
-                background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                 color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer",
                 opacity: state === "processing" ? 0.7 : 1,
               }}
@@ -210,7 +210,7 @@ export default function DebatePage() {
               width: 80, height: 80, borderRadius: "50%", border: "none",
               background: state === "listening"
                 ? "linear-gradient(135deg, #ef4444, #dc2626)"
-                : "linear-gradient(135deg, #6366f1, #4f46e5)",
+                : "linear-gradient(135deg, #2563EB, #1D4ED8)",
               color: "#fff", fontSize: 28, cursor: "pointer",
               boxShadow: state === "listening"
                 ? "0 0 0 8px rgba(239,68,68,0.2), 0 0 0 16px rgba(239,68,68,0.1)"
@@ -280,8 +280,8 @@ export default function DebatePage() {
           <div style={{
             textAlign: "center", marginBottom: 24,
             padding: "12px 24px", borderRadius: 12,
-            background: "linear-gradient(135deg, #6366f122, #8b5cf622)",
-            border: "1px solid #6366f130",
+            background: "linear-gradient(135deg, #2563EB22, #8b5cf622)",
+            border: "1px solid #2563EB30",
           }}>
             <span style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
               Debate Topic
@@ -349,7 +349,7 @@ export default function DebatePage() {
             }}>
               <div style={{
                 width: 48, height: 48, borderRadius: "50%",
-                background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                background: "linear-gradient(135deg, #2563EB, #8b5cf6)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 14, fontWeight: 900, color: "#fff",
                 boxShadow: "0 4px 20px rgba(99,102,241,0.3)",
@@ -360,28 +360,28 @@ export default function DebatePage() {
 
             {/* LokMitra */}
             <div style={{
-              background: "linear-gradient(135deg, #6366f112, #6366f106)",
-              borderRadius: 16, border: "1px solid #6366f125", padding: 24,
+              background: "linear-gradient(135deg, #2563EB12, #2563EB06)",
+              borderRadius: 16, border: "1px solid #2563EB25", padding: 24,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <div style={{
                   width: 44, height: 44, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                  background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: 20,
                 }}>
                   ⚖️
                 </div>
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: "#6366f1" }}>{result.lokmitra.agent}</div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: "#2563EB" }}>{result.lokmitra.agent}</div>
                   <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{result.lokmitra.role}</div>
                 </div>
                 <button
                   onClick={() => isSpeaking === "lokmitra" ? stopSpeaking() : speakArgument(result.lokmitra.argument, "lokmitra")}
                   style={{
                     marginLeft: "auto", padding: "6px 12px", borderRadius: 8,
-                    border: "1px solid #6366f140", background: isSpeaking === "lokmitra" ? "#6366f120" : "transparent",
-                    color: "#6366f1", fontSize: 12, fontWeight: 600, cursor: "pointer",
+                    border: "1px solid #2563EB40", background: isSpeaking === "lokmitra" ? "#2563EB20" : "transparent",
+                    color: "#2563EB", fontSize: 12, fontWeight: 600, cursor: "pointer",
                   }}
                 >
                   {isSpeaking === "lokmitra" ? "⏹ Stop" : "🔊 Listen"}
@@ -392,7 +392,7 @@ export default function DebatePage() {
               </p>
               {result.lokmitra.key_points.length > 0 && (
                 <div style={{ marginTop: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", marginBottom: 6, textTransform: "uppercase" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#2563EB", marginBottom: 6, textTransform: "uppercase" }}>
                     Key Points
                   </div>
                   {result.lokmitra.key_points.map((p, i) => (
@@ -409,7 +409,7 @@ export default function DebatePage() {
           {result.verdict && (
             <div style={{
               marginTop: 24, padding: 20, borderRadius: 14,
-              background: "linear-gradient(135deg, #8b5cf622, #6366f112)",
+              background: "linear-gradient(135deg, #8b5cf622, #2563EB12)",
               border: "1px solid #8b5cf630", textAlign: "center",
             }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.05em" }}>

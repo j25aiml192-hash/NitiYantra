@@ -273,7 +273,7 @@ export default function ChatBot() {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{
                 width: 28, height: 28, borderRadius: 8,
-                background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                 display: "flex", alignItems: "center",
                 justifyContent: "center", padding: 4,
               }}><img src="/nityantralogo.svg" alt="NitiYantra" style={{ width: 18, height: 18, filter: "invert(1)" }} /></div>
@@ -334,7 +334,7 @@ export default function ChatBot() {
               <div style={{ textAlign: "center", marginTop: 20 }}>
                 <div style={{
                   width: 40, height: 40, borderRadius: 10,
-                  background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                  background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                   margin: "0 auto 10px",
                   display: "flex", alignItems: "center",
                   justifyContent: "center", padding: 6,
@@ -420,7 +420,7 @@ export default function ChatBot() {
                 {[0, 150, 300].map(delay => (
                   <div key={delay} style={{
                     width: 7, height: 7, borderRadius: "50%",
-                    background: "#6366f1",
+                    background: "#2563EB",
                     animation: `bounce 1s ${delay}ms infinite`
                   }} />
                 ))}
@@ -460,7 +460,7 @@ export default function ChatBot() {
                 boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 transition: "all 0.2s"
               }}
-              onFocus={e => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,125,243,0.15)"; e.currentTarget.style.borderColor = "#818cf8" }}
+              onFocus={e => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,125,243,0.15)"; e.currentTarget.style.borderColor = "#3B82F6" }}
               onBlur={e => { e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)"; e.currentTarget.style.borderColor = "var(--border)" }}
             />
             <button
@@ -470,7 +470,7 @@ export default function ChatBot() {
                 width: 32, height: 32,
                 borderRadius: "50%",
                 background: input.trim()
-                  ? "linear-gradient(135deg, #6366f1, #4f46e5)"
+                  ? "linear-gradient(135deg, #2563EB, #1D4ED8)"
                   : "var(--border)",
                 border: "none",
                 color: "white",

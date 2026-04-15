@@ -151,9 +151,9 @@ export default function SimulatorPage() {
             onClick={() => applyPreset(key)}
             style={{
               padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
-              border: selectedPreset === key ? "2px solid #6366f1" : "1px solid var(--border)",
+              border: selectedPreset === key ? "2px solid #2563EB" : "1px solid var(--border)",
               background: selectedPreset === key ? "rgba(99,102,241,0.1)" : "var(--card)",
-              color: selectedPreset === key ? "#6366f1" : "var(--text-secondary)",
+              color: selectedPreset === key ? "#2563EB" : "var(--text-secondary)",
               cursor: "pointer",
             }}
             title={p.description}
@@ -167,7 +167,7 @@ export default function SimulatorPage() {
           style={{
             padding: "6px 20px", borderRadius: 8, fontSize: 12, fontWeight: 700,
             border: "none", marginLeft: "auto",
-            background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
             color: "#fff", cursor: loading ? "not-allowed" : "pointer",
             opacity: loading ? 0.7 : 1,
           }}
@@ -216,7 +216,7 @@ export default function SimulatorPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14, marginBottom: 24 }}>
             {[
               { label: "Governance Days Saved", value: currentYearData?.cumulative_governance_days?.toLocaleString() || "0", bg: "#10b981" },
-              { label: "Cumulative Savings", value: `₹${currentYearData?.cumulative_savings_cr?.toLocaleString() || "0"} Cr`, bg: "#6366f1" },
+              { label: "Cumulative Savings", value: `₹${currentYearData?.cumulative_savings_cr?.toLocaleString() || "0"} Cr`, bg: "#2563EB" },
               { label: "Synced States", value: `${currentYearData?.synced_count || 0}/${result.summary.total_states}`, bg: "#f59e0b" },
               { label: "Security Forces", value: currentYearData?.security_forces?.toLocaleString() || "0", bg: "#ef4444" },
               { label: "Active Elections", value: currentYearData?.active_polls?.toString() || "0", bg: "#8b5cf6" },
@@ -343,7 +343,7 @@ export default function SimulatorPage() {
                   <XAxis dataKey="year" tick={{ fontSize: 10, fill: "var(--text-muted)" }} />
                   <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} domain={[0, 100]} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="sync_percentage" stroke="#6366f1" strokeWidth={2} dot={false} name="Sync %" />
+                  <Line type="monotone" dataKey="sync_percentage" stroke="#2563EB" strokeWidth={2} dot={false} name="Sync %" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -387,15 +387,15 @@ export default function SimulatorPage() {
 
           {/* Summary */}
           <div style={{
-            background: "linear-gradient(135deg, #6366f112, #6366f106)",
-            borderRadius: 14, border: "1px solid #6366f130", padding: 20,
+            background: "linear-gradient(135deg, #2563EB12, #2563EB06)",
+            borderRadius: 14, border: "1px solid #2563EB30", padding: 20,
           }}>
             <h3 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", margin: 0, marginBottom: 12 }}>
               📊 20-Year Simulation Summary
             </h3>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, fontSize: 13 }}>
               {[
-                ["Final Sync Rate", `${result.summary.final_sync_percentage}%`, "#6366f1"],
+                ["Final Sync Rate", `${result.summary.final_sync_percentage}%`, "#2563EB"],
                 ["Total Savings", `₹${result.summary.total_savings_cr.toLocaleString()} Cr`, "#10b981"],
                 ["Governance Days Recovered", result.summary.total_governance_days_saved.toLocaleString(), "#f59e0b"],
                 ["Total Dissolutions", result.summary.total_dissolutions.toString(), "#ef4444"],
@@ -444,7 +444,7 @@ export default function SimulatorPage() {
                   label: "Savings Per Cycle",
                   value: "₹68,000 Cr",
                   sub: "36% cost reduction per 5-year cycle",
-                  color: "#6366f1",
+                  color: "#2563EB",
                 },
                 {
                   label: "20-Year Savings (4 cycles)",
@@ -542,7 +542,7 @@ export default function SimulatorPage() {
                     Only 60 MCC days per 5-year cycle
                   </div>
                   <div>
-                    <span style={{ fontWeight: 700, color: "#6366f1" }}>Net:</span>{" "}
+                    <span style={{ fontWeight: 700, color: "#2563EB" }}>Net:</span>{" "}
                     ~140 extra governance days/year recovered
                   </div>
                 </div>

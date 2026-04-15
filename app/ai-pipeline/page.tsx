@@ -22,8 +22,8 @@ function getDelayed(raw: Record<string, unknown> | unknown[] | null | undefined)
   return [];
 }
 const DEPT: Record<number, string> = { 1: "PWD", 2: "Jal Board", 3: "DESU", 4: "MCD", 5: "Delhi Police" };
-const PIE_COLORS = ["#6366F1", "#0EA5E9", "#F59E0B", "#EF4444", "#8B5CF6", "#10B981", "#EC4899", "#F97316"];
-const CLUSTER_COLORS = ["#6366F1", "#0EA5E9", "#F59E0B", "#EF4444", "#8B5CF6", "#10B981", "#EC4899", "#F97316"];
+const PIE_COLORS = ["#2563EB", "#0EA5E9", "#F59E0B", "#EF4444", "#8B5CF6", "#10B981", "#EC4899", "#F97316"];
+const CLUSTER_COLORS = ["#2563EB", "#0EA5E9", "#F59E0B", "#EF4444", "#8B5CF6", "#10B981", "#EC4899", "#F97316"];
 
 /* ── Animated counter ── */
 function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
@@ -132,11 +132,11 @@ export default function AIPipelinePage() {
           </div>
           <button onClick={run} disabled={loading} style={{
             display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 20px",
-            background: loading ? "transparent" : "linear-gradient(135deg, #4F46E5, #7C3AED)",
+            background: loading ? "transparent" : "linear-gradient(135deg, #1D4ED8, #7C3AED)",
             color: loading ? "var(--text)" : "#fff",
             borderRadius: 10, border: loading ? "1px solid var(--border)" : "none",
             fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: loading ? "wait" : "pointer",
-            boxShadow: loading ? "none" : "0 2px 12px rgba(79,70,229,0.25)",
+            boxShadow: loading ? "none" : "0 2px 12px rgba(29,78,216,0.25)",
             transition: "all 0.3s",
           }}>
             {loading && <div style={{ width: 13, height: 13, border: "2px solid var(--border)", borderTop: "2px solid var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />}
@@ -176,7 +176,7 @@ export default function AIPipelinePage() {
           </div>
           {loading && (
             <div style={{ height: 2, borderRadius: 2, overflow: "hidden", background: "var(--border)", marginTop: 14 }}>
-              <div style={{ height: "100%", width: `${((stage + 1) / 3) * 100}%`, borderRadius: 2, background: "linear-gradient(90deg, #6366F1, #8B5CF6, #6366F1)", backgroundSize: "200% 100%", animation: "flowBar 2s linear infinite", transition: "width 0.8s ease" }} />
+              <div style={{ height: "100%", width: `${((stage + 1) / 3) * 100}%`, borderRadius: 2, background: "linear-gradient(90deg, #2563EB, #8B5CF6, #2563EB)", backgroundSize: "200% 100%", animation: "flowBar 2s linear infinite", transition: "width 0.8s ease" }} />
             </div>
           )}
         </div>
@@ -196,7 +196,7 @@ export default function AIPipelinePage() {
 
             {/* ── Stat: Classified ── */}
             <div style={{ gridColumn: "span 4", padding: "20px 22px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #6366F1, #8B5CF6)", borderRadius: "14px 14px 0 0" }} />
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8B5CF6)", borderRadius: "14px 14px 0 0" }} />
               <p style={{ fontSize: 10, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Classified</p>
               <p style={{ fontSize: 36, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: -2, lineHeight: 1 }}>
                 <Counter to={result.classified?.length ?? 0} />
@@ -409,7 +409,7 @@ export default function AIPipelinePage() {
                               <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: sev.bg, color: sev.color, textTransform: "uppercase", letterSpacing: 0.5 }}>{sev.label}</span>
                             </td>
                             <td style={{ padding: "10px 20px" }}>
-                              <span style={{ fontSize: 10, fontWeight: 600, color: d.status === "escalated" ? "#EF4444" : d.status === "in_progress" ? "#D97706" : "#6366F1", textTransform: "capitalize" }}>{d.status.replace("_", " ")}</span>
+                              <span style={{ fontSize: 10, fontWeight: 600, color: d.status === "escalated" ? "#EF4444" : d.status === "in_progress" ? "#D97706" : "#2563EB", textTransform: "capitalize" }}>{d.status.replace("_", " ")}</span>
                             </td>
                           </tr>
                         );
@@ -431,7 +431,7 @@ export default function AIPipelinePage() {
               border: "1px solid rgba(99,102,241,0.15)",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <svg style={{ width: 24, height: 24, color: "#6366F1" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg style={{ width: 24, height: 24, color: "#2563EB" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082" />
               </svg>
             </div>
@@ -440,9 +440,9 @@ export default function AIPipelinePage() {
               Run the AI pipeline to classify complaints, discover patterns, and detect SLA violations.
             </p>
             <button onClick={run} style={{
-              padding: "10px 24px", background: "linear-gradient(135deg, #4F46E5, #7C3AED)", color: "#fff",
+              padding: "10px 24px", background: "linear-gradient(135deg, #1D4ED8, #7C3AED)", color: "#fff",
               borderRadius: 10, border: "none", fontSize: 13, fontWeight: 600,
-              fontFamily: "inherit", cursor: "pointer", boxShadow: "0 4px 16px rgba(79,70,229,0.25)",
+              fontFamily: "inherit", cursor: "pointer", boxShadow: "0 4px 16px rgba(29,78,216,0.25)",
             }}>Run Pipeline →</button>
           </div>
         )}

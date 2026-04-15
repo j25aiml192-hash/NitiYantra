@@ -168,7 +168,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             <div
               style={{
                 width: 32, height: 32, borderRadius: 10,
-                background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 flexShrink: 0, padding: 5,
               }}
@@ -332,7 +332,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             {/* Avatar */}
             <div style={{
               width: 32, height: 32, borderRadius: "50%",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              background: "linear-gradient(135deg, #2563EB, #8b5cf6)",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0,
               position: "relative",

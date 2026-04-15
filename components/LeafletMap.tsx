@@ -204,7 +204,7 @@ export default function LeafletMap({ stateName, sidebarOpen, districtMarkers = [
         html: `
           <div style="
             width: 14px; height: 14px; border-radius: 50%;
-            background: #6366f1; border: 3px solid white;
+            background: #2563EB; border: 3px solid white;
             box-shadow: 0 2px 8px rgba(99,102,241,0.5);
           "></div>`,
         iconSize: [14, 14],

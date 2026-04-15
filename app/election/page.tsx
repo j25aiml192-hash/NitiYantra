@@ -121,7 +121,7 @@ export default function ElectionPage() {
   const budgetPieData = result
     ? [
         { name: "Security", value: result.budget_split.security, color: "#ef4444" },
-        { name: "HR & Admin", value: result.budget_split.hr_admin, color: "#6366f1" },
+        { name: "HR & Admin", value: result.budget_split.hr_admin, color: "#2563EB" },
         { name: "Logistics", value: result.budget_split.logistics, color: "#f59e0b" },
       ]
     : [];
@@ -151,7 +151,7 @@ export default function ElectionPage() {
           <span style={{
             display: "inline-block", marginTop: 8, fontSize: 11, fontWeight: 600,
             padding: "3px 10px", borderRadius: 6,
-            background: "rgba(99,102,241,0.1)", color: "#6366f1",
+            background: "rgba(99,102,241,0.1)", color: "#2563EB",
           }}>
             Model: {result.model}
           </span>
@@ -240,7 +240,7 @@ export default function ElectionPage() {
               style={{
                 width: "100%", marginTop: 20, padding: "10px 0",
                 borderRadius: 10, border: "none", fontWeight: 700, fontSize: 13,
-                background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                 color: "#fff", cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.7 : 1,
               }}
@@ -268,7 +268,7 @@ export default function ElectionPage() {
                 {[
                   { label: "Projected Voters", value: result.projected_voters, bg: "#10b981" },
                   { label: "Poll Stations", value: formatNumber(result.poll_stations), bg: "#f59e0b" },
-                  { label: "Total Budget", value: `₹${result.grand_total_budget_cr} Cr`, bg: "#6366f1" },
+                  { label: "Total Budget", value: `₹${result.grand_total_budget_cr} Cr`, bg: "#2563EB" },
                   { label: "Total Workforce", value: formatNumber(result.total_human_force), bg: "#ef4444" },
                 ].map((card, i) => (
                   <div key={i} style={{
@@ -391,7 +391,7 @@ export default function ElectionPage() {
                       <XAxis dataKey="name" tick={{ fontSize: 10, fill: "var(--text-muted)" }} />
                       <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} />
                       <Tooltip />
-                      <Bar dataKey="value" fill="#6366f1" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="value" fill="#2563EB" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

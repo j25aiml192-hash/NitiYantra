@@ -135,7 +135,7 @@ const DEFAULT_COORDS = { lat: 28.6, lng: 77.2, state: "Delhi" };
 
 const CATEGORY_COLORS: Record<string, string> = {
   Roads: "#f59e0b", "Water Supply": "#06b6d4", Water: "#06b6d4",
-  Electricity: "#6366f1", Sanitation: "#10b981", "Public Safety": "#ef4444",
+  Electricity: "#2563EB", Sanitation: "#10b981", "Public Safety": "#ef4444",
   Infrastructure: "#8b5cf6", Healthcare: "#ec4899", Education: "#14b8a6",
   Transport: "#f97316", Housing: "#a855f7", Environment: "#22c55e",
 };
@@ -322,7 +322,7 @@ export default function HeatmapPage() {
             fillColor: "#f8f4ec",
             fillOpacity: 0.97,
             stroke: true,
-            color: "#6366f1",
+            color: "#2563EB",
             weight: 2,
             opacity: 0.3,
             interactive: false,
@@ -331,7 +331,7 @@ export default function HeatmapPage() {
           // Add India border outline
           L.geoJSON(indiaGeo, {
             style: {
-              color: "#6366f1",
+              color: "#2563EB",
               weight: 1.5,
               fillColor: "transparent",
               fillOpacity: 0,

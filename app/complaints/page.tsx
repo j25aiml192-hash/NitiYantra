@@ -636,7 +636,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
         .glow { animation: glow-pulse 1.5s ease-in-out infinite; }
       `}</style>
       <div className="relative">
-        <div className="absolute left-[15px] top-4 bottom-4 w-[2px]" style={{ background: step >= 5 ? "linear-gradient(to bottom, #6366f1, #22c55e)" : "linear-gradient(to bottom, #6366f1, #1e2130)" }} />
+        <div className="absolute left-[15px] top-4 bottom-4 w-[2px]" style={{ background: step >= 5 ? "linear-gradient(to bottom, #2563EB, #22c55e)" : "linear-gradient(to bottom, #2563EB, #1e2130)" }} />
         <div className="space-y-0">
           {steps.map((s) => {
             const isActive = step === s.id;
@@ -668,7 +668,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
                   )}
                   {s.hasDept && (isActive || isCompleted) && (
                     <div className="mt-3 flex items-center gap-3">
-                      <svg width="48" height="2" className="overflow-visible"><line x1="0" y1="1" x2="48" y2="1" stroke="#6366f1" strokeWidth="2" strokeDasharray="4 3" strokeDashoffset="48" style={{ animation: "dash-flow 0.6s ease forwards" }} /></svg>
+                      <svg width="48" height="2" className="overflow-visible"><line x1="0" y1="1" x2="48" y2="1" stroke="#2563EB" strokeWidth="2" strokeDasharray="4 3" strokeDashoffset="48" style={{ animation: "dash-flow 0.6s ease forwards" }} /></svg>
                       <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">{result.department}</span>
                     </div>
                   )}

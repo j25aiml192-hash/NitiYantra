@@ -82,8 +82,8 @@ function RoutingTimeline({
         <div className="absolute left-[15px] top-4 bottom-4 w-[2px]"
           style={{
             background: step >= 5
-              ? "linear-gradient(to bottom, #6366f1, #22c55e)"
-              : "linear-gradient(to bottom, #6366f1, #1e2130)",
+              ? "linear-gradient(to bottom, #2563EB, #22c55e)"
+              : "linear-gradient(to bottom, #2563EB, #1e2130)",
           }}
         />
         <div className="space-y-0">
@@ -139,7 +139,7 @@ function RoutingTimeline({
                   {s.hasDept && (isActive || isCompleted) && (
                     <div className="mt-3 flex items-center gap-3">
                       <svg width="48" height="2" className="overflow-visible">
-                        <line x1="0" y1="1" x2="48" y2="1" stroke="#6366f1" strokeWidth="2" strokeDasharray="4 3" strokeDashoffset="48" style={{ animation: "dash-flow 0.6s ease forwards" }} />
+                        <line x1="0" y1="1" x2="48" y2="1" stroke="#2563EB" strokeWidth="2" strokeDasharray="4 3" strokeDashoffset="48" style={{ animation: "dash-flow 0.6s ease forwards" }} />
                       </svg>
                       <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>

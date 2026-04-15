@@ -51,9 +51,9 @@ const PALETTE = {
   slate500: "#64748b",
   slate300: "#cbd5e1",
   slate100: "#f1f5f9",
-  indigo: "#4f46e5",
+  indigo: "#1D4ED8",
   indigoDark: "#3730a3",
-  indigoLight: "#818cf8",
+  indigoLight: "#3B82F6",
   teal: "#0d9488",
   tealLight: "#2dd4bf",
   amber: "#d97706",
@@ -67,7 +67,7 @@ const PALETTE = {
 };
 
 const CATEGORY_COLORS = [
-  "#4f46e5", "#0d9488", "#d97706", "#e11d48",
+  "#1D4ED8", "#0d9488", "#d97706", "#e11d48",
   "#7c3aed", "#0284c7", "#059669", "#ea580c",
   "#6d28d9", "#0891b2", "#ca8a04", "#dc2626",
 ];
@@ -237,7 +237,7 @@ function DeptWorkerDashboard({ user }: { user: { username: string; department_id
         {/* ROW 1 — Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total Tasks", value: deptStats?.total ?? 0, color: "#4f46e5", icon: "📋" },
+            { label: "Total Tasks", value: deptStats?.total ?? 0, color: "#1D4ED8", icon: "📋" },
             { label: "Pending", value: deptStats?.pending ?? 0, color: "#d97706", icon: "⏳" },
             { label: "In Progress", value: deptStats?.in_progress ?? 0, color: "#0284c7", icon: "🔄" },
             { label: "Overdue", value: deptStats?.overdue ?? 0, color: "#e11d48", icon: "🚨", pulse: (deptStats?.overdue ?? 0) > 0 },

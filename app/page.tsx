@@ -35,7 +35,7 @@ function CountUp({ end, suffix = "" }: { end: number; suffix?: string }) {
 /* ── Types ── */
 interface ClassifyResult { category: string; confidence: number; department: string; model: string; }
 const CAT_COLORS: Record<string, string> = {
-  Roads: "#F59E0B", "Water Supply": "#06B6D4", Electricity: "#6366F1",
+  Roads: "#F59E0B", "Water Supply": "#06B6D4", Electricity: "#2563EB",
   Sanitation: "#10B981", "Public Safety": "#EF4444", Other: "#9CA3AF",
 };
 const DEPT_GRADIENTS: Record<string, string> = {
@@ -51,7 +51,7 @@ const SAMPLES = [
   { label: "⚡ Power cut", text: "Frequent power cuts in Sector 18 Noida lasting 4-6 hours. Transformer sparking dangerously." },
 ];
 const TEAM = [
-  { name: "Hitendra Dhapola", role: "Backend Developer + AI/ML", initials: "HD", gradient: "linear-gradient(135deg,#4F46E5,#7C3AED)" },
+  { name: "Hitendra Dhapola", role: "Backend Developer + AI/ML", initials: "HD", gradient: "linear-gradient(135deg,#1D4ED8,#7C3AED)" },
   { name: "Arya Bhrdwaj", role: "Frontend Developer + UI Designer", initials: "AB", gradient: "linear-gradient(135deg,#0EA5E9,#22D3EE)" },
   { name: "Astha Yadav", role: "Frontend Developer", initials: "AY", gradient: "linear-gradient(135deg,#F59E0B,#FB923C)" },
   { name: "Kartik Kumar", role: "Backend Assist", initials: "KK", gradient: "linear-gradient(135deg,#10B981,#34D399)" },
@@ -152,7 +152,7 @@ export default function LandingPage() {
         .hover-lift { transition: transform 0.3s, box-shadow 0.3s; }
         .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
         .shimmer-bg {
-          background: linear-gradient(90deg, transparent, rgba(79,70,229,0.04), transparent);
+          background: linear-gradient(90deg, transparent, rgba(29,78,216,0.04), transparent);
           background-size: 200% 100%;
           animation: gradientShift 3s ease-in-out infinite;
         }
@@ -172,7 +172,7 @@ export default function LandingPage() {
           position: absolute;
           top: 0; left: 0; right: 0;
           height: 2px;
-          background: linear-gradient(90deg, transparent, rgba(79,70,229,0.3), rgba(139,92,246,0.3), transparent);
+          background: linear-gradient(90deg, transparent, rgba(29,78,216,0.3), rgba(139,92,246,0.3), transparent);
           animation: shimmerLine 3s ease-in-out infinite;
         }
       `}</style>
@@ -232,7 +232,7 @@ export default function LandingPage() {
         <div style={{
           position: "absolute", top: "30%", left: "50%", width: 700, height: 700,
           borderRadius: "50%", pointerEvents: "none",
-          background: "radial-gradient(circle, rgba(79,70,229,0.12), rgba(139,92,246,0.06) 40%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(29,78,216,0.12), rgba(139,92,246,0.06) 40%, transparent 70%)",
           animation: "glowPulse 4s ease-in-out infinite",
         }} />
 
@@ -278,7 +278,7 @@ export default function LandingPage() {
           position: "relative", zIndex: 1,
         }}>
           {[
-            { label: "Complaints Tracked", value: totalComplaints, suffix: "+", color: "#4F46E5" },
+            { label: "Complaints Tracked", value: totalComplaints, suffix: "+", color: "#1D4ED8" },
             { label: "Departments", value: 5, suffix: "", color: "#10B981" },
             { label: "Platform Uptime", value: 99, suffix: ".9%", color: "#0EA5E9" },
           ].map((m, i) => (
@@ -354,7 +354,7 @@ export default function LandingPage() {
                 { cat: "Roads", pct: 28, color: "#F59E0B" },
                 { cat: "Water Supply", pct: 22, color: "#06B6D4" },
                 { cat: "Sanitation", pct: 20, color: "#10B981" },
-                { cat: "Electricity", pct: 16, color: "#6366F1" },
+                { cat: "Electricity", pct: 16, color: "#2563EB" },
                 { cat: "Public Safety", pct: 14, color: "#EF4444" },
               ].map(c => (
                 <div key={c.cat}>
@@ -379,7 +379,7 @@ export default function LandingPage() {
               {[
                 { text: "Pothole on main road Sector 62", status: "In Progress", statusColor: "#0EA5E9", cat: "Roads", catColor: "#F59E0B", time: "2h ago" },
                 { text: "Water pipeline burst Block-4", status: "Escalated", statusColor: "#EF4444", cat: "Water Supply", catColor: "#06B6D4", time: "5h ago" },
-                { text: "Streetlight out near metro station", status: "Pending", statusColor: "#F59E0B", cat: "Electricity", catColor: "#6366F1", time: "8h ago" },
+                { text: "Streetlight out near metro station", status: "Pending", statusColor: "#F59E0B", cat: "Electricity", catColor: "#2563EB", time: "8h ago" },
                 { text: "Garbage pile-up market road area", status: "Resolved", statusColor: "#10B981", cat: "Sanitation", catColor: "#10B981", time: "12h ago" },
               ].map((c, i) => (
                 <div key={i} style={{
@@ -415,7 +415,7 @@ export default function LandingPage() {
           <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 80 }}>
             {[35, 48, 42, 62, 55, 78, 72].map((v, i) => (
               <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div style={{ width: "100%", height: `${v}%`, background: i === 5 ? "#4F46E5" : "rgba(79,70,229,0.18)", borderRadius: "6px 6px 3px 3px", transition: "height 0.6s ease" }} />
+                <div style={{ width: "100%", height: `${v}%`, background: i === 5 ? "#1D4ED8" : "rgba(29,78,216,0.18)", borderRadius: "6px 6px 3px 3px", transition: "height 0.6s ease" }} />
               </div>
             ))}
           </div>
@@ -436,7 +436,7 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 21 }}>
           {[
-            { step: "01", title: "Ingest", emoji: "📥", desc: "Complaints flow in from citizen portals, WhatsApp, phone calls and email — normalized into a single structured format.", tags: ["Portal", "WhatsApp", "Email"], accent: "#4F46E5" },
+            { step: "01", title: "Ingest", emoji: "📥", desc: "Complaints flow in from citizen portals, WhatsApp, phone calls and email — normalized into a single structured format.", tags: ["Portal", "WhatsApp", "Email"], accent: "#1D4ED8" },
             { step: "02", title: "Analyze", emoji: "🧠", desc: "Every complaint classified by category and urgency. Similar issues clustered. Delays flagged when unresolved beyond 7 days.", tags: ["Classification", "Clustering", "Delays"], accent: "#F59E0B" },
             { step: "03", title: "Act", emoji: "📊", desc: "Department performance, issue bottlenecks, and trend data surfaced in real time — so administrators act before crises form.", tags: ["Dashboard", "Alerts", "Reports"], accent: "#10B981" },
           ].map((c, i) => (
@@ -580,14 +580,14 @@ export default function LandingPage() {
 
       {/* ═══ ABOUT — Golden Ratio 2-col ═══ */}
       <section id="about-section" style={{ padding: "89px 24px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(79,70,229,0.04), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(29,78,216,0.04), transparent 70%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <div className="anim-in" style={{ textAlign: "center", marginBottom: 55 }}>
             <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: -0.8, margin: "0 0 13px", color: "var(--text)" }}>About</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1.618fr 1fr", gap: 21 }}>
             <div className="card anim-in delay-1 hover-lift" style={{ padding: 34, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(12px)" }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, rgba(79,70,229,0.1), rgba(79,70,229,0.2))", display: "flex", alignItems: "center", justifyContent: "center", color: "#4F46E5", marginBottom: 21 }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, rgba(29,78,216,0.1), rgba(29,78,216,0.2))", display: "flex", alignItems: "center", justifyContent: "center", color: "#1D4ED8", marginBottom: 21 }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 13px", color: "var(--text)" }}>Platform Overview</h3>
@@ -647,7 +647,7 @@ export default function LandingPage() {
         padding: "89px 24px", borderBottom: "1px solid var(--border)",
         position: "relative", overflow: "hidden",
       }}>
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(79,70,229,0.06), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(29,78,216,0.06), transparent 70%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
           <p className="anim-in" style={{ fontSize: 12, fontWeight: 600, color: "var(--accent)", textTransform: "uppercase", letterSpacing: 1.5, margin: "0 0 13px" }}>Coverage</p>
           <h2 className="anim-in delay-1" style={{ fontSize: 36, fontWeight: 800, letterSpacing: -0.8, margin: "0 0 8px", color: "var(--text)" }}>Across the National Capital Region</h2>
@@ -683,7 +683,7 @@ export default function LandingPage() {
           backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }} />
-        <div style={{ position: "absolute", top: "30%", left: "20%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(79,70,229,0.08), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "30%", left: "20%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(29,78,216,0.08), transparent 70%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1.618fr 1fr", gap: 55, alignItems: "center", position: "relative", zIndex: 1 }}>
           <div className="anim-in">
             <p style={{ fontSize: 12, fontWeight: 600, color: "var(--accent)", textTransform: "uppercase", letterSpacing: 1.5, margin: "0 0 16px" }}>Ready to explore?</p>
