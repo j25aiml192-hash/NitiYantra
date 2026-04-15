@@ -426,12 +426,12 @@ export default function DebatePage() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center py-4 px-6 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center py-4 px-6 overflow-hidden bg-[#020617]">
       {/* ─── Premium Background Elements ─── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(#1E40AF 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+        <div className="absolute top-[10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `radial-gradient(#ffffff 0.5px, transparent 0.5px)`, backgroundSize: '40px 40px' }} />
       </div>
 
       <style>{`
@@ -454,10 +454,10 @@ export default function DebatePage() {
           50% { filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.7)); }
         }
         .glass-card {
-          background: rgba(255, 255, 255, 0.65);
+          background: rgba(15, 23, 42, 0.4);
           backdrop-filter: blur(24px) saturate(180%);
-          border: 1px solid rgba(99, 102, 241, 0.15);
-          box-shadow: 0 20px 60px -15px rgba(30, 64, 175, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.4);
           position: relative;
           z-index: 10;
         }
@@ -467,7 +467,7 @@ export default function DebatePage() {
           inset: 0;
           border-radius: inherit;
           padding: 1px;
-          background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(99,102,241,0.1), rgba(255,255,255,0.4));
+          background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(99,102,241,0.1), rgba(255,255,255,0.05));
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
@@ -475,14 +475,15 @@ export default function DebatePage() {
           pointer-events: none;
         }
         .debate-input {
-          background: rgba(255, 255, 255, 0.4);
-          box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+          background: rgba(255, 255, 255, 0.03);
+          box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          color: white;
         }
         .debate-input:focus {
-          background: #fff;
+          background: rgba(255, 255, 255, 0.08);
           border-color: #6366F1;
-          box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+          box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
         }
         .premium-btn {
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -505,10 +506,10 @@ export default function DebatePage() {
           position: absolute;
           cursor: pointer;
           top: 0; left: 0; right: 0; bottom: 0;
-          background-color: #e2e8f0;
+          background-color: rgba(255,255,255,0.1);
           transition: .4s;
           border-radius: 34px;
-          border: 1px solid rgba(0,0,0,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
         }
         .slider:before {
           position: absolute;
@@ -530,11 +531,11 @@ export default function DebatePage() {
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
           <div className="absolute inset-0 rounded-full border-2 border-indigo-400 opacity-20 animate-ping" />
         </div>
-        <h1 className="text-[28px] font-black text-slate-900 tracking-tight leading-none mb-2">
+        <h1 className="text-[28px] font-black text-white tracking-tight leading-none mb-2">
           Policy Debate Arena
         </h1>
         <div className="h-[2px] w-10 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full mb-3" />
-        <p className="text-[13px] font-medium text-slate-500/70 tracking-wide max-w-[400px] mx-auto italic">
+        <p className="text-[13px] font-medium text-indigo-100/60 tracking-wide max-w-[400px] mx-auto italic">
           Powering democratic discourse with advanced multi-agent intelligence
         </p>
       </div>
@@ -546,7 +547,7 @@ export default function DebatePage() {
           {/* Manual Input Group */}
           <div className="w-full flex items-center gap-3 mb-6">
             <div className="relative flex-1 group">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
               </span>
               <input
@@ -555,7 +556,7 @@ export default function DebatePage() {
                 onChange={e => setManualTopic(e.target.value)}
                 placeholder="Describe a policy or controversial topic..."
                 onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                className="debate-input w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200/60 text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal outline-none text-sm"
+                className="debate-input w-full pl-11 pr-4 py-3.5 rounded-2xl border border-white/5 font-medium placeholder:text-slate-500 placeholder:font-normal outline-none text-sm"
                 disabled={state === "processing"}
               />
             </div>
@@ -605,8 +606,8 @@ export default function DebatePage() {
           </div>
 
           {/* Autoplay Toggle Segment */}
-          <div className="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-slate-50/50 border border-slate-200/50 mb-8 transition-all hover:bg-white/80">
-            <span className="text-[11px] font-bold text-slate-600 tracking-tight">Auto-vocalize debate arguments</span>
+          <div className="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-white/5 border border-white/10 mb-8 transition-all hover:bg-white/10">
+            <span className="text-[11px] font-bold text-indigo-100/70 tracking-tight">Auto-vocalize debate arguments</span>
             <label className="switch">
               <input type="checkbox" checked={autoPlay} onChange={toggleAutoPlay} />
               <span className="slider"></span>
@@ -616,22 +617,22 @@ export default function DebatePage() {
           {/* Suggested Contextual Topics */}
           {suggestedTopics.length > 0 && state === "idle" && (
             <div className="w-full text-center">
-              <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-5 flex items-center justify-center gap-3">
-                <span className="w-8 h-[1px] bg-slate-200" />
+              <div className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-5 flex items-center justify-center gap-3">
+                <span className="w-8 h-[1px] bg-white/10" />
                 Intelligence Starters
-                <span className="w-8 h-[1px] bg-slate-200" />
+                <span className="w-8 h-[1px] bg-white/10" />
               </div>
               <div className="flex flex-wrap gap-2.5 justify-center">
                 {suggestedTopics.slice(0, 5).map((t, i) => (
                   <button
                     key={i}
                     onClick={() => { setManualTopic(t); generateDebate(t); }}
-                    className="group px-5 py-2.5 rounded-full bg-white border border-slate-200/80 shadow-sm hover:border-indigo-400/50 hover:shadow-lg hover:shadow-indigo-500/5 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
+                    className="group px-5 py-2.5 rounded-full bg-white/5 border border-white/10 shadow-sm hover:border-indigo-400/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
                   >
                     <span className="text-sm scale-90 group-hover:scale-110 transition-transform">
                       {getTopicIcon(t)}
                     </span>
-                    <span className="text-[12px] font-bold text-slate-700 tracking-tight">
+                    <span className="text-[12px] font-bold text-indigo-100 tracking-tight">
                       {t.length > 40 ? t.substring(0, 37) + "..." : t}
                     </span>
                   </button>
@@ -652,20 +653,20 @@ export default function DebatePage() {
       {result && state === "debating" && (
         <div className="w-full max-w-[1240px] px-4 space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
           {/* AI Banner */}
-          <div className="glass-card rounded-[24px] p-8 border-indigo-200/40 text-center relative overflow-hidden group">
+          <div className="glass-card rounded-[24px] p-8 border-white/5 text-center relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
               <svg className="w-24 h-24 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 mb-3">Intelligence Objective</div>
-            <h2 className="text-[26px] font-black text-slate-900 tracking-tighter mb-4 leading-tight">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/80 mb-3">Intelligence Objective</div>
+            <h2 className="text-[26px] font-black text-white tracking-tighter mb-4 leading-tight">
               &quot;{result.topic}&quot;
             </h2>
             <div className="flex items-center justify-center gap-3">
-              <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold ring-1 ring-indigo-200/50">
+              <span className="px-3 py-1 rounded-full bg-white/5 text-indigo-100 text-xs font-bold ring-1 ring-white/10">
                 Source: {result.source}
               </span>
               {result.ai_provider && (
-                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold ring-1 ring-emerald-200/50 animate-pulse">
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold ring-1 ring-emerald-500/30 animate-pulse">
                   AI: {result.ai_provider}
                 </span>
               )}
@@ -674,32 +675,32 @@ export default function DebatePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-0 items-stretch h-full">
             {/* LokNiti (Opposition) */}
-            <div className={`glass-card rounded-3xl p-8 border-rose-200/40 transition-all duration-500 ${ttsSection === "lokniti" ? 'scale-[1.02] border-rose-500/50 ring-4 ring-rose-500/10 bg-white' : ''}`}>
+            <div className={`glass-card rounded-3xl p-8 border-white/5 transition-all duration-500 ${ttsSection === "lokniti" ? 'scale-[1.02] border-rose-500/40 ring-4 ring-rose-500/10 bg-white/5' : ''}`}>
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-700 shadow-xl shadow-rose-500/20 flex items-center justify-center text-2xl filter contrast-[1.1]">
                     ❓
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 leading-tight">{result.lokniti.agent}</h3>
-                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokniti.role}</p>
+                    <h3 className="text-xl font-black text-white leading-tight">{result.lokniti.agent}</h3>
+                    <p className="text-[11px] font-bold text-indigo-100/40 uppercase tracking-widest">{result.lokniti.role}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => isSpeaking === "lokniti" ? stopSpeaking() : speakArgument(result.lokniti.argument, "lokniti")}
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokniti' ? 'bg-rose-500 text-white animate-pulse' : 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white'}`}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokniti' ? 'bg-rose-500 text-white animate-pulse' : 'bg-white/5 text-rose-500 hover:bg-rose-600 hover:text-white'}`}
                 >
                   {isSpeaking === "lokniti" ? "⏹" : "🔊"}
                 </button>
               </div>
-              <p className="text-[15px] leading-[1.8] text-slate-600/90 font-medium tracking-tight whitespace-pre-line mb-8">
+              <p className="text-[15px] leading-[1.8] text-indigo-100/80 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokniti.argument}
               </p>
               {result.lokniti.key_points.length > 0 && (
-                <div className="space-y-3 p-5 rounded-2xl bg-rose-50/50 border border-rose-100 shadow-inner">
-                  <div className="text-[10px] font-black uppercase text-rose-500 tracking-widest">Crucial Objections</div>
+                <div className="space-y-3 p-5 rounded-2xl bg-white/5 border border-white/5 shadow-inner">
+                  <div className="text-[10px] font-black uppercase text-rose-400 tracking-widest">Crucial Objections</div>
                   {result.lokniti.key_points.map((p, i) => (
-                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
+                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-indigo-100/70 italic">
                       <span className="text-rose-400 mt-1">◈</span>
                       <span>{p}</span>
                     </div>
@@ -710,39 +711,39 @@ export default function DebatePage() {
 
             {/* VS CENTER */}
             <div className="flex items-center justify-center px-6 relative">
-              <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-[13px] font-black text-white shadow-2xl relative z-10 border-4 border-white">
+              <div className="w-12 h-12 rounded-full bg-indigo-500 flex items-center justify-center text-[13px] font-black text-white shadow-2xl relative z-10 border-4 border-[#020617]">
                 VS
               </div>
-              <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-gradient-to-b from-transparent via-slate-200 to-transparent translate-x-[-50%]" />
+              <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white/10 translate-x-[-50%]" />
             </div>
 
             {/* LokMitra (Proposition) */}
-            <div className={`glass-card rounded-3xl p-8 border-indigo-200/40 transition-all duration-500 ${ttsSection === "lokmitra" ? 'scale-[1.02] border-indigo-500/50 ring-4 ring-indigo-500/10 bg-white' : ''}`}>
+            <div className={`glass-card rounded-3xl p-8 border-white/5 transition-all duration-500 ${ttsSection === "lokmitra" ? 'scale-[1.02] border-indigo-500/40 ring-4 ring-indigo-500/10 bg-white/5' : ''}`}>
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 flex items-center justify-center text-2xl filter contrast-[1.1]">
                     ⚖️
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 leading-tight">{result.lokmitra.agent}</h3>
-                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokmitra.role}</p>
+                    <h3 className="text-xl font-black text-white leading-tight">{result.lokmitra.agent}</h3>
+                    <p className="text-[11px] font-bold text-indigo-100/40 uppercase tracking-widest">{result.lokmitra.role}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => isSpeaking === "lokmitra" ? stopSpeaking() : speakArgument(result.lokmitra.argument, "lokmitra")}
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokmitra' ? 'bg-indigo-500 text-white animate-pulse' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white'}`}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokmitra' ? 'bg-indigo-500 text-white animate-pulse' : 'bg-white/5 text-indigo-500 hover:bg-indigo-600 hover:text-white'}`}
                 >
                   {isSpeaking === "lokmitra" ? "⏹" : "🔊"}
                 </button>
               </div>
-              <p className="text-[15px] leading-[1.8] text-slate-600/90 font-medium tracking-tight whitespace-pre-line mb-8">
+              <p className="text-[15px] leading-[1.8] text-indigo-100/80 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokmitra.argument}
               </p>
               {result.lokmitra.key_points.length > 0 && (
-                <div className="space-y-3 p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 shadow-inner">
-                  <div className="text-[10px] font-black uppercase text-indigo-500 tracking-widest">Defense Pillars</div>
+                <div className="space-y-3 p-5 rounded-2xl bg-white/5 border border-white/5 shadow-inner">
+                  <div className="text-[10px] font-black uppercase text-indigo-400 tracking-widest">Defense Pillars</div>
                   {result.lokmitra.key_points.map((p, i) => (
-                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
+                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-indigo-100/70 italic">
                       <span className="text-indigo-400 mt-1">◈</span>
                       <span>{p}</span>
                     </div>
@@ -755,9 +756,9 @@ export default function DebatePage() {
           {/* References & Links */}
           {result.key_constitutional_articles && result.key_constitutional_articles.length > 0 && (
             <div className="flex items-center justify-center gap-2 flex-wrap pb-4">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-2">Constitutional Base:</span>
+              <span className="text-[10px] font-black text-indigo-100/30 uppercase tracking-widest mr-2">Constitutional Base:</span>
               {result.key_constitutional_articles.map((a, i) => (
-                <div key={i} className="px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black shadow-sm ring-1 ring-amber-200/50 border border-white hover:bg-amber-100 transition-all cursor-default">
+                <div key={i} className="px-4 py-1.5 rounded-full bg-white/5 text-amber-400 text-[11px] font-black shadow-sm ring-1 ring-white/10 border border-white/5 hover:bg-white/10 transition-all cursor-default text-shadow-glow">
                   {a}
                 </div>
               ))}
@@ -766,11 +767,11 @@ export default function DebatePage() {
 
           {/* Verdict Segment */}
           {result.verdict && (
-            <div className={`glass-card rounded-3xl p-10 text-center border-indigo-200/50 transition-all duration-500 max-w-[900px] mx-auto ${ttsSection === 'verdict' ? 'ring-8 ring-indigo-500/5 border-indigo-500 scale-[1.01]' : ''}`}>
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-amber-50 text-amber-600 font-black uppercase text-[11px] tracking-[0.15em] mb-6 shadow-sm border border-amber-100 animate-[debateGlow_3s_infinite]">
+            <div className={`glass-card rounded-3xl p-10 text-center border-white/5 transition-all duration-500 max-w-[900px] mx-auto ${ttsSection === 'verdict' ? 'ring-8 ring-amber-500/10 border-amber-500/50 scale-[1.01]' : ''}`}>
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 text-amber-400 font-black uppercase text-[11px] tracking-[0.15em] mb-6 shadow-sm border border-white/5 animate-[debateGlow_3s_infinite]">
                 ⚖️ AI Verdict
               </div>
-              <p className="text-[17px] font-bold italic text-slate-800 leading-relaxed max-w-[700px] mx-auto tracking-tight">
+              <p className="text-[17px] font-bold italic text-indigo-50 font-serif leading-relaxed max-w-[700px] mx-auto tracking-tight">
                 &quot;{result.verdict}&quot;
               </p>
             </div>
@@ -779,7 +780,7 @@ export default function DebatePage() {
           <div className="flex items-center justify-center pt-8 pb-12">
             <button
               onClick={handleReset}
-              className="premium-btn px-10 py-4 rounded-2xl bg-slate-900 text-white font-black text-[13px] uppercase tracking-widest shadow-2xl hover:bg-indigo-600"
+              className="premium-btn px-10 py-4 rounded-2xl bg-white text-slate-900 font-black text-[13px] uppercase tracking-widest shadow-2xl hover:bg-indigo-100"
             >
               🔄 Initialize New Arena
             </button>
@@ -789,25 +790,25 @@ export default function DebatePage() {
 
       {/* ─── Persistent Voice Status Bar ─── */}
       {isPlaying && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-8 py-5 rounded-[24px] bg-white/90 backdrop-blur-2xl border border-indigo-100/50 shadow-2xl shadow-indigo-500/10 flex items-center gap-10 animate-in slide-in-from-bottom-10">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-8 py-5 rounded-[24px] bg-[#0F172A]/90 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40 flex items-center gap-10 animate-in slide-in-from-bottom-10">
           <div className="flex items-center gap-2">
             {(["lokniti", "lokmitra", "verdict"] as TTSSection[]).map((s) => (
-              <div key={s!} className={`h-2.5 rounded-full transition-all duration-500 ${s === ttsSection ? 'w-10 ' + (s === 'lokniti' ? 'bg-rose-500' : s === 'lokmitra' ? 'bg-indigo-500' : 'bg-amber-500') : 'w-2.5 bg-slate-200'}`} />
+              <div key={s!} className={`h-2.5 rounded-full transition-all duration-500 ${s === ttsSection ? 'w-10 ' + (s === 'lokniti' ? 'bg-rose-500' : s === 'lokmitra' ? 'bg-indigo-500' : 'bg-amber-500') : 'w-2.5 bg-white/10'}`} />
             ))}
           </div>
 
           <div className="flex items-center gap-4 min-w-[200px]">
             <div className={`w-3 h-3 rounded-full animate-pulse ${ttsSection === 'lokniti' ? 'bg-rose-500' : ttsSection === 'lokmitra' ? 'bg-indigo-500' : 'bg-amber-500'}`} />
-            <div className="text-sm font-black text-slate-800 tracking-tight leading-none uppercase">
-              {currentSpeaker?.split(" ")[0]} <span className="text-slate-400 font-bold ml-1">is speaking</span>
+            <div className="text-sm font-black text-white tracking-tight leading-none uppercase">
+              {currentSpeaker?.split(" ")[0]} <span className="text-indigo-100/40 font-bold ml-1">is speaking</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 border-l border-slate-100 pl-8">
-            <button onClick={pauseResumeTTS} className="w-12 h-12 rounded-xl bg-slate-100 hover:bg-slate-200 transition-all flex items-center justify-center text-lg shadow-sm">
+          <div className="flex items-center gap-3 border-l border-white/10 pl-8">
+            <button onClick={pauseResumeTTS} className="w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center text-lg shadow-sm text-white">
               {ttsPaused ? "▶️" : "⏸"}
             </button>
-            <button onClick={stopTTS} className="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-lg shadow-sm">
+            <button onClick={stopTTS} className="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-lg shadow-sm">
               ⏹
             </button>
           </div>
