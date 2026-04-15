@@ -132,7 +132,7 @@ export default function ElectionPage() {
     : [];
 
   return (
-    <div className="relative min-h-[90vh] bg-transparent font-sans overflow-hidden text-slate-700">
+    <div className="relative min-h-[90vh] bg-transparent font-sans overflow-hidden text-black">
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(12px); }
@@ -170,14 +170,14 @@ export default function ElectionPage() {
         {/* ═══ HEADER ═══ */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-300 to-purple-300 flex items-center justify-center shadow-lg shadow-indigo-400/10">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-900 flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <span className="text-2xl text-white">⚡</span>
             </div>
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-700 mb-1">
+              <h1 className="text-2xl font-semibold tracking-tight text-black mb-1">
                 Hybrid Election Resource Calculator
               </h1>
-              <p className="text-sm font-medium text-slate-400">
+              <p className="text-sm font-medium text-slate-600">
                 AI-powered election resource allocation engine for Indian states & UTs
               </p>
             </div>
@@ -192,17 +192,17 @@ export default function ElectionPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* LEFT: Controls */}
           <div className="w-full lg:w-72 shrink-0">
-            <div className="bg-white/80 backdrop-blur-xl border border-slate-100/60 rounded-3xl p-6 shadow-sm sticky top-6">
-              <h3 className="text-sm font-semibold text-slate-600 tracking-tight mb-6">
+            <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-6 shadow-sm sticky top-6">
+              <h3 className="text-sm font-semibold text-black tracking-tight mb-6">
                 Parameters
               </h3>
 
               {/* State Dropdown */}
-              <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-2 block">State / UT</label>
+              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-2 block">State / UT</label>
               <select
                 value={selectedState}
                 onChange={e => setSelectedState(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-slate-100 bg-slate-50/30 text-slate-600 text-sm font-medium outline-none focus:border-indigo-200 focus:ring-4 focus:ring-indigo-50 transition-all cursor-pointer shadow-sm mb-5 appearance-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-black text-sm font-medium outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all cursor-pointer shadow-sm mb-5 appearance-none"
               >
                 <optgroup label="States">
                   {states.filter(s => s.type === "state").map(s => (
@@ -271,7 +271,7 @@ export default function ElectionPage() {
               <button
                 onClick={compute}
                 disabled={loading}
-                className="w-full py-3.5 rounded-2xl text-white font-semibold text-sm tracking-wide bg-gradient-to-r from-indigo-300 to-purple-300 shadow-lg shadow-indigo-200/50 hover:shadow-indigo-300/60 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
+                className="w-full py-3.5 rounded-2xl text-white font-semibold text-sm tracking-wide bg-gradient-to-r from-indigo-700 to-indigo-950 shadow-lg shadow-indigo-300/30 hover:shadow-indigo-400/50 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
               >
                 {loading ? "Computing..." : "Recalculate Allocation"}
               </button>
@@ -298,7 +298,7 @@ export default function ElectionPage() {
                   ].map((card, i) => (
                     <div key={i} className={`group relative ${card.bg} backdrop-blur-sm border ${card.border} rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden`}>
                       <div className={`absolute top-0 inset-x-0 h-1 bg-gradient-to-r ${card.from} ${card.to} opacity-40`} />
-                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-2">{card.label}</div>
+                      <div className="text-[10px] font-bold text-black uppercase tracking-widest mb-2 opacity-60">{card.label}</div>
                       <div className={`text-2xl font-semibold tracking-tight ${card.text}`}>{card.value}</div>
                     </div>
                   ))}
@@ -307,9 +307,9 @@ export default function ElectionPage() {
                 {/* Resource Allocation Tables */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Security */}
-                  <div className="bg-white/80 backdrop-blur-xl border border-slate-100/60 rounded-3xl p-7 shadow-sm">
-                    <h3 className="text-sm font-semibold text-slate-600 tracking-tight mb-5 flex items-center gap-2">
-                      <span className="p-1.5 rounded-lg bg-rose-50/50 text-rose-400 shadow-sm border border-rose-100/20">🛡️</span> Security Forces
+                  <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
+                    <h3 className="text-sm font-semibold text-black tracking-tight mb-5 flex items-center gap-2">
+                      <span className="p-1.5 rounded-lg bg-rose-600 text-white shadow-sm">🛡️</span> Security Forces
                     </h3>
                     <div className="space-y-3.5">
                       {[
@@ -319,18 +319,18 @@ export default function ElectionPage() {
                         ["Total Force", result.security.total_security_force.toLocaleString()],
                         ["Budget", `₹${result.security.budget_cr} Cr`],
                       ].map(([label, val], i) => (
-                        <div key={i} className="flex justify-between items-center text-sm border-b border-slate-50/50 pb-3.5 last:border-0 last:pb-0">
-                          <span className="font-medium text-slate-400">{label}</span>
-                          <span className="font-semibold text-slate-600">{val}</span>
+                        <div key={i} className="flex justify-between items-center text-sm border-b border-slate-100 pb-3.5 last:border-0 last:pb-0">
+                          <span className="font-medium text-black opacity-60">{label}</span>
+                          <span className="font-semibold text-black">{val}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* HR & Admin */}
-                  <div className="bg-white/80 backdrop-blur-xl border border-slate-100/60 rounded-3xl p-7 shadow-sm">
-                    <h3 className="text-sm font-semibold text-slate-600 tracking-tight mb-5 flex items-center gap-2">
-                      <span className="p-1.5 rounded-lg bg-blue-50/50 text-blue-400 shadow-sm border border-blue-100/20">👥</span> HR & Administration
+                  <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
+                    <h3 className="text-sm font-semibold text-black tracking-tight mb-5 flex items-center gap-2">
+                      <span className="p-1.5 rounded-lg bg-indigo-600 text-white shadow-sm">👥</span> HR & Administration
                     </h3>
                     <div className="space-y-3.5">
                       {[
@@ -341,9 +341,9 @@ export default function ElectionPage() {
                         ["VVPAT Units", result.hr_admin.vvpat_units.toLocaleString()],
                         ["Budget", `₹${result.hr_admin.budget_cr} Cr`],
                       ].map(([label, val], i) => (
-                        <div key={i} className="flex justify-between items-center text-sm border-b border-slate-50/50 pb-3.5 last:border-0 last:pb-0">
-                          <span className="font-medium text-slate-400">{label}</span>
-                          <span className="font-semibold text-slate-600">{val}</span>
+                        <div key={i} className="flex justify-between items-center text-sm border-b border-slate-100 pb-3.5 last:border-0 last:pb-0">
+                          <span className="font-medium text-black opacity-60">{label}</span>
+                          <span className="font-semibold text-black">{val}</span>
                         </div>
                       ))}
                     </div>
@@ -353,8 +353,8 @@ export default function ElectionPage() {
                 {/* Budget Split + Logistics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Donut Chart */}
-                  <div className="bg-white/80 backdrop-blur-xl border border-slate-100/60 rounded-3xl p-7 shadow-sm">
-                    <h3 className="text-sm font-semibold text-slate-600 tracking-tight mb-6">
+                  <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
+                    <h3 className="text-sm font-semibold text-black tracking-tight mb-6">
                       📊 Budget Split Allocation
                     </h3>
                     <ResponsiveContainer width="100%" height={260}>
@@ -377,15 +377,15 @@ export default function ElectionPage() {
                         </Pie>
                         <Tooltip 
                            formatter={(v: string | number | readonly (string | number)[] | undefined) => `${v ?? 0}%`} 
-                           contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 8px 20px rgba(0,0,0,0.06)', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)' }}
-                           itemStyle={{ fontWeight: 600, color: '#64748b', fontSize: '11px' }}
+                           contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 8px 20px rgba(0,0,0,0.06)', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)' }}
+                           itemStyle={{ fontWeight: 600, color: '#000000', fontSize: '11px' }}
                         />
                       </PieChart>
                     </ResponsiveContainer>
                     <div className="flex justify-center gap-6 mt-4">
                       {[ { name: "Security", hex: "#fca5a5" }, { name: "HR & Admin", hex: "#93c5fd" }, { name: "Logistics", hex: "#fde047" }].map((d, i) => (
-                        <div key={i} className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
-                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: d.hex }} />
+                        <div key={i} className="flex items-center gap-2 text-[10px] font-bold text-black uppercase tracking-widest opacity-60">
+                          <span className="w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm" style={{ background: d.hex }} />
                           {d.name}
                         </div>
                       ))}
@@ -393,8 +393,8 @@ export default function ElectionPage() {
                   </div>
 
                   {/* Resource Bar Chart */}
-                  <div className="bg-white/80 backdrop-blur-xl border border-slate-100/60 rounded-3xl p-7 shadow-sm">
-                    <h3 className="text-sm font-semibold text-slate-600 tracking-tight mb-6">
+                  <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
+                    <h3 className="text-sm font-semibold text-black tracking-tight mb-6">
                       📈 Resource Asset Distribution
                     </h3>
                     <ResponsiveContainer width="100%" height={260}>
@@ -410,10 +410,10 @@ export default function ElectionPage() {
                 </div>
 
                 {/* Logistics Summary */}
-                <div className="bg-white/80 backdrop-blur-xl border border-slate-100/60 rounded-[2rem] overflow-hidden shadow-sm">
-                   <div className="bg-slate-50/30 px-8 py-5 border-b border-slate-100/30 flex items-center justify-between">
-                     <h3 className="text-sm font-semibold text-slate-600 tracking-tight flex items-center gap-2">
-                       <span className="p-1.5 rounded-lg bg-amber-50/50 text-amber-400 shadow-sm border border-amber-100/20">🚛</span> Logistics Overview
+                <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm">
+                   <div className="bg-slate-100/50 px-8 py-5 border-b border-slate-200/50 flex items-center justify-between">
+                     <h3 className="text-sm font-semibold text-black tracking-tight flex items-center gap-2">
+                       <span className="p-1.5 rounded-lg bg-amber-600 text-white shadow-sm">🚛</span> Logistics Overview
                      </h3>
                    </div>
                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 p-8">
@@ -422,10 +422,10 @@ export default function ElectionPage() {
                       ["Transport Vehicles", result.logistics.transport_vehicles.toLocaleString(), "text-amber-400"],
                       ["Comm Units", result.logistics.communication_units.toLocaleString(), "text-amber-400"],
                       ["Logistics Budget", `₹${result.logistics.budget_cr} Cr`, "text-amber-400"],
-                    ].map(([label, val, colorClass], i) => (
-                      <div key={i} className="text-center border-r border-slate-50 last:border-0 hover:bg-slate-50/20 transition-colors rounded-xl py-2">
-                        <div className={`text-2xl font-semibold ${colorClass} mb-1 transition-transform`}>{val}</div>
-                        <div className="text-[10px] font-semibold text-slate-400 tracking-widest uppercase">{label}</div>
+                    ].map(([label, val], i) => (
+                      <div key={i} className="text-center border-r border-slate-100 last:border-0 hover:bg-slate-100/20 transition-colors rounded-xl py-2">
+                        <div className={`text-2xl font-semibold text-black mb-1 transition-transform`}>{val}</div>
+                        <div className="text-[10px] font-bold text-black tracking-widest uppercase opacity-60">{label}</div>
                       </div>
                     ))}
                   </div>
