@@ -182,7 +182,7 @@ export default function SimulatorPage() {
   const currentYearData = result?.yearly_data.find(y => y.year === selectedYear);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-black font-sans relative overflow-hidden pb-20">
+    <div className="min-h-screen text-black font-sans relative overflow-hidden pb-24">
       <NeuralBackground />
       
       <style>{`

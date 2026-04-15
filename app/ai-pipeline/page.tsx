@@ -150,7 +150,7 @@ export default function AIPipelinePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 relative overflow-hidden text-black font-sans">
+    <div className="min-h-screen text-black font-sans relative overflow-hidden pb-24">
       <NeuralBackground />
       
       <style>{`

@@ -5,10 +5,10 @@
 @tailwind utilities;
 
 :root {
-  --bg: #DFDFE4;
-  --card: #EAEAEF;
-  --card-hover: #DFDFE4;
-  --text: #0A0A0A;
+  --bg: #FDFCFE;
+  --card: rgba(255, 255, 255, 0.75);
+  --card-hover: rgba(255, 255, 255, 0.9);
+  --text: #0F172A;
   --text-secondary: #6B7280;
   --text-muted: #9CA3AF;
   --border: rgba(0,0,0,0.06);
@@ -42,12 +42,19 @@
 * { box-sizing: border-box; }
 
 body {
-  background: transparent;
-  color: var(--text);
+  background: 
+    radial-gradient(at 0% 0%, rgba(219, 234, 254, 0.6) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(238, 242, 255, 0.6) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(254, 242, 242, 0.6) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(255, 247, 237, 0.6) 0px, transparent 50%),
+    linear-gradient(to bottom right, #FFFFFF, #F8FAFC);
+  background-attachment: fixed;
+  color: #020617;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
+  min-height: 100vh;
 }
 
 /* ── Card system ── */
