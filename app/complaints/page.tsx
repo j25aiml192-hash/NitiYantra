@@ -838,7 +838,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
   ];
 
   return (
-    <div className="bg-[var(--card)] rounded-2xl border border-blue-500/20 p-8 shadow-xl" style={{ boxShadow: '0 0 0 1px rgba(37,99,235,0.08), 0 8px 40px rgba(37,99,235,0.08)' }}>
+    <div className="rounded-2xl border border-blue-500/20 p-8 shadow-xl" style={{ background: '#1e2536', boxShadow: '0 0 0 1px rgba(37,99,235,0.08), 0 8px 40px rgba(37,99,235,0.08)' }}>
       <style>{`
         @keyframes slideIn { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
         @keyframes popIn { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
@@ -851,7 +851,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
         .glow { animation: glow-pulse 1.5s ease-in-out infinite; }
       `}</style>
       <div className="relative">
-        <div className="absolute left-[15px] top-4 bottom-4 w-[2px]" style={{ background: step >= 5 ? "linear-gradient(to bottom, #2563EB, #3B82F6)" : "linear-gradient(to bottom, #2563EB, var(--border))" }} />
+        <div className="absolute left-[15px] top-4 bottom-4 w-[2px]" style={{ background: step >= 5 ? "linear-gradient(to bottom, #2563EB, #3B82F6)" : "linear-gradient(to bottom, #2563EB, rgba(255,255,255,0.1))" }} />
         <div className="space-y-0">
           {steps.map((s) => {
             const isActive = step === s.id;
@@ -859,26 +859,26 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
             const isVisible = step >= s.id;
             if (!isVisible) return (
               <div key={s.id} className="flex items-start gap-4 py-4 opacity-0">
-                <div className="w-8 h-8 rounded-full border-2 border-[var(--border)] shrink-0 z-10" /><div />
+                <div className="w-8 h-8 rounded-full border-2 border-white/10 shrink-0 z-10" /><div />
               </div>
             );
             return (
               <div key={s.id} className={`flex items-start gap-4 py-4 ${s.id === 3 ? "step-pop" : "step-slide"}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 z-10 transition-all ${isCompleted ? "bg-blue-600 text-white" : isActive && s.id === 5 ? "bg-blue-600 text-white step-bounce" : isActive ? "bg-blue-600 text-white glow" : "border-2 border-[var(--border)] text-[var(--text-secondary)]"}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 z-10 transition-all ${isCompleted ? "bg-blue-600 text-white" : isActive && s.id === 5 ? "bg-blue-600 text-white step-bounce" : isActive ? "bg-blue-600 text-white glow" : "border-2 border-white/10 text-slate-400"}`}>
                   {isCompleted ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg> : <span className="text-xs">{s.icon}</span>}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-semibold ${isActive || isCompleted ? "text-blue-600" : "text-[var(--text-muted)]"}`}>{s.title}</p>
-                  <p className={`text-xs mt-0.5 text-[var(--text-muted)]`}>{s.sub}</p>
+                  <p className={`text-sm font-semibold ${isActive || isCompleted ? "text-blue-400" : "text-slate-500"}`}>{s.title}</p>
+                  <p className={`text-xs mt-0.5 text-slate-400`}>{s.sub}</p>
                   {s.hasProgress && isActive && (
-                    <div className="mt-3 h-1.5 bg-[var(--border)] rounded-full overflow-hidden w-48">
+                    <div className="mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden w-48">
                       <div className="h-full rounded-full" style={{ width: `${progressWidth}%`, transition: "width 0.8s cubic-bezier(0.22,1,0.36,1)", background: "linear-gradient(90deg, #2563EB, #3B82F6)" }} />
                     </div>
                   )}
                   {s.hasConfidence && (isActive || isCompleted) && (
                     <div className="mt-3 space-y-2">
                       <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold text-white bg-blue-600">{result.category}</span>
-                      <div className="w-48"><div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden"><div className={`h-full rounded-full ${confColor}`} style={{ width: `${confidenceWidth}%`, transition: "width 0.8s cubic-bezier(0.22,1,0.36,1)" }} /></div></div>
+                      <div className="w-48"><div className="h-1.5 bg-white/10 rounded-full overflow-hidden"><div className={`h-full rounded-full ${confColor}`} style={{ width: `${confidenceWidth}%`, transition: "width 0.8s cubic-bezier(0.22,1,0.36,1)" }} /></div></div>
                     </div>
                   )}
                   {s.hasDept && (isActive || isCompleted) && (
@@ -889,7 +889,7 @@ function RoutingTimeline({ result, onReset, onViewAll }: { result: ClassifyResul
                   )}
                   {s.hasActions && isActive && (
                     <div className="mt-5 flex flex-wrap gap-3">
-                      <button onClick={onReset} className="px-5 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] text-xs font-semibold hover:bg-[var(--border)] transition-all">Submit Another</button>
+                      <button onClick={onReset} className="px-5 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white text-xs font-semibold hover:bg-white/15 transition-all">Submit Another</button>
                       <button onClick={onViewAll} className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all">View All Complaints →</button>
                     </div>
                   )}
@@ -959,7 +959,7 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-[var(--card)] shadow-lg border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:scale-110 transition-all z-10"
+          className="absolute -top-3 -right-3 w-8 h-8 rounded-full shadow-lg border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:scale-110 transition-all z-10" style={{ background: '#1a1e2e' }}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -967,37 +967,37 @@ function GrievanceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         </button>
 
         {/* Glass card */}
-        <div className="bg-[var(--card)] backdrop-blur-xl border border-[var(--border)] rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
+        <div className="backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.4)]" style={{ background: '#141824' }}>
           <div className="mb-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 border border-blue-600/20 text-blue-600 text-xs font-medium mb-4">New Grievance</div>
-            <h2 className="text-2xl font-bold text-[var(--text)] mb-1">File Grievance</h2>
-            <p className="text-sm text-[var(--text-muted)]">Describe the issue clearly. Our AI will automatically classify it and route it to the correct department.</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/25 text-blue-400 text-xs font-medium mb-4">New Grievance</div>
+            <h2 className="text-2xl font-bold text-white mb-1">File Grievance</h2>
+            <p className="text-sm text-slate-400">Describe the issue clearly. Our AI will automatically classify it and route it to the correct department.</p>
           </div>
 
           {!result ? (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Complaint Details</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Complaint Details</label>
                 <textarea
                   rows={4}
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all resize-none"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none"
                   placeholder="Describe the issue in detail..."
                   required
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">District</label>
-                  <select value={district} onChange={(e) => setDistrict(e.target.value)} className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-all appearance-none cursor-pointer">
-                    {GRIEVANCE_DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+                  <label className="block text-sm font-medium text-slate-300 mb-2">District</label>
+                  <select value={district} onChange={(e) => setDistrict(e.target.value)} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all appearance-none cursor-pointer">
+                    {GRIEVANCE_DISTRICTS.map(d => <option key={d} value={d} style={{ background: '#1a1e2e', color: '#e2e8f0' }}>{d}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Source</label>
-                  <select value={source} onChange={(e) => setSource(e.target.value)} className="w-full px-4 py-3 bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-all appearance-none cursor-pointer">
-                    {GRIEVANCE_SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Source</label>
+                  <select value={source} onChange={(e) => setSource(e.target.value)} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all appearance-none cursor-pointer">
+                    {GRIEVANCE_SOURCES.map(s => <option key={s} value={s} style={{ background: '#1a1e2e', color: '#e2e8f0' }}>{s}</option>)}
                   </select>
                 </div>
               </div>
