@@ -426,7 +426,7 @@ export default function DebatePage() {
   };
 
   return (
-    <div className="relative min-h-[90vh] flex flex-col items-center justify-center py-12 px-6 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center py-4 px-6 overflow-hidden">
       {/* ─── Premium Background Elements ─── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[100px] animate-pulse" />
@@ -525,26 +525,26 @@ export default function DebatePage() {
       `}</style>
 
       {/* ─── Header Section ─── */}
-      <div className="relative z-10 text-center mb-10 max-w-[600px] translate-y-[-10px]">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 mb-6 relative">
-          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+      <div className="relative z-10 text-center mb-6 max-w-[600px]">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 mb-3 relative">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
           <div className="absolute inset-0 rounded-full border-2 border-indigo-400 opacity-20 animate-ping" />
         </div>
-        <h1 className="text-[34px] font-black text-slate-900 tracking-tight leading-none mb-3">
+        <h1 className="text-[28px] font-black text-slate-900 tracking-tight leading-none mb-2">
           Policy Debate Arena
         </h1>
-        <div className="h-[3px] w-12 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full mb-4 shadow-sm" />
-        <p className="text-[15px] font-medium text-slate-500/80 tracking-wide max-w-[400px] mx-auto italic">
+        <div className="h-[2px] w-10 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full mb-3" />
+        <p className="text-[13px] font-medium text-slate-500/70 tracking-wide max-w-[400px] mx-auto italic">
           Powering democratic discourse with advanced multi-agent intelligence
         </p>
       </div>
 
       {/* ─── Main Container: Glass Modal ─── */}
       {state !== "debating" && (
-        <div className="glass-card w-full max-w-[680px] rounded-[32px] p-10 flex flex-col items-center">
+        <div className="glass-card w-full max-w-[660px] rounded-[32px] p-8 flex flex-col items-center">
           
           {/* Manual Input Group */}
-          <div className="w-full flex items-center gap-3 mb-8">
+          <div className="w-full flex items-center gap-3 mb-6">
             <div className="relative flex-1 group">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
@@ -555,14 +555,14 @@ export default function DebatePage() {
                 onChange={e => setManualTopic(e.target.value)}
                 placeholder="Describe a policy or controversial topic..."
                 onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                className="debate-input w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200/60 text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal outline-none"
+                className="debate-input w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200/60 text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal outline-none text-sm"
                 disabled={state === "processing"}
               />
             </div>
             <button
               onClick={handleSubmit}
               disabled={state === "processing" || manualTopic.trim().length < 5}
-              className="premium-btn px-8 py-4 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 flex items-center gap-2 disabled:opacity-50"
+              className="premium-btn px-6 py-3.5 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-xs shadow-lg shadow-indigo-600/25 flex items-center gap-2 disabled:opacity-50"
             >
               <span>{state === "processing" ? "Analyzing..." : "Debate"}</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
@@ -570,14 +570,14 @@ export default function DebatePage() {
           </div>
 
           {/* Centerpiece: Animated Voice Button */}
-          <div className="relative mb-10 group">
+          <div className="relative mb-8 group">
             <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/15 transition-all" />
             
             {/* Visual sound waves */}
             {state === "listening" && (
               <>
-                <div className="absolute inset-[-12px] border-2 border-indigo-400/30 rounded-full animate-[debateRipple_2s_infinite]" />
-                <div className="absolute inset-[-24px] border-2 border-indigo-300/20 rounded-full animate-[debateRipple_2s_infinite_1s]" />
+                <div className="absolute inset-[-10px] border-2 border-indigo-400/30 rounded-full animate-[debateRipple_2s_infinite]" />
+                <div className="absolute inset-[-20px] border-2 border-indigo-300/20 rounded-full animate-[debateRipple_2s_infinite_1s]" />
               </>
             )}
 
@@ -586,34 +586,31 @@ export default function DebatePage() {
               onMouseUp={stopListening}
               onMouseLeave={stopListening}
               disabled={state === "processing"}
-              className={`relative z-10 w-24 h-24 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl ${
+              className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl ${
                 state === "listening" 
                   ? "bg-gradient-to-br from-rose-500 to-rose-700 animate-[debatePulse_1.5s_infinite]" 
                   : "bg-gradient-to-br from-indigo-500 to-indigo-700 hover:scale-105 active:scale-95"
               }`}
             >
               <div className="absolute inset-1 rounded-full border border-white/20" />
-              <span className="text-3xl filter drop-shadow-md">
+              <span className="text-2xl filter drop-shadow-md">
                 {state === "listening" ? "⏹" : "🎙️"}
               </span>
             </button>
-            <div className={`mt-5 text-center text-[13px] font-bold tracking-widest uppercase transition-colors duration-300 ${state === 'listening' ? 'text-rose-500' : 'text-slate-400'}`}>
-              {state === "listening" ? "Recording Discourse..." :
-               state === "processing" ? "Intelligence Extraction..." :
+            <div className={`mt-3 text-center text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${state === 'listening' ? 'text-rose-500' : 'text-slate-400'}`}>
+              {state === "listening" ? "Recording..." :
+               state === "processing" ? "Analyzing..." :
                "Hold to Speak"}
             </div>
           </div>
 
           {/* Autoplay Toggle Segment */}
-          <div className="flex items-center gap-4 py-3 px-6 rounded-2xl bg-slate-50/50 border border-slate-200/50 mb-10 transition-all hover:bg-white/80">
-            <span className="text-[12px] font-bold text-slate-600 tracking-tight">Auto-vocalize debate arguments</span>
+          <div className="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-slate-50/50 border border-slate-200/50 mb-8 transition-all hover:bg-white/80">
+            <span className="text-[11px] font-bold text-slate-600 tracking-tight">Auto-vocalize debate arguments</span>
             <label className="switch">
               <input type="checkbox" checked={autoPlay} onChange={toggleAutoPlay} />
               <span className="slider"></span>
             </label>
-            <span className={`text-[11px] font-black uppercase ${autoPlay ? 'text-emerald-500' : 'text-slate-400'}`}>
-              {autoPlay ? "Active" : "Off"}
-            </span>
           </div>
 
           {/* Suggested Contextual Topics */}
