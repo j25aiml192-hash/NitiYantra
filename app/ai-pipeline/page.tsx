@@ -8,7 +8,23 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   AreaChart, Area
 } from "recharts";
-import { Brain, Cpu, Zap, Activity, Filter, BarChart3, PieChart as PieIcon, Layers, Clock, AlertTriangle, CheckCircle2, RefreshCw, ArrowUpRight, Database, Network } from "lucide-react";
+import {
+  Brain,
+  Cpu,
+  Lightning,
+  Activity,
+  Funnel,
+  ChartBar,
+  ChartPie,
+  Layers,
+  Clock,
+  Warning,
+  CheckCircle,
+  ArrowsCounterClockwise,
+  ArrowSquareOut,
+  Database,
+  TreeStructure
+} from "@phosphor-icons/react";
 
 /* ── Types & helpers ── */
 interface PipelineResult {
@@ -144,9 +160,9 @@ export default function AIPipelinePage() {
   });
 
   const steps = [
-    { name: "Classify", icon: <Layers className="w-4 h-4" />, desc: "Zero-shot NLP" },
-    { name: "Cluster", icon: <Database className="w-4 h-4" />, desc: "Semantic Similarity" },
-    { name: "Detect", icon: <Activity className="w-4 h-4" />, desc: "SLA Compliance" }
+    { name: "Classify", icon: <Layers size={18} weight="duotone" />, desc: "Zero-shot NLP" },
+    { name: "Cluster", icon: <Database size={18} weight="duotone" />, desc: "Semantic Similarity" },
+    { name: "Detect", icon: <Activity size={18} weight="duotone" />, desc: "SLA Compliance" }
   ];
 
   return (
@@ -217,9 +233,9 @@ export default function AIPipelinePage() {
             }`}
           >
             {loading ? (
-              <RefreshCw className="w-4 h-4 animate-spin" />
+              <ArrowsCounterClockwise size={18} weight="bold" className="animate-spin" />
             ) : (
-              <Zap className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />
+              <Lightning size={18} weight="fill" className="text-amber-400 animate-pulse" />
             )}
             <span className="relative z-10">{loading ? "Synchronizing Pipeline..." : done ? "Re-run Inference" : "Initialize Pipeline"}</span>
             {!loading && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />}
@@ -248,10 +264,10 @@ export default function AIPipelinePage() {
                     "border-slate-100"
                   }`}>
                     {passed ? (
-                      <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                      <CheckCircle size={24} weight="duotone" className="text-emerald-500" />
                     ) : active ? (
                       <div className="relative">
-                        <Cpu className="w-6 h-6 text-indigo-600 animate-pulse" />
+                        <Cpu size={24} weight="duotone" className="text-indigo-600 animate-pulse" />
                         <div className="absolute inset-0 border-2 border-indigo-600 rounded-full animate-ping opacity-25" />
                       </div>
                     ) : (
@@ -277,9 +293,9 @@ export default function AIPipelinePage() {
             {/* Primary Metrics */}
             <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
                {[
-                 { label: "Classified Entities", val: result.classified.length, icon: <Layers />, g: "from-blue-600/10 to-indigo-600/5", border: "border-indigo-100", accent: "text-indigo-600", trend: "+12%" },
-                 { label: "Semantic Clusters", val: result.clusters.length, icon: <Database />, g: "from-emerald-600/10 to-teal-600/5", border: "border-emerald-100", accent: "text-emerald-600", trend: "Optimized" },
-                 { label: "SLA Violations", val: delayed.length, icon: <AlertTriangle />, g: "from-rose-600/10 to-orange-600/5", border: "border-rose-100", accent: delayed.length > 0 ? "text-rose-600" : "text-emerald-600", trend: delayed.length > 5 ? "High Risk" : "Normal" },
+                 { label: "Classified Entities", val: result.classified.length, icon: <Layers size={24} weight="duotone" />, g: "from-blue-600/10 to-indigo-600/5", border: "border-indigo-100", accent: "text-indigo-600", trend: "+12%" },
+                 { label: "Semantic Clusters", val: result.clusters.length, icon: <Database size={24} weight="duotone" />, g: "from-emerald-600/10 to-teal-600/5", border: "border-emerald-100", accent: "text-emerald-600", trend: "Optimized" },
+                 { label: "SLA Violations", val: delayed.length, icon: <Warning size={24} weight="duotone" />, g: "from-rose-600/10 to-orange-600/5", border: "border-rose-100", accent: delayed.length > 0 ? "text-rose-600" : "text-emerald-600", trend: delayed.length > 5 ? "High Risk" : "Normal" },
                ].map((m, i) => (
                  <div key={i} className={`glass min-h-[140px] rounded-[2rem] p-8 border ${m.border} ddd-shadow relative overflow-hidden group`}>
                     <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${m.g} rounded-bl-full opacity-50 group-hover:scale-110 transition-transform duration-500`} />
@@ -311,7 +327,7 @@ export default function AIPipelinePage() {
                   <p className="text-[10px] font-medium text-slate-400">Distribution of semantic problem types</p>
                 </div>
                 <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500">
-                  <PieIcon className="w-4 h-4" />
+                  <ChartPie size={20} weight="duotone" />
                 </div>
               </div>
 
@@ -367,7 +383,7 @@ export default function AIPipelinePage() {
                   <p className="text-[10px] font-medium text-slate-400">Certainty breakdown of pattern recognition</p>
                 </div>
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500">
-                  <BarChart3 className="w-4 h-4" />
+                  <ChartBar size={20} weight="duotone" />
                 </div>
               </div>
 
@@ -395,7 +411,7 @@ export default function AIPipelinePage() {
               <div className="px-4 py-3 rounded-2xl bg-indigo-950 text-white flex items-center justify-between">
                  <div className="flex items-center gap-3">
                     <div className="p-2 bg-white/10 rounded-xl">
-                      <Zap className="w-4 h-4 text-amber-400" />
+                      <Lightning size={18} weight="fill" className="text-amber-400" />
                     </div>
                     <div>
                       <p className="text-[10px] font-bold tracking-wide">Aggregate Reliability</p>
@@ -417,7 +433,7 @@ export default function AIPipelinePage() {
                       <h3 className="text-base font-bold text-black tracking-tight">Intelligence Velocity</h3>
                       <p className="text-[10px] font-medium text-slate-400">Processing throughput & pattern density wave</p>
                     </div>
-                    <Activity className="w-4 h-4 text-indigo-400 animate-pulse" />
+                    <Activity size={20} weight="duotone" className="text-indigo-400 animate-pulse" />
                   </div>
                   <div className="h-[200px] w-full pt-2">
                     <ResponsiveContainer width="100%" height="100%">
@@ -444,7 +460,7 @@ export default function AIPipelinePage() {
                       <h3 className="text-base font-bold text-black tracking-tight">SLA Intensity Matrix</h3>
                       <p className="text-[10px] font-medium text-slate-400">Urgency mapping for delayed governance seeds</p>
                     </div>
-                    <Clock className="w-4 h-4 text-rose-400" />
+                    <Clock size={20} weight="duotone" className="text-rose-400" />
                   </div>
                   
                   <div className="space-y-6 pt-2">
@@ -472,7 +488,7 @@ export default function AIPipelinePage() {
                   </div>
 
                   <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 flex items-center gap-3">
-                     <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                     <Warning size={24} weight="duotone" className="text-amber-600 shrink-0" />
                      <p className="text-[10px] font-semibold text-amber-900 leading-relaxed">
                        {delayed.length > 5 ? "Significant backlog detected in PWD & MCD departments. Prioritized allocation of resources required." : "Service metrics within enterprise benchmarks. Continue monitoring intelligence stream."}
                      </p>
@@ -488,7 +504,7 @@ export default function AIPipelinePage() {
                     <p className="text-[10px] font-medium text-slate-400">Verifying {result.classified.length} entities against BART-Zero model</p>
                   </div>
                   <button className="p-2.5 rounded-xl border border-slate-100 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
-                    <Filter className="w-4 h-4" />
+                    <Funnel size={18} weight="duotone" />
                   </button>
                </div>
                <div className="overflow-x-auto">
@@ -515,19 +531,19 @@ export default function AIPipelinePage() {
                            </td>
                            <td className="px-10 py-6">
                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-[10px] font-bold uppercase tracking-tight text-slate-600">
-                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                                {c.predicted_category}
+                                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                                 {c.predicted_category}
                              </div>
                            </td>
                            <td className="px-10 py-6 text-right">
                              <div className="flex items-center justify-end gap-3">
-                                <div className="text-xs font-bold text-black">{conf}%</div>
-                                <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
-                                   <div 
-                                     className={`h-full transition-all duration-1000 ${conf > 80 ? "bg-emerald-500" : conf > 60 ? "bg-indigo-500" : "bg-rose-500"}`} 
-                                     style={{ width: `${conf}%` }} 
-                                   />
-                                </div>
+                                 <div className="text-xs font-bold text-black">{conf}%</div>
+                                 <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                    <div 
+                                      className={`h-full transition-all duration-1000 ${conf > 80 ? "bg-emerald-500" : conf > 60 ? "bg-indigo-500" : "bg-rose-500"}`} 
+                                      style={{ width: `${conf}%` }} 
+                                    />
+                                 </div>
                              </div>
                            </td>
                          </tr>
@@ -556,7 +572,7 @@ export default function AIPipelinePage() {
                     <div key={i} className="glass rounded-3xl p-6 border-slate-100 ddd-shadow hover:-translate-y-2 transition-all duration-500 group">
                       <div className="flex items-center gap-3 mb-6">
                         <div className={`p-2.5 rounded-xl bg-gradient-to-br ${["from-blue-600", "from-emerald-600", "from-amber-500", "from-rose-500"][i % 4]} to-black/20 text-white shadow-lg`}>
-                          <Brain className="w-4 h-4" />
+                          <Brain size={20} weight="duotone" />
                         </div>
                         <h4 className="text-sm font-bold text-black tracking-tight">{cluster.cluster_label}</h4>
                       </div>
@@ -569,7 +585,7 @@ export default function AIPipelinePage() {
                         <div className="flex items-center justify-between pt-2">
                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{cluster.complaints.length} Entities</span>
                            <button className="p-1 rounded-md text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                             <ArrowUpRight className="w-4 h-4" />
+                             <ArrowSquareOut size={18} weight="bold" />
                            </button>
                         </div>
                       </div>
@@ -586,7 +602,7 @@ export default function AIPipelinePage() {
           <div className="flex flex-col items-center justify-center py-40 animate-[fadeUp_0.8s_ease-out]">
             <div className="relative mb-10">
                <div className="w-32 h-32 rounded-[2.5rem] bg-indigo-950 flex items-center justify-center shadow-2xl shadow-indigo-950/40 relative z-10 overflow-hidden">
-                  <Network className="w-12 h-12 text-white opacity-90 animate-[spinSlow_20s_linear_infinite]" />
+                  <TreeStructure size={48} weight="duotone" className="text-white opacity-90 animate-[spinSlow_20s_linear_infinite]" />
                   <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-transparent" />
                </div>
                <div className="absolute -inset-4 bg-indigo-500/10 rounded-[3rem] blur-2xl -z-10 animate-pulse" />
@@ -598,10 +614,14 @@ export default function AIPipelinePage() {
               className="px-10 py-4 bg-indigo-600 text-white rounded-[1.5rem] font-bold text-sm shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:bg-indigo-700 transition-all flex items-center gap-3"
             >
               Analyze Governance Stream
-              <Cpu className="w-4 h-4" />
+              <Cpu size={20} weight="duotone" />
             </button>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
 
         {/* ═══ Loading State skeleton ═══ */}
         {loading && !result && (

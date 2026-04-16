@@ -1,6 +1,27 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { 
+  Microphone, 
+  Stop, 
+  SpeakerHigh, 
+  ChatCenteredText, 
+  Lightning, 
+  ArrowsCounterClockwise, 
+  Gavel, 
+  UserCircle, 
+  Scales, 
+  CheckCircle,
+  Warning,
+  Bank,
+  Robot,
+  FirstAid,
+  GraduationCap,
+  Lightbulb,
+  Note,
+  Pause,
+  Play
+} from "@phosphor-icons/react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const SARVAM_KEY = process.env.NEXT_PUBLIC_SARVAM_API_KEY || "";
@@ -416,13 +437,14 @@ export default function DebatePage() {
 
   const getTopicIcon = (t: string) => {
     const lower = t.toLowerCase();
-    if (lower.includes("election")) return "🗳️";
-    if (lower.includes("ai") || lower.includes("tech")) return "🤖";
-    if (lower.includes("law") || lower.includes("justice")) return "⚖️";
-    if (lower.includes("money") || lower.includes("economy")) return "💰";
-    if (lower.includes("health")) return "🏥";
-    if (lower.includes("education")) return "🎓";
-    return "💡";
+    const props = { size: 18, weight: "duotone" as const };
+    if (lower.includes("election")) return <Bank {...props} />;
+    if (lower.includes("ai") || lower.includes("tech")) return <Robot {...props} />;
+    if (lower.includes("law") || lower.includes("justice")) return <Scales {...props} />;
+    if (lower.includes("money") || lower.includes("economy")) return <Bank {...props} />;
+    if (lower.includes("health")) return <FirstAid {...props} />;
+    if (lower.includes("education")) return <GraduationCap {...props} />;
+    return <Lightbulb {...props} />;
   };
 
   return (
@@ -528,7 +550,7 @@ export default function DebatePage() {
       {/* ─── Header Section ─── */}
       <div className="relative z-10 text-center mb-6 max-w-[500px]">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 mb-3 relative">
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+          <Microphone size={24} weight="duotone" className="text-white" />
           <div className="absolute inset-0 rounded-full border-2 border-indigo-400 opacity-20 animate-ping" />
         </div>
         <h1 className="text-[28px] font-black text-white tracking-tight leading-none mb-2">
@@ -548,7 +570,7 @@ export default function DebatePage() {
           <div className="w-full flex items-center gap-3 mb-5">
             <div className="relative flex-1 group">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                <ChatCenteredText size={20} weight="duotone" />
               </span>
               <input
                 type="text"
@@ -566,7 +588,7 @@ export default function DebatePage() {
               className="premium-btn px-6 py-3.5 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-xs shadow-lg shadow-indigo-600/25 flex items-center gap-2 disabled:opacity-50"
             >
               <span>{state === "processing" ? "Analyzing..." : "Debate"}</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              <Lightning size={16} weight="fill" />
             </button>
           </div>
 
@@ -594,9 +616,7 @@ export default function DebatePage() {
               }`}
             >
               <div className="absolute inset-1 rounded-full border border-white/20" />
-              <span className="text-2xl filter drop-shadow-md">
-                {state === "listening" ? "⏹" : "🎙️"}
-              </span>
+              {state === "listening" ? <Stop size={32} weight="fill" className="text-white" /> : <Microphone size={32} weight="duotone" className="text-white" />}
             </button>
             <div className={`mt-3 text-center text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${state === 'listening' ? 'text-rose-500' : 'text-slate-400'}`}>
               {state === "listening" ? "Recording..." :
@@ -647,8 +667,8 @@ export default function DebatePage() {
       )}
 
       {error && (
-        <div className="relative z-10 mt-6 px-6 py-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-[13px] font-bold shadow-xl shadow-rose-900/5 animate-bounce">
-          ⚠️ {error}
+        <div className="relative z-10 mt-6 px-6 py-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-[13px] font-bold shadow-xl shadow-rose-900/5 animate-bounce flex items-center gap-2">
+          <Warning size={18} weight="fill" /> {error}
         </div>
       )}
 
@@ -681,33 +701,33 @@ export default function DebatePage() {
             <div className={`glass-card rounded-3xl p-8 border-white/5 transition-all duration-500 ${ttsSection === "lokniti" ? 'scale-[1.02] border-rose-500/40 ring-4 ring-rose-500/10 bg-white/5' : ''}`}>
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-700 shadow-xl shadow-rose-500/20 flex items-center justify-center text-2xl filter contrast-[1.1]">
-                    ❓
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-700 shadow-xl shadow-rose-500/20 flex items-center justify-center text-white">
+                    <UserCircle size={32} weight="duotone" />
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-slate-900 leading-tight">{result.lokniti.agent}</h3>
                     <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokniti.role}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => isSpeaking === "lokniti" ? stopSpeaking() : speakArgument(result.lokniti.argument, "lokniti")}
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokniti' ? 'bg-rose-500 text-white animate-pulse' : 'bg-white/5 text-rose-500 hover:bg-rose-600 hover:text-white'}`}
-                >
-                  {isSpeaking === "lokniti" ? "⏹" : "🔊"}
-                </button>
+                 <button
+                   onClick={() => isSpeaking === "lokniti" ? stopSpeaking() : speakArgument(result.lokniti.argument, "lokniti")}
+                   className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokniti' ? 'bg-rose-500 text-white animate-pulse' : 'bg-white/5 text-rose-500 hover:bg-rose-600 hover:text-white'}`}
+                 >
+                   {isSpeaking === "lokniti" ? <Stop size={20} weight="fill" /> : <SpeakerHigh size={20} weight="duotone" />}
+                 </button>
               </div>
               <p className="text-[15px] leading-[1.8] text-slate-800/90 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokniti.argument}
               </p>
               {result.lokniti.key_points.length > 0 && (
                 <div className="space-y-3 p-5 rounded-2xl bg-rose-50/50 border border-rose-100 shadow-inner">
-                  <div className="text-[10px] font-black uppercase text-rose-500 tracking-widest">Crucial Objections</div>
-                  {result.lokniti.key_points.map((p, i) => (
-                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
-                      <span className="text-rose-400 mt-1">◈</span>
-                      <span>{p}</span>
-                    </div>
-                  ))}
+                   <div className="text-[10px] font-black uppercase text-rose-500 tracking-widest">Crucial Objections</div>
+                   {result.lokniti.key_points.map((p, i) => (
+                     <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
+                       <Note size={14} weight="duotone" className="text-rose-400 mt-1 shrink-0" />
+                       <span>{p}</span>
+                     </div>
+                   ))}
                 </div>
               )}
             </div>
@@ -724,33 +744,33 @@ export default function DebatePage() {
             <div className={`glass-card rounded-3xl p-8 border-white/5 transition-all duration-500 ${ttsSection === "lokmitra" ? 'scale-[1.02] border-indigo-500/40 ring-4 ring-indigo-500/10 bg-white/5' : ''}`}>
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 flex items-center justify-center text-2xl filter contrast-[1.1]">
-                    ⚖️
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-xl shadow-indigo-500/20 flex items-center justify-center text-white">
+                    <Scales size={32} weight="duotone" />
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-slate-900 leading-tight">{result.lokmitra.agent}</h3>
                     <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokmitra.role}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => isSpeaking === "lokmitra" ? stopSpeaking() : speakArgument(result.lokmitra.argument, "lokmitra")}
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokmitra' ? 'bg-indigo-500 text-white animate-pulse' : 'bg-white/5 text-indigo-500 hover:bg-indigo-600 hover:text-white'}`}
-                >
-                  {isSpeaking === "lokmitra" ? "⏹" : "🔊"}
-                </button>
+                 <button
+                   onClick={() => isSpeaking === "lokmitra" ? stopSpeaking() : speakArgument(result.lokmitra.argument, "lokmitra")}
+                   className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSpeaking === 'lokmitra' ? 'bg-indigo-500 text-white animate-pulse' : 'bg-white/5 text-indigo-500 hover:bg-indigo-600 hover:text-white'}`}
+                 >
+                   {isSpeaking === "lokmitra" ? <Stop size={20} weight="fill" /> : <SpeakerHigh size={20} weight="duotone" />}
+                 </button>
               </div>
               <p className="text-[15px] leading-[1.8] text-slate-800/90 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokmitra.argument}
               </p>
               {result.lokmitra.key_points.length > 0 && (
                 <div className="space-y-3 p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 shadow-inner">
-                  <div className="text-[10px] font-black uppercase text-indigo-500 tracking-widest">Defense Pillars</div>
-                  {result.lokmitra.key_points.map((p, i) => (
-                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
-                      <span className="text-indigo-400 mt-1">◈</span>
-                      <span>{p}</span>
-                    </div>
-                  ))}
+                   <div className="text-[10px] font-black uppercase text-indigo-500 tracking-widest">Defense Pillars</div>
+                   {result.lokmitra.key_points.map((p, i) => (
+                     <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
+                       <Note size={14} weight="duotone" className="text-indigo-400 mt-1 shrink-0" />
+                       <span>{p}</span>
+                     </div>
+                   ))}
                 </div>
               )}
             </div>
@@ -771,9 +791,9 @@ export default function DebatePage() {
           {/* Verdict Segment */}
           {result.verdict && (
             <div className={`glass-card rounded-3xl p-10 text-center border-slate-100 transition-all duration-500 max-w-[900px] mx-auto ${ttsSection === 'verdict' ? 'ring-8 ring-amber-500/10 border-amber-500/50 scale-[1.01]' : ''}`}>
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-amber-50 text-amber-600 font-black uppercase text-[11px] tracking-[0.15em] mb-6 shadow-sm border border-amber-100 animate-[debateGlow_3s_infinite]">
-                ⚖️ AI Verdict
-              </div>
+               <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-amber-50 text-amber-600 font-black uppercase text-[11px] tracking-[0.15em] mb-6 shadow-sm border border-amber-100 animate-[debateGlow_3s_infinite]">
+                 <Gavel size={16} weight="duotone" /> AI Verdict
+               </div>
               <p className="text-[17px] font-bold italic text-slate-800 leading-relaxed max-w-[700px] mx-auto tracking-tight">
                 &quot;{result.verdict}&quot;
               </p>
@@ -781,12 +801,12 @@ export default function DebatePage() {
           )}
 
           <div className="flex items-center justify-center pt-8 pb-12">
-            <button
-              onClick={handleReset}
-              className="premium-btn px-10 py-4 rounded-2xl bg-white text-slate-900 font-black text-[13px] uppercase tracking-widest shadow-2xl hover:bg-indigo-100"
-            >
-              🔄 Initialize New Arena
-            </button>
+             <button
+               onClick={handleReset}
+               className="premium-btn px-10 py-4 rounded-2xl bg-white text-slate-900 font-black text-[13px] uppercase tracking-widest shadow-2xl hover:bg-indigo-100 flex items-center gap-2"
+             >
+               <ArrowsCounterClockwise size={18} weight="bold" /> Initialize New Arena
+             </button>
           </div>
         </div>
       )}

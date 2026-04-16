@@ -5,9 +5,18 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
 import { 
-  Zap, Activity, Clock, Shield, 
-  RefreshCw, TrendingUp, Calculator, Globe, Layout, AlertTriangle, CheckCircle2
-} from "lucide-react";
+  Lightning as Zap, 
+  Activity, 
+  Clock, 
+  Shield, 
+  ArrowsCounterClockwise as RefreshCw, 
+  TrendUp as TrendingUp, 
+  Calculator, 
+  Globe, 
+  Layout, 
+  Warning as AlertTriangle, 
+  CheckCircle as CheckCircle2
+} from "@phosphor-icons/react";
 
 /* ── Types ── */
 interface Preset {
@@ -211,7 +220,7 @@ const IndiaMap = ({
       
       {/* Decorative Compass */}
       <div className="absolute bottom-6 right-8 text-slate-300 opacity-20 pointer-events-none">
-        <Globe className="w-20 h-20 rotate-12" />
+        <Globe size={80} weight="duotone" className="rotate-12" />
       </div>
     </div>
   );
@@ -291,7 +300,7 @@ export default function SimulatorPage() {
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold tracking-widest uppercase">Policy Simulator</span>
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 animate-pulse">
-                <Activity className="w-3 h-3" />
+                <Activity size={12} weight="bold" />
                 <span className="text-[10px] font-bold">LIVE ENGINE</span>
               </div>
             </div>
@@ -309,7 +318,7 @@ export default function SimulatorPage() {
               loading ? "bg-slate-200 text-slate-400 cursor-wait" : "royal-gradient text-white shadow-indigo-900/20 hover:-translate-y-1 hover:shadow-indigo-900/30 active:scale-[0.98]"
             }`}
           >
-            {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 text-amber-300 fill-amber-300" />}
+            {loading ? <RefreshCw size={18} weight="bold" className="animate-spin" /> : <Zap size={18} weight="fill" className="text-amber-300" />}
             <span className="relative z-10">{loading ? "Synchronizing Matrix..." : "Run Simulation Engine"}</span>
             {!loading && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />}
           </button>
@@ -352,11 +361,11 @@ export default function SimulatorPage() {
             {/* ═══ Metric Grid ═══ */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               {[
-                { label: "Gov. Days Saved", val: currentYearData?.cumulative_governance_days || 0, icon: <Clock />, g: "from-blue-600/10 to-indigo-600/5", color: "text-blue-600", trend: "+2,800 Goal" },
-                { label: "Cumulative Savings", val: currentYearData?.cumulative_savings_cr || 0, icon: <Calculator />, g: "from-emerald-600/10 to-teal-600/5", color: "text-emerald-600", trend: "₹ Cr", prefix: "₹" },
-                { label: "Synced States", val: currentYearData?.synced_count || 0, icon: <Globe />, g: "from-indigo-600/10 to-blue-600/5", color: "text-indigo-600", suffix: `/${result.summary.total_states}`, trend: "Sync %" },
-                { label: "Security Forces", val: currentYearData?.security_forces || 0, icon: <Shield />, g: "from-rose-600/10 to-orange-600/5", color: "text-rose-600", trend: "Deployments" },
-                { label: "Active Polls", val: currentYearData?.active_polls || 0, icon: <Layout />, g: "from-amber-600/10 to-orange-500/5", color: "text-amber-600", trend: "Synchronized" },
+                { label: "Gov. Days Saved", val: currentYearData?.cumulative_governance_days || 0, icon: <Clock size={20} weight="duotone" />, g: "from-blue-600/10 to-indigo-600/5", color: "text-blue-600", trend: "+2,800 Goal" },
+                { label: "Cumulative Savings", val: currentYearData?.cumulative_savings_cr || 0, icon: <Calculator size={20} weight="duotone" />, g: "from-emerald-600/10 to-teal-600/5", color: "text-emerald-600", trend: "₹ Cr", prefix: "₹" },
+                { label: "Synced States", val: currentYearData?.synced_count || 0, icon: <Globe size={20} weight="duotone" />, g: "from-indigo-600/10 to-blue-600/5", color: "text-indigo-600", suffix: `/${result.summary.total_states}`, trend: "Sync %" },
+                { label: "Security Forces", val: currentYearData?.security_forces || 0, icon: <Shield size={20} weight="duotone" />, g: "from-rose-600/10 to-orange-600/5", color: "text-rose-600", trend: "Deployments" },
+                { label: "Active Polls", val: currentYearData?.active_polls || 0, icon: <Layout size={20} weight="duotone" />, g: "from-amber-600/10 to-orange-500/5", color: "text-amber-600", trend: "Synchronized" },
               ].map((m, i) => (
                 <div key={i} className="glass min-h-[140px] rounded-[2rem] p-7 ddd-shadow relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500">
                   <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${m.g} rounded-bl-full opacity-50`} />
@@ -370,7 +379,7 @@ export default function SimulatorPage() {
                         <Counter to={m.val} prefix={m.prefix} suffix={m.suffix} />
                       </div>
                       <div className="text-[10px] font-bold text-emerald-500 flex items-center gap-1 mt-1 uppercase tracking-tighter">
-                        <TrendingUp className="w-3 h-3" />
+                        <TrendingUp size={12} weight="bold" />
                         {m.trend}
                       </div>
                     </div>
@@ -459,7 +468,7 @@ export default function SimulatorPage() {
                 <div className="flex-1 overflow-y-auto space-y-6 pr-2 max-h-[480px]">
                   {result.simulation_events.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center p-10 opacity-50">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-500 mb-4" />
+                      <CheckCircle2 size={32} weight="duotone" className="text-emerald-500 mb-4" />
                       <p className="text-sm font-bold">Stable Policy Environment</p>
                     </div>
                   ) : (
@@ -483,7 +492,7 @@ export default function SimulatorPage() {
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                   <div className="space-y-8">
                     <div className="flex items-center gap-3">
-                      <Calculator className="w-8 h-8 text-amber-300" />
+                      <Calculator size={32} weight="duotone" className="text-amber-300" />
                       <h2 className="text-3xl font-extrabold tracking-tight underline border-none">Savings Matrix</h2>
                     </div>
                     <div className="space-y-6">
@@ -556,7 +565,7 @@ export default function SimulatorPage() {
                 </div>
 
                 <div className="p-5 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center gap-3">
-                   <AlertTriangle className="w-5 h-5 text-indigo-600 shrink-0" />
+                   <WarningCircle size={20} weight="duotone" className="text-indigo-600 shrink-0" />
                    <p className="text-[10px] font-semibold text-indigo-900 leading-relaxed uppercase tracking-tight italic">
                      Sync rate above 80% reduces election volatility by 4.2x. Target achieved in Projected Year 2042.
                    </p>

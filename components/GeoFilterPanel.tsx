@@ -1,4 +1,4 @@
-"use client";
+import { Globe, MapPin, ChartPie, SquaresFour } from "@phosphor-icons/react";
 
 interface GeoFilterPanelProps {
   regionLevel: string;
@@ -24,14 +24,17 @@ export default function GeoFilterPanel({
       className="absolute top-5 left-5 z-40 w-64 bg-white/70 backdrop-blur-xl border border-[#e2e8f0] rounded-2xl shadow-lg transition-all duration-500 ease-in-out"
       style={{ padding: 16 }}
     >
-      <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold mb-3">
-        Geo-Intelligence
-      </p>
+      <div className="flex items-center gap-2 mb-3">
+        <Globe size={18} weight="duotone" className="text-indigo-600" />
+        <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+          Geo-Intelligence
+        </p>
+      </div>
 
       {/* Region Level */}
       <div className="mb-3">
-        <label className="text-[10px] text-gray-400 uppercase tracking-wider font-medium block mb-1">
-          Region Level
+        <label className="text-[10px] text-gray-400 uppercase tracking-wider font-medium flex items-center gap-1.5 mb-1">
+          <SquaresFour size={12} weight="bold" /> Region Level
         </label>
         <select
           value={regionLevel}
@@ -45,8 +48,8 @@ export default function GeoFilterPanel({
 
       {/* Target State */}
       <div className="mb-3">
-        <label className="text-[10px] text-gray-400 uppercase tracking-wider font-medium block mb-1">
-          Target State
+        <label className="text-[10px] text-gray-400 uppercase tracking-wider font-medium flex items-center gap-1.5 mb-1">
+          <MapPin size={12} weight="bold" /> Target State
         </label>
         <select
           value={targetState}
@@ -63,7 +66,9 @@ export default function GeoFilterPanel({
       {/* Live stats */}
       <div className="border-t border-[#e2e8f0] pt-3 mt-1">
         <div className="flex justify-between items-center mb-1">
-          <span className="text-[10px] text-gray-400">Complaints</span>
+          <span className="text-[10px] text-gray-400 flex items-center gap-1.5">
+            <ChartPie size={12} weight="bold" /> Complaints
+          </span>
           <span className="text-xs font-bold text-indigo-600">{complaintCount}</span>
         </div>
         <div className="flex justify-between items-center">

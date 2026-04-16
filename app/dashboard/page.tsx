@@ -11,6 +11,25 @@ import {
   ResponsiveContainer, Area, AreaChart, PieChart, Pie, Cell,
   RadialBarChart, RadialBar, Legend,
 } from "recharts";
+import { 
+  ChartBar, 
+  ClipboardText, 
+  Hourglass, 
+  ArrowsClockwise, 
+  Warning, 
+  TrendUp, 
+  TrendDown, 
+  ArrowRight, 
+  Lightbulb, 
+  Export, 
+  Lightning, 
+  Buildings, 
+  Briefcase, 
+  WarningCircle,
+  CheckCircle,
+  Clock,
+  Layout
+} from "@phosphor-icons/react";
 
 /* ---------- types ---------- */
 interface Stats {
@@ -237,10 +256,10 @@ function DeptWorkerDashboard({ user }: { user: { username: string; department_id
         {/* ROW 1 — Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total Tasks", value: deptStats?.total ?? 0, color: "#1D4ED8", icon: "📋" },
-            { label: "Pending", value: deptStats?.pending ?? 0, color: "#d97706", icon: "⏳" },
-            { label: "In Progress", value: deptStats?.in_progress ?? 0, color: "#0284c7", icon: "🔄" },
-            { label: "Overdue", value: deptStats?.overdue ?? 0, color: "#e11d48", icon: "🚨", pulse: (deptStats?.overdue ?? 0) > 0 },
+            { label: "Total Tasks", value: deptStats?.total ?? 0, color: "#1D4ED8", icon: <ClipboardText size={20} weight="duotone" /> },
+            { label: "Pending", value: deptStats?.pending ?? 0, color: "#d97706", icon: <Hourglass size={20} weight="duotone" /> },
+            { label: "In Progress", value: deptStats?.in_progress ?? 0, color: "#0284c7", icon: <ArrowsClockwise size={20} weight="duotone" /> },
+            { label: "Overdue", value: deptStats?.overdue ?? 0, color: "#e11d48", icon: <Warning size={20} weight="duotone" />, pulse: (deptStats?.overdue ?? 0) > 0 },
           ].map((card) => (
             <div
               key={card.label}
@@ -587,7 +606,7 @@ export default function DashboardPage() {
           <div>
             <div className="flex items-center gap-3 mb-1">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1D4ED8] to-[#7C3AED] flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                <Layout size={20} weight="duotone" className="text-white" />
               </div>
               <div>
                 <h1 className="text-[22px] font-bold text-slate-900 tracking-tight">Command Center</h1>
@@ -597,9 +616,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <button onClick={handleExport} className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--text)] text-[var(--card)] text-sm font-medium hover:opacity-90 transition-all shadow-md hover:shadow-lg">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
+              <Export size={16} weight="bold" />
               Export Report
             </button>
             {getCurrentUser()?.role === "office_staff" && (
@@ -613,7 +630,8 @@ export default function DashboardPage() {
                 }}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--card)] border border-rose-200 hover:border-rose-400 text-rose-600 text-sm font-medium transition-all cursor-pointer hover:shadow-md"
               >
-                ⚡ Auto-Escalate
+                <Lightning size={16} weight="duotone" />
+                Auto-Escalate
               </button>
             )}
           </div>
@@ -659,7 +677,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <Buildings size={18} weight="duotone" className="text-white" />
                   </div>
                   <div>
                     <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">Governance Health Score</h3>
@@ -673,9 +691,9 @@ export default function DashboardPage() {
 
               {/* AI Insight */}
               {govHealth.ai_insight && (
-                <div className="text-[12px] text-slate-600 font-medium leading-relaxed mb-4 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm relative pr-6">
-                  <span className="absolute top-3.5 left-4 text-amber-500 text-lg leading-none">💡</span>
-                  <p className="pl-8">{govHealth.ai_insight}</p>
+                <div className="text-[12px] text-slate-600 font-medium leading-relaxed mb-4 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm relative pr-6 flex items-start gap-3">
+                  <Lightbulb size={20} weight="duotone" className="text-amber-500 shrink-0 mt-0.5" />
+                  <p>{govHealth.ai_insight}</p>
                 </div>
               )}
 
@@ -702,7 +720,7 @@ export default function DashboardPage() {
                           color: isRed ? "#f43f5e" : isAmber ? "#f59e0b" : "#10b981",
                         }}>{dept.score}</span>
                         <span className="text-xs">
-                          {dept.trend === "improving" ? "📈" : dept.trend === "declining" ? "📉" : "➡️"}
+                          {dept.trend === "improving" ? <TrendUp size={14} weight="bold" className="text-emerald-500" /> : dept.trend === "declining" ? <TrendDown size={14} weight="bold" className="text-rose-500" /> : <ArrowRight size={14} weight="bold" className="text-slate-400" />}
                         </span>
                       </div>
                       <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden mb-2">
@@ -727,28 +745,28 @@ export default function DashboardPage() {
             value={stats?.total_complaints ?? 0}
             accentColor={PALETTE.indigo}
             bgGradient="linear-gradient(135deg, var(--card) 0%, #eef2ff 100%)"
-            icon={<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>}
+            icon={<ClipboardText size={20} weight="duotone" className="text-white" />}
           />
           <StatCard
             title="Active Issues"
             value={stats?.active_issues ?? 0}
             accentColor={PALETTE.amber}
             bgGradient="linear-gradient(135deg, var(--card) 0%, #fffbeb 100%)"
-            icon={<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+            icon={<WarningCircle size={20} weight="duotone" className="text-white" />}
           />
           <StatCard
             title="Resolved Today"
             value={stats?.resolved_today ?? 0}
             accentColor={PALETTE.teal}
             bgGradient="linear-gradient(135deg, var(--card) 0%, #f0fdfa 100%)"
-            icon={<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+            icon={<CheckCircle size={20} weight="duotone" className="text-white" />}
           />
           <StatCard
             title="Delayed Issues"
             value={stats?.delayed_issues ?? 0}
             accentColor={PALETTE.rose}
             bgGradient="linear-gradient(135deg, var(--card) 0%, #fff1f2 100%)"
-            icon={<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+            icon={<Clock size={20} weight="duotone" className="text-white" />}
           />
         </div>
 
@@ -759,7 +777,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2.5">
                 <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#1D4ED8] to-[#3B82F6] flex items-center justify-center shadow-md shadow-indigo-500/15">
-                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                  <ChartBar size={14} weight="duotone" className="text-white" />
                 </span>
                 <div>
                   <h3 className="text-[15px] font-semibold text-[var(--text)]">Complaints by Department</h3>
@@ -794,7 +812,7 @@ export default function DashboardPage() {
           <div className="dash-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6" style={{ boxShadow: "var(--shadow-card)" }}>
             <div className="flex items-center gap-2.5 mb-1">
               <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md shadow-violet-500/15">
-                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+                <ChartPie size={14} weight="duotone" className="text-white" />
               </span>
               <div>
                 <h3 className="text-[15px] font-semibold text-[var(--text)]">Category Breakdown</h3>

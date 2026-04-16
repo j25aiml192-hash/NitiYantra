@@ -2,6 +2,18 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { useSidebar } from "@/lib/SidebarContext";
+import { 
+  X, 
+  FileArrowUp, 
+  Lightning, 
+  CheckCircle, 
+  Warning, 
+  Copy, 
+  Trash, 
+  Export, 
+  ArrowsCounterClockwise,
+  Note
+} from "@phosphor-icons/react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "https://nityantra-backend.onrender.com";
 
@@ -217,9 +229,7 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
             onClick={handleClose}
             className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-[var(--card)] hover:bg-red-50 border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-red-500 transition-all cursor-pointer z-10"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X size={16} weight="bold" />
           </button>
 
           {/* Header */}
@@ -273,8 +283,8 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
 
                 {/* Upload */}
                 <div className="flex gap-2">
-                  <button className="flex-1 border border-dashed border-[var(--border)] rounded-lg p-2.5 text-xs text-[var(--text-muted)] hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 transition-all cursor-pointer">
-                    📄 Upload File (PDF, DOCX, TXT)
+                  <button className="flex-1 border border-dashed border-[var(--border)] rounded-lg p-2.5 text-xs text-[var(--text-muted)] hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <FileArrowUp size={16} weight="duotone" /> Upload File (PDF, DOCX, TXT)
                   </button>
                 </div>
 
@@ -307,14 +317,14 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
+                    <ArrowsCounterClockwise size={16} weight="bold" className="animate-spin" />
                     Analyzing transcript...
                   </>
                 ) : (
-                  <>⚡ Extract Decisions &amp; Actions</>
+                  <>
+                    <Lightning size={16} weight="fill" />
+                    Extract Decisions &amp; Actions
+                  </>
                 )}
               </button>
 
@@ -348,9 +358,7 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
                   {error && !decisions.length ? (
                     <div className="flex flex-col items-center justify-center text-center py-10">
                       <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center mb-3">
-                        <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
+                        <Warning size={32} weight="duotone" className="text-red-400" />
                       </div>
                       <p className="text-sm font-semibold text-red-600 mb-1">{error}</p>
                       <p className="text-xs text-[var(--text-muted)]">Check your connection and try again</p>
@@ -359,7 +367,7 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
                     <>
                       {/* Success */}
                       <div className="bg-emerald-50 text-emerald-700 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                        <CheckCircle size={14} weight="fill" />
                         Extracted {decisions.length} Decisions &amp; Action Items
                       </div>
 
@@ -405,9 +413,9 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
                                     setDecisions(prev => prev.filter((_, i) => i !== idx));
                                     setNoted(prev => { const next = new Set(prev); next.delete(idx); return next; });
                                   }}
-                                  className="text-red-400 hover:text-red-600 text-[10px] font-medium transition-colors cursor-pointer bg-transparent border-none"
+                                  className="text-red-400 hover:text-red-600 text-[10px] font-medium transition-colors cursor-pointer bg-transparent border-none flex items-center justify-center"
                                 >
-                                  ✕
+                                  <Trash size={14} weight="duotone" />
                                 </button>
                               </div>
                             );
@@ -432,9 +440,9 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
                       <div className="space-y-2 pt-2 border-t border-[var(--border)]">
                         <button
                           onClick={handleExportCSV}
-                          className="w-full py-2 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-500/20 transition-all cursor-pointer"
+                          className="w-full py-2 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-500/20 transition-all cursor-pointer flex items-center justify-center gap-2"
                         >
-                          Export to System (CSV)
+                          <Export size={16} weight="bold" /> Export to System (CSV)
                         </button>
                       </div>
 
@@ -449,16 +457,16 @@ export default function DecisionExtractorModal({ isOpen, onClose, onRefresh }: D
                           }`}
                         >
                           {copiedCSV ? (
-                            <><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg> Copied!</>
+                            <><CheckCircle size={14} weight="fill" /> Copied!</>
                           ) : (
-                            <><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy All</>
+                            <><Copy size={14} weight="duotone" /> Copy All</>
                           )}
                         </button>
                         <button
                           onClick={handleClear}
-                          className="px-3 py-1.5 rounded-lg text-[11px] font-medium text-[var(--text-muted)] hover:bg-red-50 hover:text-red-600 border border-[var(--border)] hover:border-red-200 transition-all cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg text-[11px] font-medium text-[var(--text-muted)] hover:bg-red-50 hover:text-red-600 border border-[var(--border)] hover:border-red-200 transition-all cursor-pointer flex items-center gap-1.5"
                         >
-                          Clear All
+                          <Trash size={14} weight="duotone" /> Clear All
                         </button>
                       </div>
                     </>

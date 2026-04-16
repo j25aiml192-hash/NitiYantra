@@ -3,6 +3,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/api";
+import { 
+  User, 
+  Lock, 
+  Eye, 
+  EyeSlash, 
+  Warning, 
+  ArrowsCounterClockwise, 
+  CaretDown,
+  CaretUp,
+  Bank,
+  Tie,
+  Wrench,
+  UserCircle,
+  Lightning
+} from "@phosphor-icons/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,10 +30,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const DEMO_ACCOUNTS = [
-    { role: "office_staff", label: "Office Staff", emoji: "🏛️", username: "admin", password: "admin123" },
-    { role: "politician", label: "Politician", emoji: "👔", username: "minister_sharma", password: "pass123" },
-    { role: "dept_worker", label: "Dept Worker", emoji: "🔧", username: "pwd_ravi", password: "pass123" },
-    { role: "citizen", label: "Citizen", emoji: "👤", username: "citizen_rahul", password: "pass123" },
+    { role: "office_staff", label: "Office Staff", icon: <Bank size={24} weight="duotone" />, username: "admin", password: "admin123" },
+    { role: "politician", label: "Politician", icon: <Tie size={24} weight="duotone" />, username: "minister_sharma", password: "pass123" },
+    { role: "dept_worker", label: "Dept Worker", icon: <Wrench size={24} weight="duotone" />, username: "pwd_ravi", password: "pass123" },
+    { role: "citizen", label: "Citizen", icon: <UserCircle size={24} weight="duotone" />, username: "citizen_rahul", password: "pass123" },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -187,13 +202,16 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Username */}
-              <div>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
+                  <User size={18} weight="duotone" />
+                </div>
                 <input
                   id="login-username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition bg-[var(--bg)]"
+                  className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-[var(--border)] text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition bg-[var(--bg)]"
                   placeholder="Enter username"
                   required
                 />
@@ -201,21 +219,24 @@ export default function LoginPage() {
 
               {/* Password */}
               <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
+                  <Lock size={18} weight="duotone" />
+                </div>
                 <input
                   id="login-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition bg-[var(--bg)] pr-16"
+                  className="w-full pl-11 pr-16 py-3.5 rounded-xl border border-[var(--border)] text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition bg-[var(--bg)]"
                   placeholder="Enter password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[var(--text-muted)] hover:text-[var(--text)] font-medium transition-colors cursor-pointer bg-transparent border-none px-1 py-0.5"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text)] font-medium transition-colors cursor-pointer bg-transparent border-none px-1 py-0.5"
                 >
-                  {showPassword ? "Hide" : "Show"}
+                  {showPassword ? <EyeSlash size={18} weight="duotone" /> : <Eye size={18} weight="duotone" />}
                 </button>
               </div>
 
@@ -227,9 +248,7 @@ export default function LoginPage() {
               {/* Error */}
               {error && (
                 <div className="flex items-center gap-2 text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
-                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <Warning size={18} weight="duotone" className="shrink-0" />
                   {error}
                 </div>
               )}
@@ -244,10 +263,7 @@ export default function LoginPage() {
               >
                 {loading ? (
                   <span className="inline-flex items-center gap-2 justify-center">
-                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                    </svg>
+                    <ArrowsCounterClockwise size={18} weight="bold" className="animate-spin" />
                     Signing in...
                   </span>
                 ) : (
@@ -280,8 +296,10 @@ export default function LoginPage() {
                       : "bg-[var(--card)] border-[var(--border)] hover:bg-[var(--bg)]"
                   }`}
                 >
-                  <span className="text-base">{acc.emoji}</span>
-                  <span className={`text-[10px] font-medium leading-tight ${selectedRole === acc.role ? "text-amber-500" : "text-[var(--text-secondary)]"}`}>
+                  <span className={selectedRole === acc.role ? "text-amber-500" : "text-[var(--text-muted)]"}>
+                    {acc.icon}
+                  </span>
+                  <span className={`text-[10px] font-bold leading-tight ${selectedRole === acc.role ? "text-amber-600" : "text-[var(--text-secondary)]"}`}>
                     {acc.label}
                   </span>
                 </button>
@@ -293,12 +311,10 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowDemo(!showDemo)}
-                className="w-full text-center text-[var(--text-muted)] text-[10px] hover:text-[var(--text-secondary)] transition-colors flex items-center justify-center gap-1 cursor-pointer bg-transparent border-none"
+                className="w-full text-center text-[var(--text-muted)] text-[10px] hover:text-[var(--text-secondary)] transition-colors flex items-center justify-center gap-1 cursor-pointer bg-transparent border-none font-bold uppercase tracking-wider"
               >
                 {showDemo ? "Hide" : "Show"} credentials
-                <svg className={`w-2.5 h-2.5 transition-transform duration-200 ${showDemo ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                {showDemo ? <CaretUp size={10} weight="bold" /> : <CaretDown size={10} weight="bold" />}
               </button>
               {showDemo && (
                 <div className="mt-2 space-y-1 text-[10px]">

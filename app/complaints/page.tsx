@@ -4,6 +4,35 @@ import { useState, useEffect, useCallback } from "react";
 import { fetchComplaints, createComplaint, classifyComplaint, assignComplaint, getDepartmentStaff, getCurrentUser, fetchComplaintTimeline, TimelineEvent, reassignComplaint, getAvailableStaff, AvailableStaff } from "@/lib/api";
 import { SkeletonTable } from "@/components/Skeleton";
 import toast from "react-hot-toast";
+import { 
+  ArrowsCounterClockwise, 
+  Plus, 
+  MagnifyingGlass, 
+  Funnel, 
+  X, 
+  ClipboardText, 
+  History, 
+  MapPin, 
+  Globe, 
+  DeviceMobile, 
+  Phone, 
+  Envelope, 
+  TwitterLogo,
+  User,
+  Calendar,
+  Hash,
+  ChatCircleDots,
+  CheckCircle,
+  Clock,
+  WarningCircle,
+  CaretRight,
+  CaretLeft,
+  CaretDoubleLeft,
+  CaretDoubleRight,
+  ArrowsLeftRight,
+  ArrowArcLeft
+} from "@phosphor-icons/react";
+import GrievanceModal from "@/components/GrievanceModal";
 
 /* ─── constants ─── */
 const STATUSES = ["all", "pending", "in_progress", "resolved", "escalated"] as const;
@@ -29,8 +58,12 @@ const DEPT_NAMES: Record<number, string> = {
   21: "PWD", 22: "Jal Board", 23: "DESU", 24: "MCD", 25: "Delhi Police",
 };
 
-const SOURCE_ICONS: Record<string, string> = {
-  web: "🌐", mobile_app: "📱", phone: "📞", email: "📧", twitter: "🐦",
+const SOURCE_ICONS: Record<string, React.ElementType> = {
+  web: Globe,
+  mobile_app: DeviceMobile,
+  phone: Phone,
+  email: Envelope,
+  twitter: TwitterLogo,
 };
 
 /* ─── types ─── */
@@ -207,14 +240,14 @@ export default function ComplaintsPage() {
               disabled={loading}
               className="px-3 py-2 bg-[var(--card)] hover:bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] text-sm font-medium rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
             >
-              <svg className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              <ArrowsCounterClockwise size={16} weight="bold" className={loading ? "animate-spin" : ""} />
               Refresh
             </button>
             <button
               onClick={() => setShowGrievanceModal(true)}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+              <Plus size={16} weight="bold" />
               New Complaint
             </button>
           </div>
@@ -255,9 +288,11 @@ export default function ComplaintsPage() {
         <div className="flex flex-wrap gap-3 mb-6">
           {/* Search */}
           <div className="relative flex-1 min-w-[200px]">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <MagnifyingGlass 
+              size={16} 
+              weight="bold" 
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" 
+            />
             <input
               type="text"
               value={search}
@@ -341,7 +376,10 @@ export default function ComplaintsPage() {
                       </td>
                       <td className="py-3.5 px-5 text-sm text-[var(--text-muted)]">{c.district}</td>
                       <td className="py-3.5 px-5 text-sm">
-                        <span title={c.source}>{SOURCE_ICONS[c.source] || "📝"}</span>
+                        {(() => {
+                          const Icon = SOURCE_ICONS[c.source] || ClipboardText;
+                          return <Icon size={18} weight="duotone" title={c.source} className="text-slate-500" />;
+                        })()}
                       </td>
                       <td className="py-3.5 px-5 text-xs text-[var(--text-muted)] whitespace-nowrap">{formatDate(c.date_submitted)}</td>
                       <td className="py-3.5 px-5">
@@ -363,10 +401,8 @@ export default function ComplaintsPage() {
                     <tr>
                       <td colSpan={7} className="py-16 text-center">
                         <div className="flex flex-col items-center gap-2">
-                          <svg className="w-10 h-10 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <p className="text-[var(--text-muted)] text-sm">No complaints match your filters</p>
+                          <WarningCircle size={40} weight="duotone" className="text-[var(--text-muted)]" />
+                          <p className="text-[var(--text-muted)] text-sm font-medium">No complaints match your filters</p>
                         </div>
                       </td>
                     </tr>
@@ -443,9 +479,7 @@ export default function ComplaintsPage() {
                 onClick={() => setSelected(null)}
                 className="w-8 h-8 rounded-lg bg-[var(--border)] hover:bg-[var(--bg)] border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-all"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X size={18} weight="bold" />
               </button>
             </div>
 
@@ -455,13 +489,14 @@ export default function ComplaintsPage() {
                 <button
                   key={tab}
                   onClick={() => setDetailTab(tab)}
-                  className={`px-4 py-2.5 text-xs font-bold rounded-t-lg transition-all capitalize ${
+                  className={`px-4 py-2.5 text-xs font-bold rounded-t-lg transition-all capitalize flex items-center gap-2 ${
                     detailTab === tab
                       ? "bg-slate-50 text-indigo-700 border border-slate-200 border-b-slate-50 -mb-px relative z-10"
                       : "text-slate-500 hover:text-slate-800"
                   }`}
                 >
-                  {tab === "timeline" ? "⏱ Journey" : "📋 Details"}
+                  {tab === "timeline" ? <History size={16} weight="duotone" /> : <ClipboardText size={16} weight="duotone" />}
+                  {tab === "timeline" ? "Journey" : "Details"}
                 </button>
               ))}
             </div>
@@ -492,17 +527,17 @@ export default function ComplaintsPage() {
                 <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
                   <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">District</p>
                   <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                    <MapPin size={18} weight="duotone" className="text-indigo-500" />
                     {selected.district}
                   </p>
                 </div>
                 <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
                   <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Source</p>
                   <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <span>{SOURCE_ICONS[selected.source] || "📝"}</span>
+                    {(() => {
+                      const Icon = SOURCE_ICONS[selected.source] || ClipboardText;
+                      return <Icon size={18} weight="duotone" className="text-slate-400" />;
+                    })()}
                     <span className="capitalize">{selected.source.replace("_", " ")}</span>
                   </p>
                 </div>
@@ -522,9 +557,7 @@ export default function ComplaintsPage() {
               <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-center justify-between mt-2">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shadow-inner">
-                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                    </svg>
+                    <Hash size={20} weight="bold" className="text-slate-400" />
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Complaint ID</p>
@@ -542,7 +575,7 @@ export default function ComplaintsPage() {
             {detailTab === "timeline" && (
               <div className="p-6">
                 <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-[10px]">⏱</span>
+                  <History size={20} weight="duotone" className="text-indigo-600" />
                   Complaint Journey
                 </h3>
                 {timelineLoading ? (
@@ -558,21 +591,17 @@ export default function ComplaintsPage() {
                     <div className="space-y-0">
                       {timeline.map((evt, idx) => {
                         const isUpcoming = evt.status === "upcoming";
-                        const dotColorMap: Record<string, string> = {
-                          file: "bg-blue-500", ai: "bg-violet-500", assign: "bg-indigo-500",
-                          warning: "bg-amber-500", breach: "bg-red-500", escalate: "bg-red-600",
-                          resolved: "bg-emerald-500",
+                        const iconMap: Record<string, React.ElementType> = {
+                          file: ClipboardText, ai: Lightning, assign: ArrowsLeftRight, warning: WarningCircle, breach: WarningCircle, escalate: WarningCircle, resolved: CheckCircle,
                         };
-                        const dotColor = isUpcoming ? "bg-slate-100 border-2 border-dashed border-slate-300" : (dotColorMap[evt.icon] || "bg-slate-500");
-                        const iconMap: Record<string, string> = {
-                          file: "📄", ai: "⚡", assign: "🔀", warning: "⚠️", breach: "🔴", escalate: "🚨", resolved: "✅",
-                        };
+                        const Icon = iconMap[evt.icon] || ClipboardText;
+                        const iconColor = isUpcoming ? "text-slate-400" : "text-white";
 
                         return (
                           <div key={idx} className={`flex items-start gap-4 py-3 ${isUpcoming ? "opacity-50" : ""}`}>
                             {/* Dot */}
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] shrink-0 z-10 ${dotColor} ${!isUpcoming ? "shadow-md shadow-slate-200" : ""}`}>
-                              {isUpcoming ? "" : <span>{iconMap[evt.icon] || "●"}</span>}
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] shrink-0 z-10 ${dotColor} ${!isUpcoming ? "shadow-md shadow-slate-200" : ""}`}>
+                              {isUpcoming ? "" : <Icon size={14} weight="duotone" className={iconColor} />}
                             </div>
                             {/* Content */}
                             <div className="flex-1 min-w-0 bg-white border border-slate-100 rounded-xl p-3 shadow-sm ml-1 transform transition-all hover:-translate-y-0.5 hover:shadow-md">
@@ -617,7 +646,7 @@ export default function ComplaintsPage() {
                 <div className="px-6 pb-6">
                   <div className="border-t border-[var(--border)] pt-5">
                     <h4 className="text-sm font-semibold text-slate-800 flex items-center gap-2 mb-4">
-                      🔀 Assign & Route
+                      <ArrowsLeftRight size={18} weight="duotone" className="text-blue-600" /> Assign & Route
                     </h4>
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
@@ -661,9 +690,9 @@ export default function ComplaintsPage() {
                       className="w-full py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {assigning ? (
-                        <><svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" /></svg>Assigning...</>
+                        <><ArrowsCounterClockwise size={16} weight="bold" className="animate-spin" />Assigning...</>
                       ) : (
-                        <>🔀 Assign & Route</>
+                        <><ArrowsLeftRight size={18} weight="bold" /> Assign & Route</>
                       )}
                     </button>
                   </div>
@@ -676,14 +705,14 @@ export default function ComplaintsPage() {
                   {!showReassign ? (
                     <button
                       onClick={() => setShowReassign(true)}
-                      className="w-full py-2.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-white hover:text-slate-800 transition-all shadow-sm"
+                      className="w-full py-2.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-white hover:text-slate-800 transition-all shadow-sm flex items-center justify-center gap-2"
                     >
-                      🔄 Reassign Complaint
+                      <ArrowArcLeft size={16} weight="bold" /> Reassign Complaint
                     </button>
                   ) : (
                     <div className="border-t border-slate-200 pt-5">
                       <h4 className="text-sm font-semibold text-slate-800 flex items-center gap-2 mb-4">
-                        🔄 Reassign Complaint
+                        <ArrowArcLeft size={18} weight="duotone" className="text-amber-600" /> Reassign Complaint
                       </h4>
                       <div className="grid grid-cols-2 gap-3 mb-3">
                         <div>
@@ -752,9 +781,10 @@ export default function ComplaintsPage() {
                             setReassigning(false);
                           }}
                           disabled={!reassignDeptId || reassigning}
-                          className="flex-1 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-amber-600/20 transition-all disabled:opacity-50 text-sm"
+                          className="flex-1 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-amber-600/20 transition-all disabled:opacity-50 text-sm flex items-center justify-center gap-2"
                         >
-                          {reassigning ? "Reassigning…" : "🔄 Confirm Reassign"}
+                          {reassigning ? <ArrowsCounterClockwise size={16} weight="bold" className="animate-spin" /> : <ArrowArcLeft size={18} weight="bold" />}
+                          {reassigning ? "Reassigning…" : "Confirm Reassign"}
                         </button>
                         <button
                           onClick={() => { setShowReassign(false); setReassignDeptId(null); setReassignStaffId(null); setReassignReason(""); }}

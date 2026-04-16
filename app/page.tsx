@@ -2,6 +2,25 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { 
+  ArrowRight, 
+  ArrowDown, 
+  ChartBar, 
+  ChartPieSlice, 
+  Activity, 
+  DownloadSimple, 
+  Brain, 
+  PresentationChart,
+  SquaresFour,
+  TrendUp,
+  Target,
+  Rocket,
+  Robot,
+  Lightning,
+  CheckCircle,
+  ShieldCheck,
+  Globe
+} from "@phosphor-icons/react";
 
 const API = "https://nityantra-backend.onrender.com";
 
@@ -266,8 +285,12 @@ export default function LandingPage() {
 
         {/* CTA Buttons */}
         <div className="float-in float-d4" style={{ display: "flex", gap: 13, justifyContent: "center", marginBottom: 48, position: "relative", zIndex: 1 }}>
-          <button className="btn-primary" onClick={() => router.push("/dashboard")}>View Dashboard →</button>
-          <button className="btn-ghost" onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}>How It Works ↓</button>
+          <button className="btn-primary" onClick={() => router.push("/dashboard")}>
+            View Dashboard <ArrowRight size={16} weight="bold" className="ml-1" />
+          </button>
+          <button className="btn-ghost" onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}>
+            How It Works <ArrowDown size={16} weight="bold" className="ml-1" />
+          </button>
         </div>
 
         {/* Inline metrics */}
@@ -436,13 +459,15 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 21 }}>
           {[
-            { step: "01", title: "Ingest", emoji: "📥", desc: "Complaints flow in from citizen portals, WhatsApp, phone calls and email — normalized into a single structured format.", tags: ["Portal", "WhatsApp", "Email"], accent: "#1D4ED8" },
-            { step: "02", title: "Analyze", emoji: "🧠", desc: "Every complaint classified by category and urgency. Similar issues clustered. Delays flagged when unresolved beyond 7 days.", tags: ["Classification", "Clustering", "Delays"], accent: "#F59E0B" },
-            { step: "03", title: "Act", emoji: "📊", desc: "Department performance, issue bottlenecks, and trend data surfaced in real time — so administrators act before crises form.", tags: ["Dashboard", "Alerts", "Reports"], accent: "#10B981" },
+            { step: "01", title: "Ingest", icon: DownloadSimple, desc: "Complaints flow in from citizen portals, WhatsApp, phone calls and email — normalized into a single structured format.", tags: ["Portal", "WhatsApp", "Email"], accent: "#1D4ED8" },
+            { step: "02", title: "Analyze", icon: Brain, desc: "Every complaint classified by category and urgency. Similar issues clustered. Delays flagged when unresolved beyond 7 days.", tags: ["Classification", "Clustering", "Delays"], accent: "#F59E0B" },
+            { step: "03", title: "Act", icon: PresentationChart, desc: "Department performance, issue bottlenecks, and trend data surfaced in real time — so administrators act before crises form.", tags: ["Dashboard", "Alerts", "Reports"], accent: "#10B981" },
           ].map((c, i) => (
             <div key={c.step} className={`card anim-in delay-${i + 1} hover-lift`} style={{ padding: 34, position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -16, right: -8, fontSize: 100, fontWeight: 900, color: "rgba(0,0,0,0.03)", lineHeight: 1 }}>{c.step}</div>
-              <div style={{ width: 48, height: 48, borderRadius: 14, background: `${c.accent}12`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: 16 }}>{c.emoji}</div>
+              <div style={{ width: 48, height: 48, borderRadius: 14, background: `${c.accent}12`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                <c.icon size={24} weight="duotone" style={{ color: c.accent }} />
+              </div>
               <h3 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 10px", color: "var(--text)" }}>{c.title}</h3>
               <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7, margin: "0 0 16px" }}>{c.desc}</p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -528,16 +553,20 @@ export default function LandingPage() {
               disabled={loading || !classifyText.trim()}
               style={{ width: "100%", marginTop: 16, opacity: loading || !classifyText.trim() ? 0.5 : 1, justifyContent: "center" }}
             >
-              {loading ? "Classifying..." : "Classify with AI →"}
+              {loading ? "Classifying..." : (
+                <span className="flex items-center gap-2">
+                  Classify with AI <ArrowRight size={16} weight="bold" />
+                </span>
+              )}
             </button>
           </div>
           <div className="card-static anim-in delay-2" style={{ padding: 28, minHeight: 280 }}>
             {!result ? (
               <div style={{
                 height: 230, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                border: "2px dashed var(--border)", borderRadius: 16, gap: 8,
+                border: "2px dashed var(--border)", borderRadius: 16, gap: 12,
               }}>
-                <span style={{ fontSize: 36 }}>🤖</span>
+                <Robot size={48} weight="duotone" className="text-[var(--text-muted)]" />
                 <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}>Classification result appears here</p>
               </div>
             ) : (
@@ -550,8 +579,6 @@ export default function LandingPage() {
                 <div style={{ marginBottom: 21 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                     <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>Confidence</span>
-                    <span style={{ fontSize: 20, fontWeight: 800, color: "var(--accent)" }}>{Math.round(result.confidence * 100)}%</span>
-                  </div>
                   <div style={{ height: 8, borderRadius: 99, background: "var(--bg)", overflow: "hidden" }}>
                     <div style={{
                       height: "100%", borderRadius: 99, background: "var(--accent)",
@@ -565,13 +592,21 @@ export default function LandingPage() {
                     fontSize: 14, fontWeight: 700, color: "var(--text)",
                     background: "var(--bg)", padding: "4px 14px", borderRadius: 999,
                     border: "1px solid var(--border)",
-                  }}>{result.department}</span>
+                    display: "inline-flex", alignItems: "center", gap: 6
+                  }}>
+                    <CheckCircle size={14} weight="fill" className="text-emerald-500" />
+                    {result.department}
+                  </span>
                 </div>
                 <span style={{
                   fontSize: 11, fontWeight: 500, color: "var(--text-muted)",
                   background: "var(--bg)", padding: "4px 12px", borderRadius: 999,
                   border: "1px solid var(--border)",
-                }}>{result.model}</span>
+                  display: "inline-flex", alignItems: "center", gap: 6
+                }}>
+                  <Lightning size={12} weight="fill" />
+                  {result.model}
+                </span>
               </div>
             )}
           </div>
@@ -588,7 +623,7 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1.618fr 1fr", gap: 21 }}>
             <div className="card anim-in delay-1 hover-lift" style={{ padding: 34, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(12px)" }}>
               <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, rgba(29,78,216,0.1), rgba(29,78,216,0.2))", display: "flex", alignItems: "center", justifyContent: "center", color: "#1D4ED8", marginBottom: 21 }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+                <SquaresFour size={28} weight="duotone" />
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 13px", color: "var(--text)" }}>Platform Overview</h3>
               <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.8, margin: 0 }}>
@@ -598,14 +633,14 @@ export default function LandingPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 21 }}>
               <div className="card anim-in delay-2 hover-lift" style={{ padding: 28, flex: 1, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(12px)" }}>
                 <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg, rgba(14,165,233,0.1), rgba(14,165,233,0.2))", display: "flex", alignItems: "center", justifyContent: "center", color: "#0EA5E9", marginBottom: 16 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18" /><path d="M7 16l4-8 4 5 5-9" /></svg>
+                  <TrendUp size={24} weight="duotone" />
                 </div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px", color: "var(--text)" }}>AI & Insights</h3>
                 <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0 }}>Real-time visibility into complaint patterns, department performance, and SLA compliance. AI automatically categorizes, detects delays, and surfaces actionable insights.</p>
               </div>
               <div className="card anim-in delay-3 hover-lift" style={{ padding: 28, flex: 1, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(12px)" }}>
                 <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.2))", display: "flex", alignItems: "center", justifyContent: "center", color: "#10B981", marginBottom: 16 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>
+                  <Target size={24} weight="duotone" />
                 </div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px", color: "var(--text)" }}>Impact & Vision</h3>
                 <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0 }}>Bridging governance and ground reality. Our vision is to make civic services responsive, data-driven, and proactive across India.</p>
@@ -703,7 +738,9 @@ export default function LandingPage() {
               }}
                 onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.02)"; e.currentTarget.style.opacity = "0.9"; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}
-              >Open Dashboard →</button>
+              >
+                Open Dashboard <ArrowRight size={14} weight="bold" className="ml-1" />
+              </button>
               <button onClick={() => window.open(`${API}/docs`, "_blank")} style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "14px 28px", background: "transparent", color: "#fff",
@@ -744,7 +781,7 @@ export default function LandingPage() {
                       <p style={{ fontSize: 14, fontWeight: 600, margin: "0 0 2px", color: "var(--text)" }}>{l.label}</p>
                       <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>{l.desc}</p>
                     </div>
-                    <span style={{ fontSize: 16, color: "var(--text-muted)" }}>→</span>
+                    <ArrowRight size={16} weight="bold" className="text-[var(--text-muted)]" />
                   </button>
                 ))}
               </div>

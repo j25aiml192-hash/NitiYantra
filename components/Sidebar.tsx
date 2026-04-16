@@ -5,6 +5,20 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { getCurrentUser } from "@/lib/api";
 import { useAuth } from "@/lib/AuthContext";
+import { 
+  House, 
+  ClipboardText, 
+  SquaresFour, 
+  MapPin, 
+  User, 
+  Globe, 
+  Lightning, 
+  Strategy, 
+  ChatCircleDots,
+  Sidebar as SidebarIcon,
+  MagnifyingGlass,
+  SignOut
+} from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────── */
 /*  NAV CONFIGURATION                                     */
@@ -12,7 +26,7 @@ import { useAuth } from "@/lib/AuthContext";
 interface NavItem {
   label: string;
   href: string;
-  icon: string;
+  icon: React.ElementType;
   badge?: string;
   badgeColor?: string;
   dynamicKey?: "total_complaints" | "delayed_issues";
@@ -27,20 +41,20 @@ const SECTIONS: Section[] = [
   {
     title: "Governance Command",
     items: [
-      { label: "Command Center", href: "/dashboard", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
-      { label: "Grievance Intelligence", href: "/complaints", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2", dynamicKey: "total_complaints" },
-      { label: "AI Pipeline", href: "/ai-pipeline", icon: "M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" },
-      { label: "Geographic Monitor", href: "/heatmap", icon: "M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" },
-      { label: "My Work", href: "/my-work", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
-      { label: "Crowd Monitor", href: "/social", icon: "M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" },
+      { label: "Command Center", href: "/dashboard", icon: House },
+      { label: "Grievance Intelligence", href: "/complaints", icon: ClipboardText, dynamicKey: "total_complaints" },
+      { label: "AI Pipeline", href: "/ai-pipeline", icon: SquaresFour },
+      { label: "Geographic Monitor", href: "/heatmap", icon: MapPin },
+      { label: "My Work", href: "/my-work", icon: User },
+      { label: "Crowd Monitor", href: "/social", icon: Globe },
     ],
   },
   {
     title: "Election Intelligence",
     items: [
-      { label: "Election Resource Engine", href: "/election", icon: "M13 10V3L4 14h7v7l9-11h-7z" },
-      { label: "ONOE Simulator", href: "/simulator", icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" },
-      { label: "Policy Debate Arena", href: "/debate", icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" },
+      { label: "Election Resource Engine", href: "/election", icon: Lightning },
+      { label: "ONOE Simulator", href: "/simulator", icon: Strategy },
+      { label: "Policy Debate Arena", href: "/debate", icon: ChatCircleDots },
     ],
   },
 ];
@@ -183,11 +197,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           {/* Collapse button — shown when expanded */}
           {!collapsed && (
             <button onClick={toggle} style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: 4, borderRadius: 6, display: "flex", alignItems: "center", flexShrink: 0 }} title="Collapse sidebar">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <line x1="9" y1="3" x2="9" y2="21" />
-                <polyline points="15 8 11 12 15 16" />
-              </svg>
+              <SidebarIcon size={18} weight="duotone" />
             </button>
           )}
         </div>
@@ -195,11 +205,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         {/* Expand button — shown when collapsed */}
         {collapsed && (
           <button onClick={toggle} style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: "12px 0", display: "flex", justifyContent: "center", width: "100%" }} title="Expand sidebar">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <line x1="9" y1="3" x2="9" y2="21" />
-              <polyline points="13 8 17 12 13 16" />
-            </svg>
+            <SidebarIcon size={18} weight="duotone" mirrored />
           </button>
         )}
 
@@ -207,7 +213,11 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         {!collapsed && (
           <div style={{ padding: "8px 12px" }}>
             <div style={{ position: "relative" }}>
-              <svg style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, color: "var(--text-muted)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              <MagnifyingGlass 
+                size={14} 
+                weight="bold"
+                style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} 
+              />
               <input
                 type="text"
                 value={search}
@@ -277,9 +287,11 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                       onMouseEnter={(e) => { if (!active) e.currentTarget.style.background = "var(--bg)"; e.currentTarget.style.color = "var(--text)"; }}
                       onMouseLeave={(e) => { e.currentTarget.style.background = active ? "var(--accent-light)" : "transparent"; e.currentTarget.style.color = active ? "var(--text)" : "var(--text-secondary)"; }}
                     >
-                      <svg style={{ width: 18, height: 18, flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={item.icon} />
-                      </svg>
+                      <item.icon 
+                        size={ collapsed ? 20 : 18 } 
+                        weight="duotone" 
+                        style={{ flexShrink: 0, color: active ? "var(--accent)" : "inherit" }} 
+                      />
                       {!collapsed && (
                         <>
                           <span style={{ flex: 1, textAlign: "left", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.label}</span>
@@ -351,7 +363,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                   onMouseEnter={(e) => { e.currentTarget.style.color = "#ef4444"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
                 >
-                  <svg style={{ width: 16, height: 16 }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                  <SignOut size={16} weight="bold" />
                 </button>
               </>
             )}

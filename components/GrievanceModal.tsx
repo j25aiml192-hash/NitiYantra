@@ -4,6 +4,16 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { createComplaint, classifyComplaint } from "@/lib/api";
+import { 
+  CheckCircle, 
+  Lightning, 
+  Tag, 
+  ArrowsLeftRight, 
+  X, 
+  Buildings,
+  ArrowRight,
+  ArrowsCounterClockwise
+} from "@phosphor-icons/react";
 
 const DISTRICTS = ["Noida", "Ghaziabad", "Delhi", "Gurugram", "Faridabad"];
 const SOURCES = ["Portal", "WhatsApp", "Phone", "Email"];
@@ -57,11 +67,11 @@ function RoutingTimeline({
   const confColor = result.confidence >= 85 ? "bg-emerald-500" : result.confidence >= 70 ? "bg-amber-500" : "bg-red-500";
 
   const steps = [
-    { id: 1, icon: "✅", title: "Complaint Received", sub: "Your complaint has been logged in the system" },
-    { id: 2, icon: "⚡", title: "AI Analyzing...", sub: "Running NitiYantra Keyword Engine v1", hasProgress: true },
-    { id: 3, icon: "🏷", title: `Classified: ${result.category}`, sub: `Confidence: ${result.confidence}%`, hasConfidence: true },
-    { id: 4, icon: "🔀", title: `Routing to ${result.department}`, sub: "Assigning to responsible department", hasDept: true },
-    { id: 5, icon: "✅", title: "Successfully Assigned", sub: result.complaintId ? `Complaint #${result.complaintId} is now being tracked` : "Your complaint is now being tracked", hasActions: true },
+    { id: 1, icon: <CheckCircle size={18} weight="duotone" />, title: "Complaint Received", sub: "Your complaint has been logged in the system" },
+    { id: 2, icon: <Lightning size={18} weight="duotone" />, title: "AI Analyzing...", sub: "Running NitiYantra Keyword Engine v1", hasProgress: true },
+    { id: 3, icon: <Tag size={18} weight="duotone" />, title: `Classified: ${result.category}`, sub: `Confidence: ${result.confidence}%`, hasConfidence: true },
+    { id: 4, icon: <ArrowsLeftRight size={18} weight="duotone" />, title: `Routing to ${result.department}`, sub: "Assigning to responsible department", hasDept: true },
+    { id: 5, icon: <CheckCircle size={18} weight="duotone" />, title: "Successfully Assigned", sub: result.complaintId ? `Complaint #${result.complaintId} is now being tracked` : "Your complaint is now being tracked", hasActions: true },
   ];
 
   return (
@@ -108,11 +118,9 @@ function RoutingTimeline({
                     : "border-2 border-[#1e2130] text-[var(--text-secondary)]"
                 }`}>
                   {isCompleted ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckCircle size={18} weight="bold" />
                   ) : (
-                    <span className="text-xs">{s.icon}</span>
+                    <span className="flex items-center justify-center">{s.icon}</span>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -142,7 +150,7 @@ function RoutingTimeline({
                         <line x1="0" y1="1" x2="48" y2="1" stroke="#2563EB" strokeWidth="2" strokeDasharray="4 3" strokeDashoffset="48" style={{ animation: "dash-flow 0.6s ease forwards" }} />
                       </svg>
                       <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                        <Buildings size={14} weight="duotone" />
                         {result.department}
                       </span>
                     </div>
@@ -151,7 +159,9 @@ function RoutingTimeline({
                   {s.hasActions && isActive && (
                     <div className="mt-5 flex flex-wrap gap-3">
                       <button onClick={onReset} className="px-4 py-2.5 rounded-xl bg-[var(--card)] text-[var(--text)] text-xs font-semibold hover:bg-[var(--border)] transition-all">Submit Another</button>
-                      <Link href="/complaints" className="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-500 transition-all">View All Complaints →</Link>
+                      <Link href="/complaints" className="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-500 transition-all flex items-center gap-2">
+                        View All Complaints <ArrowRight size={14} weight="bold" />
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -243,9 +253,7 @@ export default function GrievanceModal({ isOpen, onClose }: GrievanceModalProps)
               onClick={handleClose}
               className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[var(--card)] shadow-sm border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--card)] transition-all z-10"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X size={16} weight="bold" />
             </button>
 
             {/* Header inside container */}
@@ -302,17 +310,12 @@ export default function GrievanceModal({ isOpen, onClose }: GrievanceModalProps)
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                  </svg>
+                  <ArrowsCounterClockwise size={20} weight="bold" className="animate-spin" />
                   Processing via AI...
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
+                  <Lightning size={20} weight="fill" className="text-amber-300" />
                   Submit &amp; Classify
                 </>
               )}
@@ -324,9 +327,7 @@ export default function GrievanceModal({ isOpen, onClose }: GrievanceModalProps)
               onClick={handleClose}
               className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-[var(--card)] shadow-lg border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg)] transition-all z-10"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X size={16} weight="bold" />
             </button>
             <RoutingTimeline result={result} onReset={handleReset} />
           </div>

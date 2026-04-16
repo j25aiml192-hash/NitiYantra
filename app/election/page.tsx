@@ -5,6 +5,15 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid
 } from "recharts";
+import { 
+  Lightning, 
+  Shield, 
+  UsersThree, 
+  ChartPie, 
+  ChartBar, 
+  Truck,
+  CheckSquare
+} from "@phosphor-icons/react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -171,7 +180,7 @@ export default function ElectionPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-900 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <span className="text-2xl text-white">⚡</span>
+              <Lightning size={28} weight="fill" className="text-amber-400" />
             </div>
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-black mb-1">
@@ -309,7 +318,7 @@ export default function ElectionPage() {
                   {/* Security */}
                   <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
                     <h3 className="text-sm font-semibold text-black tracking-tight mb-5 flex items-center gap-2">
-                      <span className="p-1.5 rounded-lg bg-rose-600 text-white shadow-sm">🛡️</span> Security Forces
+                       <Shield size={20} weight="duotone" className="text-rose-600" /> Security Forces
                     </h3>
                     <div className="space-y-3.5">
                       {[
@@ -330,7 +339,7 @@ export default function ElectionPage() {
                   {/* HR & Admin */}
                   <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
                     <h3 className="text-sm font-semibold text-black tracking-tight mb-5 flex items-center gap-2">
-                      <span className="p-1.5 rounded-lg bg-indigo-600 text-white shadow-sm">👥</span> HR & Administration
+                      <UsersThree size={20} weight="duotone" className="text-indigo-600" /> HR & Administration
                     </h3>
                     <div className="space-y-3.5">
                       {[
@@ -354,8 +363,8 @@ export default function ElectionPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Donut Chart */}
                   <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
-                    <h3 className="text-sm font-semibold text-black tracking-tight mb-6">
-                      📊 Budget Split Allocation
+                    <h3 className="text-sm font-semibold text-black tracking-tight mb-6 flex items-center gap-2">
+                      <ChartPie size={20} weight="duotone" className="text-amber-500" /> Budget Split Allocation
                     </h3>
                     <ResponsiveContainer width="100%" height={260}>
                       <PieChart>
@@ -394,8 +403,8 @@ export default function ElectionPage() {
 
                   {/* Resource Bar Chart */}
                   <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-7 shadow-sm">
-                    <h3 className="text-sm font-semibold text-black tracking-tight mb-6">
-                      📈 Resource Asset Distribution
+                    <h3 className="text-sm font-semibold text-black tracking-tight mb-6 flex items-center gap-2">
+                      <ChartBar size={20} weight="duotone" className="text-indigo-400" /> Resource Asset Distribution
                     </h3>
                     <ResponsiveContainer width="100%" height={260}>
                       <BarChart data={resourceBarData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -413,7 +422,7 @@ export default function ElectionPage() {
                 <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm">
                    <div className="bg-slate-100/50 px-8 py-5 border-b border-slate-200/50 flex items-center justify-between">
                      <h3 className="text-sm font-semibold text-black tracking-tight flex items-center gap-2">
-                       <span className="p-1.5 rounded-lg bg-amber-600 text-white shadow-sm">🚛</span> Logistics Overview
+                       <Truck size={20} weight="duotone" className="text-amber-600" /> Logistics Overview
                      </h3>
                    </div>
                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 p-8">

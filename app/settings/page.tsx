@@ -2,6 +2,24 @@
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { 
+  User, 
+  Envelope, 
+  Tag, 
+  Bell, 
+  DeviceMobile, 
+  WarningCircle, 
+  Palette, 
+  ArrowsCounterClockwise, 
+  Robot, 
+  Lock, 
+  Key, 
+  Archive, 
+  Trash,
+  CaretRight,
+  Check,
+  Warning
+} from "@phosphor-icons/react";
 
 const STORAGE_KEY = "NitiYantra_settings";
 
@@ -81,10 +99,10 @@ function IOSToggle({ enabled, onChange, ariaLabel }: { enabled: boolean; onChang
 }
 
 /* ─── iOS Row Icon ─── */
-function RowIcon({ emoji, bg, label }: { emoji: string; bg: string; label: string }) {
+function RowIcon({ icon: Icon, bg, label }: { icon: any; bg: string; label: string }) {
   return (
     <div className="flex items-center justify-center flex-shrink-0" style={{ width: 28, height: 28, borderRadius: 6, background: bg }} role="img" aria-label={label}>
-      <span className="text-sm" aria-hidden="true">{emoji}</span>
+      <Icon size={16} weight="duotone" className="text-white" />
     </div>
   );
 }
@@ -92,17 +110,16 @@ function RowIcon({ emoji, bg, label }: { emoji: string; bg: string; label: strin
 /* ─── Chevron ─── */
 function Chevron({ isOpen = false }: { isOpen?: boolean }) {
   return (
-    <svg
-      className="w-4 h-4 flex-shrink-0"
+    <CaretRight
+      size={14}
+      weight="bold"
+      className="flex-shrink-0"
       style={{
         color: "#c7c7cc",
         transform: isOpen ? "rotate(90deg)" : "rotate(0deg)",
         transition: "transform 0.2s ease",
       }}
-      fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-    </svg>
+    />
   );
 }
 
@@ -216,7 +233,7 @@ export default function SettingsPage() {
         <SectionHeader title="Profile" id="section-profile" />
         <GroupedCard labelledBy="section-profile">
           <Row>
-            <RowIcon emoji="👤" bg="#5856D6" label="Profile icon" />
+            <RowIcon icon={User} bg="#5856D6" label="Profile icon" />
             <label htmlFor="input-name" className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Full Name</label>
             <input
               id="input-name" type="text" value={settings.name} onChange={(e) => update("name", e.target.value)}
@@ -225,7 +242,7 @@ export default function SettingsPage() {
             />
           </Row>
           <Row>
-            <RowIcon emoji="✉️" bg="#007AFF" label="Email icon" />
+            <RowIcon icon={Envelope} bg="#007AFF" label="Email icon" />
             <label htmlFor="input-email" className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Email</label>
             <input
               id="input-email" type="email" value={settings.email} onChange={(e) => update("email", e.target.value)}
@@ -234,7 +251,7 @@ export default function SettingsPage() {
             />
           </Row>
           <Row isLast onClick={() => setShowRolePicker(!showRolePicker)} ariaLabel={`Role: ${ROLE_LABELS[settings.role] || settings.role}. Click to change.`}>
-            <RowIcon emoji="🏷️" bg="#AF52DE" label="Role icon" />
+            <RowIcon icon={Tag} bg="#AF52DE" label="Role icon" />
             <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Role</span>
             <span className="text-[15px] mr-1" style={{ color: "#6B7280" }}>{ROLE_LABELS[settings.role] || settings.role}</span>
             <Chevron isOpen={showRolePicker} />
@@ -244,9 +261,10 @@ export default function SettingsPage() {
               {Object.entries(ROLE_LABELS).map(([val, label]) => (
                 <button key={val} onClick={() => { update("role", val); setShowRolePicker(false); }}
                   role="option" aria-selected={settings.role === val}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg text-[15px] cursor-pointer min-h-[44px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 ${settings.role === val ? "font-semibold" : ""}`}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg text-[15px] cursor-pointer min-h-[44px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 flex items-center justify-between ${settings.role === val ? "font-semibold" : ""}`}
                   style={{ color: settings.role === val ? "#007AFF" : "var(--text)", background: "transparent" }}>
-                  {settings.role === val && <span aria-hidden="true">✓  </span>}{label}
+                  {label}
+                  {settings.role === val && <Check size={16} weight="bold" />}
                 </button>
               ))}
             </div>
@@ -258,17 +276,17 @@ export default function SettingsPage() {
       <SectionHeader title="Notifications" id="section-notifications" />
       <GroupedCard labelledBy="section-notifications">
         <Row>
-          <RowIcon emoji="🔔" bg="#FF9500" label="Email notifications icon" />
+          <RowIcon icon={Bell} bg="#FF9500" label="Email notifications icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Email Notifications</span>
           <IOSToggle enabled={settings.emailNotif} onChange={(v) => update("emailNotif", v)} ariaLabel="Toggle email notifications" />
         </Row>
         <Row>
-          <RowIcon emoji="📱" bg="#007AFF" label="Push notifications icon" />
+          <RowIcon icon={DeviceMobile} bg="#007AFF" label="Push notifications icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Push Notifications</span>
           <IOSToggle enabled={settings.pushNotif} onChange={(v) => update("pushNotif", v)} ariaLabel="Toggle push notifications" />
         </Row>
         <Row isLast>
-          <RowIcon emoji="⚠️" bg="#FF3B30" label="Critical alerts icon" />
+          <RowIcon icon={WarningCircle} bg="#FF3B30" label="Critical alerts icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Critical Alerts Only</span>
           <IOSToggle enabled={settings.criticalOnly} onChange={(v) => update("criticalOnly", v)} ariaLabel="Toggle critical alerts only" />
         </Row>
@@ -279,7 +297,7 @@ export default function SettingsPage() {
       <SectionHeader title="System" id="section-system" />
       <GroupedCard labelledBy="section-system">
         <Row onClick={() => setShowThemePicker(!showThemePicker)} ariaLabel={`Theme: ${THEME_LABELS[settings.theme]}. Click to change.`}>
-          <RowIcon emoji="🎨" bg="#AF52DE" label="Theme icon" />
+          <RowIcon icon={Palette} bg="#AF52DE" label="Theme icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Theme</span>
           <span className="text-[15px] mr-1" style={{ color: "#6B7280" }}>{THEME_LABELS[settings.theme]}</span>
           <Chevron isOpen={showThemePicker} />
@@ -289,15 +307,16 @@ export default function SettingsPage() {
             {Object.entries(THEME_LABELS).map(([val, label]) => (
               <button key={val} onClick={() => { update("theme", val); setShowThemePicker(false); }}
                 role="option" aria-selected={settings.theme === val}
-                className={`w-full text-left px-3 py-2.5 rounded-lg text-[15px] cursor-pointer min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 ${settings.theme === val ? "font-semibold" : ""}`}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-[15px] cursor-pointer min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 flex items-center justify-between ${settings.theme === val ? "font-semibold" : ""}`}
                 style={{ color: settings.theme === val ? "#007AFF" : "var(--text)", background: "transparent" }}>
-                {settings.theme === val && <span aria-hidden="true">✓  </span>}{label}
+                {label}
+                {settings.theme === val && <Check size={16} weight="bold" />}
               </button>
             ))}
           </div>
         )}
         <Row onClick={() => setShowRefreshPicker(!showRefreshPicker)} ariaLabel={`Auto-refresh: ${REFRESH_LABELS[settings.autoRefresh]}. Click to change.`}>
-          <RowIcon emoji="🔄" bg="#007AFF" label="Auto-refresh icon" />
+          <RowIcon icon={ArrowsCounterClockwise} bg="#007AFF" label="Auto-refresh icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Auto-Refresh</span>
           <span className="text-[15px] mr-1" style={{ color: "#6B7280" }}>{REFRESH_LABELS[settings.autoRefresh]}</span>
           <Chevron isOpen={showRefreshPicker} />
@@ -307,15 +326,16 @@ export default function SettingsPage() {
             {Object.entries(REFRESH_LABELS).map(([val, label]) => (
               <button key={val} onClick={() => { update("autoRefresh", val); setShowRefreshPicker(false); }}
                 role="option" aria-selected={settings.autoRefresh === val}
-                className={`w-full text-left px-3 py-2.5 rounded-lg text-[15px] cursor-pointer min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 ${settings.autoRefresh === val ? "font-semibold" : ""}`}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-[15px] cursor-pointer min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 flex items-center justify-between ${settings.autoRefresh === val ? "font-semibold" : ""}`}
                 style={{ color: settings.autoRefresh === val ? "#007AFF" : "var(--text)", background: "transparent" }}>
-                {settings.autoRefresh === val && <span aria-hidden="true">✓  </span>}{label}
+                {label}
+                {settings.autoRefresh === val && <Check size={16} weight="bold" />}
               </button>
             ))}
           </div>
         )}
         <Row isLast>
-          <RowIcon emoji="🤖" bg="#34C759" label="AI confidence scores icon" />
+          <RowIcon icon={Robot} bg="#34C759" label="AI confidence scores icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>AI Confidence Scores</span>
           <IOSToggle enabled={settings.aiScores} onChange={(v) => update("aiScores", v)} ariaLabel="Toggle AI confidence scores" />
         </Row>
@@ -326,12 +346,12 @@ export default function SettingsPage() {
       <SectionHeader title="Security" id="section-security" />
       <GroupedCard labelledBy="section-security">
         <Row>
-          <RowIcon emoji="🔐" bg="#34C759" label="Two-factor authentication icon" />
+          <RowIcon icon={Lock} bg="#34C759" label="Two-factor authentication icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Two-Factor Auth</span>
           <IOSToggle enabled={settings.twoFactor} onChange={(v) => update("twoFactor", v)} ariaLabel="Toggle two-factor authentication" />
         </Row>
         <Row isLast onClick={() => toast.success("Password reset link sent to your email")} ariaLabel="Change password">
-          <RowIcon emoji="🔑" bg="#8E8E93" label="Password icon" />
+          <RowIcon icon={Key} bg="#8E8E93" label="Password icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Change Password</span>
           <Chevron />
         </Row>
@@ -342,12 +362,12 @@ export default function SettingsPage() {
       <SectionHeader title="Data & Privacy" id="section-data-privacy" />
       <GroupedCard labelledBy="section-data-privacy">
         <Row onClick={() => toast.success("Data export started. You'll receive an email shortly.")} ariaLabel="Download my data">
-          <RowIcon emoji="📦" bg="#007AFF" label="Download data icon" />
+          <RowIcon icon={Archive} bg="#007AFF" label="Download data icon" />
           <span className="flex-1 text-[15px]" style={{ color: "var(--text)" }}>Download My Data</span>
           <Chevron />
         </Row>
         <Row isLast onClick={() => toast.success("Activity logs cleared")} ariaLabel="Clear activity logs - this action is permanent">
-          <RowIcon emoji="🗑️" bg="#FF3B30" label="Delete icon" />
+          <RowIcon icon={Trash} bg="#FF3B30" label="Delete icon" />
           <span className="flex-1 text-[15px]" style={{ color: "#FF3B30" }}>Clear Activity Logs</span>
           <Chevron />
         </Row>

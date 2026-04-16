@@ -4,6 +4,18 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useSidebar } from "@/lib/SidebarContext";
 import { fetchComplaints, fetchReadinessIndex, ComplaintResponse, ReadinessState } from "@/lib/api";
 import "leaflet/dist/leaflet.css";
+import { 
+  Globe, 
+  CaretRight, 
+  Clock, 
+  ClipboardText, 
+  WarningCircle, 
+  MagnifyingGlass,
+  ArrowRight,
+  ChartLineUp,
+  MapTrifold,
+  Info
+} from "@phosphor-icons/react";
 
 /* ─── types ─── */
 interface DistrictMarker {
@@ -706,9 +718,7 @@ export default function HeatmapPage() {
         {/* Left: Title + Status */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-sm shadow-indigo-500/20">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Globe size={18} weight="duotone" className="text-white" />
           </div>
           <div className="flex flex-col">
             <span className="text-[13px] font-bold text-[var(--text)] tracking-tight leading-tight">Geographic Monitor</span>
@@ -738,17 +748,13 @@ export default function HeatmapPage() {
                 >
                   India
                 </button>
-                <svg className="w-3 h-3 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <CaretRight size={10} weight="bold" className="text-[var(--text-muted)]" />
                 <span className="text-[11px] font-semibold text-[var(--text)] bg-[var(--accent-light)] px-2.5 py-0.5 rounded-full">
                   {selectedState}
                 </span>
                 {selectedDistrict && (
                   <>
-                    <svg className="w-3 h-3 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <CaretRight size={10} weight="bold" className="text-[var(--text-muted)]" />
                     <span className="text-[11px] font-semibold text-[var(--accent)]">
                       {selectedDistrict}
                     </span>
@@ -762,14 +768,14 @@ export default function HeatmapPage() {
         {/* Right: Stat pills */}
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-semibold text-[var(--text-secondary)] bg-[var(--bg)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
-            📋 {totalComplaints} complaints
+            <ClipboardText size={12} weight="duotone" className="inline mr-1" /> {totalComplaints} complaints
           </span>
           <span className="text-[10px] font-semibold text-amber-500 bg-amber-500/8 px-2.5 py-1 rounded-lg border border-amber-500/15">
-            ⏳ {totalPending} pending
+            <Hourglass size={12} weight="duotone" className="inline mr-1" /> {totalPending} pending
           </span>
           {onoeOverlay && highRiskStates > 0 && (
             <span className="text-[10px] font-semibold text-red-500 bg-red-500/8 px-2.5 py-1 rounded-lg border border-red-500/15">
-              🔴 {highRiskStates} high risk states
+              <WarningCircle size={12} weight="duotone" className="inline mr-1" /> {highRiskStates} high risk states
             </span>
           )}
         </div>
@@ -795,7 +801,7 @@ export default function HeatmapPage() {
                 : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 shadow-sm'
             }`}
           >
-            <span className={`w-2 h-2 rounded-full ${onoeOverlay ? 'bg-emerald-300 animate-pulse' : 'bg-slate-300'}`} />
+            <MapTrifold size={16} weight={onoeOverlay ? "fill" : "duotone"} />
             ONOE Overlay {onoeOverlay ? 'ON' : 'OFF'}
           </button>
 
