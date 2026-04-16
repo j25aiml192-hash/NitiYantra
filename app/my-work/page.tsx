@@ -139,24 +139,20 @@ export default function MyWorkPage() {
         {/* ═══ STAT CARDS ═══ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: "Total Assigned",     value: report?.total_assigned ?? 0,     icon: "📋", from: "from-blue-500", to: "to-indigo-500" },
-            { label: "Resolved This Week", value: report?.this_week_resolved ?? 0, icon: "✅", from: "from-emerald-400", to: "to-teal-500" },
-            { label: "SLA Breached",       value: report?.sla_breached ?? 0,       icon: "🔴", from: "from-rose-500", to: "to-pink-600" },
-            { label: "On-Time Rate",       value: `${report?.on_time_rate ?? 100}%`, icon: "⏱", from: "from-sky-400", to: "to-cyan-500" },
+            { label: "Total Assigned",     value: report?.total_assigned ?? 0,     text: "text-indigo-700",  bg: "bg-indigo-50/95",  border: "border-indigo-200" },
+            { label: "Resolved This Week", value: report?.this_week_resolved ?? 0, text: "text-emerald-700", bg: "bg-emerald-50/95", border: "border-emerald-200" },
+            { label: "SLA Breached",       value: report?.sla_breached ?? 0,       text: "text-rose-700",    bg: "bg-rose-50/95",    border: "border-rose-200" },
+            { label: "On-Time Rate",       value: `${report?.on_time_rate ?? 100}%`, text: "text-amber-700",  bg: "bg-amber-50/95",   border: "border-amber-200" },
           ].map((stat, i) => (
             <div
               key={stat.label}
-              className="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              className={`group relative ${stat.bg} backdrop-blur-xl border-2 ${stat.border} rounded-[2rem] p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden`}
               style={{ animation: `fadeUp 0.5s ease-out ${(i+1)*0.1}s forwards`, opacity: 0 }}
             >
-              <div className={`absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r ${stat.from} ${stat.to}`} />
-              <div className={`absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br ${stat.from} ${stat.to} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity`} />
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors" />
               
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">{stat.label}</span>
-                <span className="text-xl opacity-80 backdrop-blur bg-white/50 w-8 h-8 flex items-center justify-center rounded-xl shadow-sm border border-white">{stat.icon}</span>
-              </div>
-              <p className="text-3xl font-semibold text-slate-600 tracking-tight">{stat.value}</p>
+              <div className="text-[10px] font-black text-black uppercase tracking-[0.2em] mb-4 opacity-40">{stat.label}</div>
+              <p className={`text-3xl font-black ${stat.text} tracking-tight drop-shadow-sm`}>{stat.value}</p>
             </div>
           ))}
         </div>
