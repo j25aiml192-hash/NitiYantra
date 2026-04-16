@@ -507,7 +507,7 @@ export default function SimulatorPage() {
                 </div>
               </div>
 
-              <div className="lg:col-span-7 glass rounded-[2.5rem] p-10 ddd-shadow h-[400px]">
+              <div className="lg:col-span-4 glass rounded-[2.5rem] p-10 ddd-shadow h-[400px]">
                 <h3 className="text-xl font-bold text-slate-900 tracking-tight mb-8">Sync Velocity Percentage</h3>
                 <ResponsiveContainer width="100%" height="80%">
                   <AreaChart data={result.yearly_data}>
@@ -521,7 +521,7 @@ export default function SimulatorPage() {
                 </ResponsiveContainer>
               </div>
 
-              <div className="lg:col-span-5 glass rounded-[2.5rem] p-10 ddd-shadow h-[400px]">
+              <div className="lg:col-span-4 glass rounded-[2.5rem] p-10 ddd-shadow h-[400px]">
                 <h3 className="text-xl font-bold text-slate-900 tracking-tight mb-8 underline border-none">Governance Gained</h3>
                 <ResponsiveContainer width="100%" height="80%">
                   <BarChart data={result.yearly_data.filter((_, i) => i % 2 === 0)}>
@@ -534,7 +534,7 @@ export default function SimulatorPage() {
                 </ResponsiveContainer>
               </div>
               {/* Intensity Strip (Policy Stress Meter) */}
-              <div className="lg:col-span-4 glass rounded-[2.5rem] p-10 ddd-shadow flex flex-col justify-between space-y-8">
+              <div className="lg:col-span-4 glass rounded-[2.5rem] p-10 ddd-shadow flex flex-col justify-between space-y-8 h-[400px]">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 tracking-tight">Policy Stability</h3>
                   <p className="text-xs font-medium text-slate-400 font-bold uppercase tracking-widest leading-relaxed">Atmospheric stress of electoral cycles</p>
