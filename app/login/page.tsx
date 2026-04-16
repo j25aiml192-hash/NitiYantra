@@ -13,10 +13,9 @@ import {
   CaretDown,
   CaretUp,
   Bank,
-  Tie,
+  IdentificationBadge,
   Wrench,
-  UserCircle,
-  Lightning
+  UserCircle
 } from "@phosphor-icons/react";
 
 export default function LoginPage() {
@@ -31,7 +30,7 @@ export default function LoginPage() {
 
   const DEMO_ACCOUNTS = [
     { role: "office_staff", label: "Office Staff", icon: <Bank size={24} weight="duotone" />, username: "admin", password: "admin123" },
-    { role: "politician", label: "Politician", icon: <Tie size={24} weight="duotone" />, username: "minister_sharma", password: "pass123" },
+    { role: "politician", label: "Politician", icon: <IdentificationBadge size={24} weight="duotone" />, username: "minister_sharma", password: "pass123" },
     { role: "dept_worker", label: "Dept Worker", icon: <Wrench size={24} weight="duotone" />, username: "pwd_ravi", password: "pass123" },
     { role: "citizen", label: "Citizen", icon: <UserCircle size={24} weight="duotone" />, username: "citizen_rahul", password: "pass123" },
   ];

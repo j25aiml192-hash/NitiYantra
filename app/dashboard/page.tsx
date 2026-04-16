@@ -24,7 +24,7 @@ import {
   Export, 
   Lightning, 
   Buildings, 
-  Briefcase, 
+  ChartPie, 
   WarningCircle,
   CheckCircle,
   Clock,

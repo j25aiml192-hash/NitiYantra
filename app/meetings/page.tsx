@@ -4,19 +4,15 @@ import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { 
   MagicWand, 
-  FileArrowUp, 
-  Trash, 
-  CheckCircle, 
-  Warning, 
-  ListChecks,
   Lightning,
   Copy,
-  ArrowRight,
   FileCsv,
   FileText,
   ArrowsCounterClockwise,
   UploadSimple,
-  Pencil
+  Warning,
+  CheckCircle,
+  Trash
 } from "@phosphor-icons/react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "https://nityantra-backend.onrender.com";

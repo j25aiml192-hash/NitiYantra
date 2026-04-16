@@ -17,8 +17,7 @@ import {
   Archive, 
   Trash,
   CaretRight,
-  Check,
-  Warning
+  Check
 } from "@phosphor-icons/react";
 
 const STORAGE_KEY = "NitiYantra_settings";
@@ -99,7 +98,7 @@ function IOSToggle({ enabled, onChange, ariaLabel }: { enabled: boolean; onChang
 }
 
 /* ─── iOS Row Icon ─── */
-function RowIcon({ icon: Icon, bg, label }: { icon: any; bg: string; label: string }) {
+function RowIcon({ icon: Icon, bg, label }: { icon: React.ElementType; bg: string; label: string }) {
   return (
     <div className="flex items-center justify-center flex-shrink-0" style={{ width: 28, height: 28, borderRadius: 6, background: bg }} role="img" aria-label={label}>
       <Icon size={16} weight="duotone" className="text-white" />

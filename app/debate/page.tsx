@@ -11,16 +11,13 @@ import {
   Gavel, 
   UserCircle, 
   Scales, 
-  CheckCircle,
   Warning,
   Bank,
   Robot,
   FirstAid,
   GraduationCap,
   Lightbulb,
-  Note,
-  Pause,
-  Play
+  Note
 } from "@phosphor-icons/react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";

@@ -6,7 +6,7 @@ import {
 } from "recharts";
 import { 
   Lightning as Zap, 
-  Activity, 
+  Pulse as Activity, 
   Clock, 
   Shield, 
   ArrowsCounterClockwise as RefreshCw, 
@@ -14,8 +14,8 @@ import {
   Calculator, 
   Globe, 
   Layout, 
-  Warning as AlertTriangle, 
-  CheckCircle as CheckCircle2
+  CheckCircle as CheckCircle2,
+  WarningCircle
 } from "@phosphor-icons/react";
 
 /* ── Types ── */

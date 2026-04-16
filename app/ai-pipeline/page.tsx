@@ -12,11 +12,11 @@ import {
   Brain,
   Cpu,
   Lightning,
-  Activity,
+  Pulse,
   Funnel,
   ChartBar,
   ChartPie,
-  Layers,
+  Stack,
   Clock,
   Warning,
   CheckCircle,
@@ -160,9 +160,9 @@ export default function AIPipelinePage() {
   });
 
   const steps = [
-    { name: "Classify", icon: <Layers size={18} weight="duotone" />, desc: "Zero-shot NLP" },
+    { name: "Classify", icon: <Stack size={18} weight="duotone" />, desc: "Zero-shot NLP" },
     { name: "Cluster", icon: <Database size={18} weight="duotone" />, desc: "Semantic Similarity" },
-    { name: "Detect", icon: <Activity size={18} weight="duotone" />, desc: "SLA Compliance" }
+    { name: "Detect", icon: <Pulse size={18} weight="duotone" />, desc: "SLA Compliance" }
   ];
 
   return (
@@ -293,7 +293,7 @@ export default function AIPipelinePage() {
             {/* Primary Metrics */}
             <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
                {[
-                 { label: "Classified Entities", val: result.classified.length, icon: <Layers size={24} weight="duotone" />, g: "from-blue-600/10 to-indigo-600/5", border: "border-indigo-100", accent: "text-indigo-600", trend: "+12%" },
+                 { label: "Classified Entities", val: result.classified.length, icon: <Stack size={24} weight="duotone" />, g: "from-blue-600/10 to-indigo-600/5", border: "border-indigo-100", accent: "text-indigo-600", trend: "+12%" },
                  { label: "Semantic Clusters", val: result.clusters.length, icon: <Database size={24} weight="duotone" />, g: "from-emerald-600/10 to-teal-600/5", border: "border-emerald-100", accent: "text-emerald-600", trend: "Optimized" },
                  { label: "SLA Violations", val: delayed.length, icon: <Warning size={24} weight="duotone" />, g: "from-rose-600/10 to-orange-600/5", border: "border-rose-100", accent: delayed.length > 0 ? "text-rose-600" : "text-emerald-600", trend: delayed.length > 5 ? "High Risk" : "Normal" },
                ].map((m, i) => (
@@ -433,7 +433,7 @@ export default function AIPipelinePage() {
                       <h3 className="text-base font-bold text-black tracking-tight">Intelligence Velocity</h3>
                       <p className="text-[10px] font-medium text-slate-400">Processing throughput & pattern density wave</p>
                     </div>
-                    <Activity size={20} weight="duotone" className="text-indigo-400 animate-pulse" />
+                    <Pulse size={20} weight="duotone" className="text-indigo-400 animate-pulse" />
                   </div>
                   <div className="h-[200px] w-full pt-2">
                     <ResponsiveContainer width="100%" height="100%">
@@ -618,10 +618,6 @@ export default function AIPipelinePage() {
             </button>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
 
         {/* ═══ Loading State skeleton ═══ */}
         {loading && !result && (

@@ -5,21 +5,15 @@ import { useRouter } from "next/navigation";
 import { 
   ArrowRight, 
   ArrowDown, 
-  ChartBar, 
-  ChartPieSlice, 
-  Activity, 
   DownloadSimple, 
   Brain, 
   PresentationChart,
   SquaresFour,
   TrendUp,
   Target,
-  Rocket,
   Robot,
   Lightning,
-  CheckCircle,
-  ShieldCheck,
-  Globe
+  CheckCircle
 } from "@phosphor-icons/react";
 
 const API = "https://nityantra-backend.onrender.com";
@@ -579,6 +573,8 @@ export default function LandingPage() {
                 <div style={{ marginBottom: 21 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                     <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>Confidence</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)" }}>{barWidth}%</span>
+                  </div>
                   <div style={{ height: 8, borderRadius: 99, background: "var(--bg)", overflow: "hidden" }}>
                     <div style={{
                       height: "100%", borderRadius: 99, background: "var(--accent)",

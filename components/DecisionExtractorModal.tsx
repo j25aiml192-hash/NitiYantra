@@ -11,8 +11,7 @@ import {
   Copy, 
   Trash, 
   Export, 
-  ArrowsCounterClockwise,
-  Note
+  ArrowsCounterClockwise
 } from "@phosphor-icons/react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "https://nityantra-backend.onrender.com";

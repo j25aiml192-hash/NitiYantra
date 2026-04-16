@@ -8,31 +8,23 @@ import {
   ArrowsCounterClockwise, 
   Plus, 
   MagnifyingGlass, 
-  Funnel, 
-  X, 
-  ClipboardText, 
-  History, 
-  MapPin, 
-  Globe, 
-  DeviceMobile, 
-  Phone, 
-  Envelope, 
-  TwitterLogo,
-  User,
-  Calendar,
-  Hash,
-  ChatCircleDots,
-  CheckCircle,
-  Clock,
-  WarningCircle,
-  CaretRight,
-  CaretLeft,
-  CaretDoubleLeft,
-  CaretDoubleRight,
   ArrowsLeftRight,
-  ArrowArcLeft
+  ArrowArcLeft,
+  ClockCounterClockwise,
+  X,
+  ClipboardText,
+  MapPin,
+  WarningCircle,
+  Hash,
+  Globe,
+  DeviceMobile,
+  Phone,
+  Envelope,
+  TwitterLogo,
+  Lightning,
+  CheckCircle
 } from "@phosphor-icons/react";
-import GrievanceModal from "@/components/GrievanceModal";
+
 
 /* ─── constants ─── */
 const STATUSES = ["all", "pending", "in_progress", "resolved", "escalated"] as const;
@@ -495,7 +487,7 @@ export default function ComplaintsPage() {
                       : "text-slate-500 hover:text-slate-800"
                   }`}
                 >
-                  {tab === "timeline" ? <History size={16} weight="duotone" /> : <ClipboardText size={16} weight="duotone" />}
+                  {tab === "timeline" ? <ClockCounterClockwise size={16} weight="duotone" /> : <ClipboardText size={16} weight="duotone" />}
                   {tab === "timeline" ? "Journey" : "Details"}
                 </button>
               ))}
@@ -575,7 +567,7 @@ export default function ComplaintsPage() {
             {detailTab === "timeline" && (
               <div className="p-6">
                 <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                  <History size={20} weight="duotone" className="text-indigo-600" />
+                  <ClockCounterClockwise size={20} weight="duotone" className="text-indigo-600" />
                   Complaint Journey
                 </h3>
                 {timelineLoading ? (
@@ -596,6 +588,7 @@ export default function ComplaintsPage() {
                         };
                         const Icon = iconMap[evt.icon] || ClipboardText;
                         const iconColor = isUpcoming ? "text-slate-400" : "text-white";
+                        const dotColor = isUpcoming ? "bg-slate-100 ring-4 ring-slate-50" : "bg-blue-600 ring-4 ring-blue-50";
 
                         return (
                           <div key={idx} className={`flex items-start gap-4 py-3 ${isUpcoming ? "opacity-50" : ""}`}>

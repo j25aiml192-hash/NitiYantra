@@ -7,14 +7,10 @@ import "leaflet/dist/leaflet.css";
 import { 
   Globe, 
   CaretRight, 
-  Clock, 
   ClipboardText, 
   WarningCircle, 
-  MagnifyingGlass,
-  ArrowRight,
-  ChartLineUp,
   MapTrifold,
-  Info
+  Hourglass
 } from "@phosphor-icons/react";
 
 /* ─── types ─── */

@@ -2,18 +2,11 @@
 
 import { useState, useRef, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import Image from "next/image"
 import { 
   PaperPlaneRight, 
   X, 
   ChatTeardropDots, 
-  Robot, 
-  Lightning,
-  ChartBar,
-  Buildings,
-  WarningCircle,
-  Question,
-  Scales
+  Robot
 } from "@phosphor-icons/react"
 
 interface Message {
