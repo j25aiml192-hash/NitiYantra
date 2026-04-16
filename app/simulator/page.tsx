@@ -127,6 +127,96 @@ function Counter({ to, prefix = "", suffix = "" }: { to: number; prefix?: string
   return <>{prefix}{v.toLocaleString()}{suffix}</>;
 }
 
+/* ── India Map Component ── */
+const IndiaMap = ({ 
+  stateSummary, 
+  onStateHover 
+}: { 
+  stateSummary: StateSummary[], 
+  onStateHover: (state: StateSummary | null) => void 
+}) => {
+  // Simplified state paths for visualization
+  const statePaths = [
+    { id: "AP", name: "Andhra Pradesh", d: "M 283,572 L 285,580 L 305,580 L 320,550 L 310,500 L 290,495 Z" },
+    { id: "AR", name: "Arunachal Pradesh", d: "M 580,240 L 610,250 L 620,280 L 590,290 L 560,260 Z" },
+    { id: "AS", name: "Assam", d: "M 540,280 L 570,295 L 590,320 L 550,330 L 520,310 Z" },
+    { id: "BR", name: "Bihar", d: "M 400,280 L 450,285 L 460,320 L 410,330 L 390,300 Z" },
+    { id: "CT", name: "Chhattisgarh", d: "M 320,380 L 360,385 L 370,470 L 330,480 L 310,430 Z" },
+    { id: "GA", name: "Goa", d: "M 185,510 L 195,512 L 192,525 L 182,522 Z" },
+    { id: "GJ", name: "Gujarat", d: "M 100,340 L 170,345 L 180,420 L 120,430 L 90,400 Z" },
+    { id: "HR", name: "Haryana", d: "M 230,225 L 260,228 L 265,260 L 235,265 Z" },
+    { id: "HP", name: "Himachal Pradesh", d: "M 240,170 L 275,185 L 285,215 L 250,220 Z" },
+    { id: "JH", name: "Jharkhand", d: "M 410,340 L 460,345 L 470,390 L 420,400 Z" },
+    { id: "KA", name: "Karnataka", d: "M 195,520 L 250,530 L 260,630 L 210,640 L 185,580 Z" },
+    { id: "KL", name: "Kerala", d: "M 235,680 L 260,685 L 255,750 L 230,730 Z" },
+    { id: "MP", name: "Madhya Pradesh", d: "M 220,310 L 330,315 L 340,410 L 230,420 Z" },
+    { id: "MH", name: "Maharashtra", d: "M 180,430 L 305,440 L 315,530 L 190,520 Z" },
+    { id: "MN", name: "Manipur", d: "M 595,335 L 610,345 L 605,370 L 590,365 Z" },
+    { id: "ML", name: "Meghalaya", d: "M 530,315 L 560,320 L 555,340 L 525,335 Z" },
+    { id: "MZ", name: "Mizoram", d: "M 585,375 L 600,380 L 595,410 L 580,405 Z" },
+    { id: "NL", name: "Nagaland", d: "M 605,295 L 620,305 L 615,330 L 600,325 Z" },
+    { id: "OR", name: "Odisha", d: "M 370,410 L 450,420 L 460,500 L 380,510 Z" },
+    { id: "PB", name: "Punjab", d: "M 205,200 L 240,205 L 235,245 L 200,240 Z" },
+    { id: "RJ", name: "Rajasthan", d: "M 150,230 L 245,240 L 235,350 L 140,340 Z" },
+    { id: "SK", name: "Sikkim", d: "M 475,260 L 495,265 L 490,285 L 470,280 Z" },
+    { id: "TN", name: "Tamil Nadu", d: "M 265,650 L 315,660 L 300,780 L 250,770 Z" },
+    { id: "TS", name: "Telangana", d: "M 270,490 L 330,495 L 340,560 L 280,555 Z" },
+    { id: "TR", name: "Tripura", d: "M 565,360 L 580,365 L 575,385 L 560,380 Z" },
+    { id: "UP", name: "Uttar Pradesh", d: "M 270,245 L 400,250 L 415,335 L 285,330 L 255,290 Z" },
+    { id: "UK", name: "Uttarakhand", d: "M 285,195 L 330,210 L 320,250 L 275,240 Z" },
+    { id: "WB", name: "West Bengal", d: "M 485,330 L 530,335 L 510,430 L 465,420 Z" },
+    { id: "JK", name: "Jammu and Kashmir", d: "M 215,100 L 255,110 L 265,175 L 210,180 Z" },
+    { id: "LA", name: "Ladakh", d: "M 260,105 L 320,130 L 310,210 L 250,180 Z" },
+    { id: "DL", name: "Delhi", d: "M 258,255 L 268,255 L 268,265 L 258,265 Z" },
+  ];
+
+  const getFullStateData = (name: string) => {
+    return stateSummary.find(s => 
+      s.name.toLowerCase().includes(name.toLowerCase()) || 
+      name.toLowerCase().includes(s.name.toLowerCase())
+    );
+  };
+
+  return (
+    <div className="relative w-full aspect-[4/5] max-h-[600px] flex items-center justify-center bg-slate-50/30 rounded-3xl border border-slate-100/50 p-4">
+      <svg
+        viewBox="80 80 560 700"
+        className="w-full h-full drop-shadow-2xl"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        {statePaths.map((path) => {
+          const data = getFullStateData(path.name);
+          const status = data ? (data.dissolved ? "rose" : data.synced ? "emerald" : "amber") : "slate";
+          
+          const fill = status === "rose" ? "#F43F5E" : status === "emerald" ? "#10B981" : status === "amber" ? "#F59E0B" : "#94A3B8";
+          const opacity = data ? 0.85 : 0.4;
+
+          return (
+            <path
+              key={path.id}
+              d={path.d}
+              fill={fill}
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+              fillOpacity={opacity}
+              className="transition-all duration-300 cursor-pointer hover:fill-opacity-100 hover:scale-[1.01] origin-center"
+              onMouseEnter={() => onStateHover(data || null)}
+              onMouseLeave={() => onStateHover(null)}
+              style={{ filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.1))" }}
+            />
+          );
+        })}
+      </svg>
+      
+      {/* Decorative Compass */}
+      <div className="absolute bottom-6 right-8 text-slate-300 opacity-20 pointer-events-none">
+        <Globe className="w-20 h-20 rotate-12" />
+      </div>
+    </div>
+  );
+};
+
 /* ────────────────────────────────────────────────────── */
 
 export default function SimulatorPage() {
@@ -142,6 +232,7 @@ export default function SimulatorPage() {
   const [error, setError] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [readiness, setReadiness] = useState<ReadinessData | null>(null);
+  const [hoveredState, setHoveredState] = useState<StateSummary | null>(null);
 
   useEffect(() => {
     fetch(`${API}/simulator/presets`)
@@ -302,21 +393,66 @@ export default function SimulatorPage() {
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 relative z-10">
-                  {result.state_summary.map(s => {
-                    const status = s.dissolved ? "rose" : s.synced ? "emerald" : "amber";
-                    return (
-                      <div key={s.name} className={`p-3.5 rounded-2xl border transition-all duration-300 hover:scale-[1.03] hover:shadow-xl ${status === "rose" ? "bg-rose-50 border-rose-100" : status === "emerald" ? "bg-emerald-50 border-emerald-100" : "bg-amber-50 border-amber-100"}`}>
-                         <p className={`text-[11px] font-bold truncate ${status === "rose" ? "text-rose-700" : status === "emerald" ? "text-emerald-700" : "text-amber-800"}`}>{s.name}</p>
-                         <div className="flex items-center justify-between mt-1 opacity-60">
-                           <span className="text-[9px] font-medium">Term: {s.term_end}</span>
-                           <div className={`w-1.5 h-1.5 rounded-full ${status === "rose" ? "bg-rose-500" : status === "emerald" ? "bg-emerald-500" : "bg-amber-500"}`} />
-                         </div>
+                 <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                  <div className="md:col-span-7 relative group">
+                    <IndiaMap 
+                      stateSummary={result.state_summary} 
+                      onStateHover={setHoveredState} 
+                    />
+                    
+                    {/* Floating Map Tooltip */}
+                    {hoveredState && (
+                      <div className="absolute top-4 left-4 glass rounded-2xl p-5 ddd-shadow border border-indigo-100/50 animate-in fade-in zoom-in-95 duration-200 z-50 pointer-events-none min-w-[200px]">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-black text-slate-900 tracking-tight">{hoveredState.name}</h4>
+                          <div className={`w-2 h-2 rounded-full ${hoveredState.dissolved ? 'bg-rose-500' : hoveredState.synced ? 'bg-emerald-500' : 'bg-amber-400'}`} />
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-[11px] font-bold">
+                            <span className="text-slate-400 uppercase">Status</span>
+                            <span className={hoveredState.dissolved ? 'text-rose-600' : hoveredState.synced ? 'text-emerald-600' : 'text-amber-600'}>
+                              {hoveredState.dissolved ? 'Dissolved' : hoveredState.synced ? 'Synced' : 'Off-Cycle'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-[11px] font-bold">
+                            <span className="text-slate-400 uppercase">Current Term End</span>
+                            <span className="text-indigo-900">{hoveredState.term_end}</span>
+                          </div>
+                          <div className="flex justify-between text-[11px] font-bold border-t border-slate-100 pt-2 mt-2">
+                            <span className="text-slate-400 uppercase">Voter Base</span>
+                            <span className="text-slate-900">{hoveredState.voters_cr} Cr</span>
+                          </div>
+                        </div>
                       </div>
-                    );
-                  })}
+                    )}
+                  </div>
+
+                  <div className="md:col-span-5 grid grid-cols-2 gap-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                    {result.state_summary.map(s => {
+                      const status = s.dissolved ? "rose" : s.synced ? "emerald" : "amber";
+                      const isHovered = hoveredState?.name === s.name;
+                      return (
+                        <div 
+                          key={s.name} 
+                          className={`p-4 rounded-2xl border transition-all duration-300 ${
+                            isHovered ? "ring-2 ring-indigo-500 ring-offset-2 scale-[1.02] shadow-xl z-20" : ""
+                          } ${
+                            status === "rose" ? "bg-rose-50 border-rose-100" : 
+                            status === "emerald" ? "bg-emerald-50 border-emerald-100" : 
+                            "bg-amber-50 border-amber-100"
+                          }`}
+                        >
+                           <p className={`text-[12px] font-black truncate mb-1 ${status === "rose" ? "text-rose-700" : status === "emerald" ? "text-emerald-700" : "text-amber-800"}`}>{s.name}</p>
+                           <div className="flex items-center justify-between opacity-70">
+                             <span className="text-[10px] font-bold">Year {s.term_end}</span>
+                             <div className={`w-2 h-2 rounded-full ${status === "rose" ? "bg-rose-500" : status === "emerald" ? "bg-emerald-500" : "bg-amber-500"}`} />
+                           </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+               </div>
 
               <div className="lg:col-span-4 glass rounded-[2.5rem] p-8 ddd-shadow flex flex-col">
                 <h3 className="text-xl font-bold text-slate-900 tracking-tight mb-8">Intelligence Stream</h3>
