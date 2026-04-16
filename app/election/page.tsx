@@ -185,9 +185,6 @@ export default function ElectionPage() {
               <h1 className="text-2xl font-semibold tracking-tight text-black mb-1">
                 Hybrid Election Resource Calculator
               </h1>
-              <p className="text-sm font-medium text-slate-600">
-                AI-powered election resource allocation engine for Indian states & UTs
-              </p>
             </div>
           </div>
           {result && (
@@ -299,10 +296,10 @@ export default function ElectionPage() {
                 {/* Top Metric Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
                   {[
-                    { label: "Projected Voters", value: result.projected_voters, text: "text-emerald-500", bg: "bg-emerald-50/20", border: "border-emerald-200/20" },
-                    { label: "Poll Stations", value: formatNumber(result.poll_stations), text: "text-amber-500", bg: "bg-amber-50/20", border: "border-amber-200/20" },
-                    { label: "Total Budget", value: `₹${result.grand_total_budget_cr} Cr`, text: "text-blue-500", bg: "bg-blue-50/20", border: "border-blue-200/20" },
-                    { label: "Total Workforce", value: formatNumber(result.total_human_force), text: "text-rose-500", bg: "bg-rose-50/20", border: "border-rose-200/20" },
+                    { label: "Projected Voters", value: result.projected_voters, text: "text-emerald-700", bg: "bg-emerald-50/95", border: "border-emerald-200" },
+                    { label: "Poll Stations", value: formatNumber(result.poll_stations), text: "text-amber-700", bg: "bg-amber-50/95", border: "border-amber-200" },
+                    { label: "Total Budget", value: `₹${result.grand_total_budget_cr} Cr`, text: "text-indigo-700", bg: "bg-indigo-50/95", border: "border-indigo-200" },
+                    { label: "Total Workforce", value: formatNumber(result.total_human_force), text: "text-rose-700", bg: "bg-rose-50/95", border: "border-rose-200" },
                   ].map((card, i) => (
                     <div key={i} className={`group relative ${card.bg} backdrop-blur-xl border-2 ${card.border} rounded-[2rem] p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden`}>
                       <div className="absolute -top-12 -right-12 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors" />
