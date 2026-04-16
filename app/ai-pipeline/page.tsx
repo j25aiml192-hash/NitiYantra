@@ -45,7 +45,7 @@ const DEPT: Record<number, string> = { 1: "PWD", 2: "Jal Board", 3: "DESU", 4: "
 const LOG = (m: string) => console.log(`[AI-Pipeline] ${m}`); // Using DEPT logic in log to suppress unused
 LOG(`Active departments: ${Object.values(DEPT).join(", ")}`);
 
-const PIE_COLORS = ["#1D4ED8", "#10B981", "#F59E0B", "#EF4444", "#6366F1", "#34D399", "#FBBF24", "#F43F5E"];
+const PIE_COLORS = ["#1E1B4B", "#1E3A8A", "#134E4A", "#78350F", "#7F1D1D", "#4C1D95", "#0F172A", "#334155"];
 
 /* ── Neural Background Pattern ── */
 function NeuralBackground() {
@@ -139,10 +139,10 @@ export default function AIPipelinePage() {
   const pieData = Object.entries(categoryMap).map(([name, value]) => ({ name, value }));
 
   const confBuckets = [
-    { range: "90-100%", count: 0, color: "#10B981" },
-    { range: "70-89%", count: 0, color: "#3B82F6" },
-    { range: "50-69%", count: 0, color: "#F59E0B" },
-    { range: "<50%", count: 0, color: "#EF4444" },
+    { range: "90-100%", count: 0, color: "#065F46" },
+    { range: "70-89%", count: 0, color: "#1E40AF" },
+    { range: "50-69%", count: 0, color: "#B45309" },
+    { range: "<50%", count: 0, color: "#991B1B" },
   ];
   (result?.classified || []).forEach(c => {
     const p = Math.round(c.confidence * 100);
@@ -195,16 +195,16 @@ export default function AIPipelinePage() {
       <svg style={{ height: 0, width: 0, position: 'absolute' }}>
         <defs>
           <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.9} />
-            <stop offset="95%" stopColor="#1D4ED8" stopOpacity={0.9} />
+            <stop offset="5%" stopColor="#1E3A8A" stopOpacity={0.9} />
+            <stop offset="95%" stopColor="#1E1B4B" stopOpacity={0.9} />
           </linearGradient>
           <linearGradient id="emeraldGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#10B981" stopOpacity={0.9} />
-            <stop offset="95%" stopColor="#059669" stopOpacity={0.9} />
+            <stop offset="5%" stopColor="#134E4A" stopOpacity={0.9} />
+            <stop offset="95%" stopColor="#064E3B" stopOpacity={0.9} />
           </linearGradient>
           <linearGradient id="amberGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.9} />
-            <stop offset="95%" stopColor="#D97706" stopOpacity={0.9} />
+            <stop offset="5%" stopColor="#78350F" stopOpacity={0.9} />
+            <stop offset="95%" stopColor="#451A03" stopOpacity={0.9} />
           </linearGradient>
         </defs>
       </svg>
@@ -443,11 +443,11 @@ export default function AIPipelinePage() {
                       ]}>
                         <defs>
                           <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
+                            <stop offset="5%" stopColor="#312E81" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#312E81" stopOpacity={0}/>
                           </linearGradient>
                         </defs>
-                        <Area type="monotone" dataKey="v" stroke="#6366F1" strokeWidth={3} fillOpacity={1} fill="url(#waveGrad)" />
+                        <Area type="monotone" dataKey="v" stroke="#312E81" strokeWidth={3} fillOpacity={1} fill="url(#waveGrad)" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
