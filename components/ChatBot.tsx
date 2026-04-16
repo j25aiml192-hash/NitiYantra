@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation"
 import { 
   PaperPlaneRight, 
   X, 
-  ChatTeardropDots, 
-  Robot
+  ChatTeardropDots 
 } from "@phosphor-icons/react"
 
 interface Message {
@@ -280,9 +279,8 @@ export default function ChatBot() {
               <div style={{
                 width: 28, height: 28, borderRadius: 8,
                 background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-                display: "flex", alignItems: "center",
                 justifyContent: "center",
-              }}><Robot size={18} weight="duotone" className="text-white" /></div>
+              }}><img src="/nityantralogo.svg" alt="NitiYantra Logo" style={{ width: 18, height: 18, filter: "brightness(0) invert(1)" }} /></div>
               <div>
                 <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 600 }}>
                   NitiYantra AI
@@ -344,7 +342,7 @@ export default function ChatBot() {
                   margin: "0 auto 10px",
                   display: "flex", alignItems: "center",
                   justifyContent: "center",
-                }}><Robot size={24} weight="duotone" className="text-white" /></div>
+                }}><img src="/nityantralogo.svg" alt="NitiYantra Logo" style={{ width: 24, height: 24, filter: "brightness(0) invert(1)" }} /></div>
                 <p style={{ color: "var(--text)", fontSize: 13,
                             fontWeight: 600, marginBottom: 6 }}>
                   NitiYantra AI
