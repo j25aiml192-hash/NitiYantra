@@ -139,10 +139,10 @@ export default function MyWorkPage() {
         {/* ═══ STAT CARDS ═══ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: "Total Assigned",     value: report?.total_assigned ?? 0,     text: "text-indigo-700",  bg: "bg-indigo-50/95",  border: "border-indigo-200" },
-            { label: "Resolved This Week", value: report?.this_week_resolved ?? 0, text: "text-emerald-700", bg: "bg-emerald-50/95", border: "border-emerald-200" },
-            { label: "SLA Breached",       value: report?.sla_breached ?? 0,       text: "text-rose-700",    bg: "bg-rose-50/95",    border: "border-rose-200" },
-            { label: "On-Time Rate",       value: `${report?.on_time_rate ?? 100}%`, text: "text-amber-700",  bg: "bg-amber-50/95",   border: "border-amber-200" },
+            { label: "Total Assigned",     value: report?.total_assigned ?? 0,     text: "text-indigo-600",  bg: "bg-indigo-50/80",  border: "border-indigo-100" },
+            { label: "Resolved This Week", value: report?.this_week_resolved ?? 0, text: "text-emerald-600", bg: "bg-emerald-50/80", border: "border-emerald-100" },
+            { label: "SLA Breached",       value: report?.sla_breached ?? 0,       text: "text-rose-600",    bg: "bg-rose-50/80",    border: "border-rose-100" },
+            { label: "On-Time Rate",       value: `${report?.on_time_rate ?? 100}%`, text: "text-amber-600",  bg: "bg-amber-50/80",   border: "border-amber-100" },
           ].map((stat, i) => (
             <div
               key={stat.label}
