@@ -98,6 +98,10 @@ export default function MyWorkPage() {
           from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes modalSlideUp {
+          from { opacity: 0; transform: translateY(24px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
       `}</style>
 
       {/* Background blobs for premium effect */}
@@ -276,43 +280,65 @@ export default function MyWorkPage() {
               )}
             </div>
 
-            {/* ── Complaint Detail (when selected) ── */}
+            {/* ── Complaint Detail Modal ── */}
             {selectedComplaint && (
-              <div className="mt-6 bg-white/90 backdrop-blur-xl rounded-3xl border border-indigo-100 p-8 shadow-xl relative overflow-hidden animate-[fadeUp_0.3s_ease-out_forwards]">
-                <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-500" />
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm font-black text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl border border-indigo-100 tracking-widest">#{selectedComplaint.id}</span>
-                    <StatusBadge status={selectedComplaint.status} />
-                    <SlaBadge status={selectedComplaint.sla_status} />
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                onClick={() => setSelectedComplaint(null)}
+              >
+                {/* Backdrop */}
+                <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+
+                {/* Modal Card */}
+                <div
+                  className="relative w-full max-w-lg bg-white rounded-3xl border border-indigo-100 p-8 shadow-2xl shadow-indigo-500/10"
+                  style={{ animation: 'modalSlideUp 0.25s cubic-bezier(0.22,1,0.36,1) forwards' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Top accent bar */}
+                  <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-t-3xl" />
+
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-black text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl border border-indigo-100 tracking-widest">#{selectedComplaint.id}</span>
+                      <StatusBadge status={selectedComplaint.status} />
+                      <SlaBadge status={selectedComplaint.sla_status} />
+                    </div>
+                    <button
+                      onClick={() => setSelectedComplaint(null)}
+                      className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:border-red-300 hover:bg-red-50 transition-all"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setSelectedComplaint(null)}
-                    className="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                  </button>
-                </div>
-                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 mb-6">
-                  <p className="text-sm font-medium text-slate-700 leading-relaxed">{selectedComplaint.text}</p>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-white border border-slate-100 p-3 rounded-xl shadow-sm">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">District</p>
-                    <p className="text-sm font-bold text-slate-800">{selectedComplaint.district}</p>
+
+                  {/* Body */}
+                  <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 mb-6">
+                    <p className="text-sm font-medium text-slate-700 leading-relaxed">{selectedComplaint.text}</p>
                   </div>
-                  <div className="bg-white border border-slate-100 p-3 rounded-xl shadow-sm">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Category</p>
-                    <p className="text-sm font-bold text-slate-800 truncate">{selectedComplaint.category}</p>
+
+                  {/* Meta Grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { label: "District", value: selectedComplaint.district },
+                      { label: "Category", value: selectedComplaint.category },
+                      { label: "Submitted", value: new Date(selectedComplaint.date_submitted).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) },
+                      { label: "Duration", value: `${selectedComplaint.days_open} days open` },
+                    ].map((m) => (
+                      <div key={m.label} className="bg-white border border-slate-100 p-3 rounded-xl shadow-sm">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{m.label}</p>
+                        <p className="text-sm font-bold text-slate-800">{m.value}</p>
+                      </div>
+                    ))}
                   </div>
-                  <div className="bg-white border border-slate-100 p-3 rounded-xl shadow-sm">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Submitted</p>
-                    <p className="text-sm font-bold text-slate-800">{new Date(selectedComplaint.date_submitted).toLocaleDateString('en-IN')}</p>
-                  </div>
-                  <div className="bg-white border border-slate-100 p-3 rounded-xl shadow-sm">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Duration</p>
-                    <p className="text-sm font-bold text-slate-800">{selectedComplaint.days_open} days open</p>
-                  </div>
+
+                  {selectedComplaint.escalated && (
+                    <div className="mt-5 flex items-center gap-2 text-xs text-rose-600 bg-rose-50 rounded-xl px-4 py-2.5 border border-rose-200">
+                      <span>⚠</span>
+                      <span className="font-bold">This complaint has been escalated</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
