@@ -656,20 +656,20 @@ export default function DebatePage() {
       {result && state === "debating" && (
         <div className="w-full max-w-[1240px] px-4 space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
           {/* AI Banner */}
-          <div className="glass-card rounded-[24px] p-8 border-white/5 text-center relative overflow-hidden group">
+            <div className={`glass-card rounded-[24px] p-8 border-white/5 text-center relative overflow-hidden group`}>
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
               <svg className="w-24 h-24 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/80 mb-3">Intelligence Objective</div>
-            <h2 className="text-[26px] font-black text-white tracking-tighter mb-4 leading-tight">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-600/80 mb-3">Intelligence Objective</div>
+            <h2 className="text-[26px] font-black text-slate-900 tracking-tighter mb-4 leading-tight">
               &quot;{result.topic}&quot;
             </h2>
             <div className="flex items-center justify-center gap-3">
-              <span className="px-3 py-1 rounded-full bg-white/5 text-indigo-100 text-xs font-bold ring-1 ring-white/10">
+              <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold ring-1 ring-indigo-200/50">
                 Source: {result.source}
               </span>
               {result.ai_provider && (
-                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold ring-1 ring-emerald-500/30 animate-pulse">
+                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold ring-1 ring-emerald-200/50 animate-pulse">
                   AI: {result.ai_provider}
                 </span>
               )}
@@ -685,8 +685,8 @@ export default function DebatePage() {
                     ❓
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-white leading-tight">{result.lokniti.agent}</h3>
-                    <p className="text-[11px] font-bold text-indigo-100/40 uppercase tracking-widest">{result.lokniti.role}</p>
+                    <h3 className="text-xl font-black text-slate-900 leading-tight">{result.lokniti.agent}</h3>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokniti.role}</p>
                   </div>
                 </div>
                 <button
@@ -696,14 +696,14 @@ export default function DebatePage() {
                   {isSpeaking === "lokniti" ? "⏹" : "🔊"}
                 </button>
               </div>
-              <p className="text-[15px] leading-[1.8] text-indigo-100/80 font-medium tracking-tight whitespace-pre-line mb-8">
+              <p className="text-[15px] leading-[1.8] text-slate-800/90 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokniti.argument}
               </p>
               {result.lokniti.key_points.length > 0 && (
-                <div className="space-y-3 p-5 rounded-2xl bg-white/5 border border-white/5 shadow-inner">
-                  <div className="text-[10px] font-black uppercase text-rose-400 tracking-widest">Crucial Objections</div>
+                <div className="space-y-3 p-5 rounded-2xl bg-rose-50/50 border border-rose-100 shadow-inner">
+                  <div className="text-[10px] font-black uppercase text-rose-500 tracking-widest">Crucial Objections</div>
                   {result.lokniti.key_points.map((p, i) => (
-                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-indigo-100/70 italic">
+                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
                       <span className="text-rose-400 mt-1">◈</span>
                       <span>{p}</span>
                     </div>
@@ -728,8 +728,8 @@ export default function DebatePage() {
                     ⚖️
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-white leading-tight">{result.lokmitra.agent}</h3>
-                    <p className="text-[11px] font-bold text-indigo-100/40 uppercase tracking-widest">{result.lokmitra.role}</p>
+                    <h3 className="text-xl font-black text-slate-900 leading-tight">{result.lokmitra.agent}</h3>
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{result.lokmitra.role}</p>
                   </div>
                 </div>
                 <button
@@ -739,14 +739,14 @@ export default function DebatePage() {
                   {isSpeaking === "lokmitra" ? "⏹" : "🔊"}
                 </button>
               </div>
-              <p className="text-[15px] leading-[1.8] text-indigo-100/80 font-medium tracking-tight whitespace-pre-line mb-8">
+              <p className="text-[15px] leading-[1.8] text-slate-800/90 font-medium tracking-tight whitespace-pre-line mb-8">
                 {result.lokmitra.argument}
               </p>
               {result.lokmitra.key_points.length > 0 && (
-                <div className="space-y-3 p-5 rounded-2xl bg-white/5 border border-white/5 shadow-inner">
-                  <div className="text-[10px] font-black uppercase text-indigo-400 tracking-widest">Defense Pillars</div>
+                <div className="space-y-3 p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 shadow-inner">
+                  <div className="text-[10px] font-black uppercase text-indigo-500 tracking-widest">Defense Pillars</div>
                   {result.lokmitra.key_points.map((p, i) => (
-                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-indigo-100/70 italic">
+                    <div key={i} className="flex items-start gap-3 text-[13px] font-bold text-slate-700 italic">
                       <span className="text-indigo-400 mt-1">◈</span>
                       <span>{p}</span>
                     </div>
@@ -759,9 +759,9 @@ export default function DebatePage() {
           {/* References & Links */}
           {result.key_constitutional_articles && result.key_constitutional_articles.length > 0 && (
             <div className="flex items-center justify-center gap-2 flex-wrap pb-4">
-              <span className="text-[10px] font-black text-indigo-100/30 uppercase tracking-widest mr-2">Constitutional Base:</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-2">Constitutional Base:</span>
               {result.key_constitutional_articles.map((a, i) => (
-                <div key={i} className="px-4 py-1.5 rounded-full bg-white/5 text-amber-400 text-[11px] font-black shadow-sm ring-1 ring-white/10 border border-white/5 hover:bg-white/10 transition-all cursor-default text-shadow-glow">
+                <div key={i} className="px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black shadow-sm ring-1 ring-amber-200/50 border border-slate-100 hover:bg-amber-100 transition-all cursor-default text-shadow-glow">
                   {a}
                 </div>
               ))}
@@ -770,11 +770,11 @@ export default function DebatePage() {
 
           {/* Verdict Segment */}
           {result.verdict && (
-            <div className={`glass-card rounded-3xl p-10 text-center border-white/5 transition-all duration-500 max-w-[900px] mx-auto ${ttsSection === 'verdict' ? 'ring-8 ring-amber-500/10 border-amber-500/50 scale-[1.01]' : ''}`}>
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 text-amber-400 font-black uppercase text-[11px] tracking-[0.15em] mb-6 shadow-sm border border-white/5 animate-[debateGlow_3s_infinite]">
+            <div className={`glass-card rounded-3xl p-10 text-center border-slate-100 transition-all duration-500 max-w-[900px] mx-auto ${ttsSection === 'verdict' ? 'ring-8 ring-amber-500/10 border-amber-500/50 scale-[1.01]' : ''}`}>
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-amber-50 text-amber-600 font-black uppercase text-[11px] tracking-[0.15em] mb-6 shadow-sm border border-amber-100 animate-[debateGlow_3s_infinite]">
                 ⚖️ AI Verdict
               </div>
-              <p className="text-[17px] font-bold italic text-indigo-50 font-serif leading-relaxed max-w-[700px] mx-auto tracking-tight">
+              <p className="text-[17px] font-bold italic text-slate-800 leading-relaxed max-w-[700px] mx-auto tracking-tight">
                 &quot;{result.verdict}&quot;
               </p>
             </div>
